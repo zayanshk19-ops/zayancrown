@@ -251,7 +251,7 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
@@ -304,6 +304,7 @@ function card(p){
 }
 function openDetail(id){
   var p=prod(id);if(!p)return;
+  track('view_item',{currency:'PKR',value:p.price,items:[gaItem(p)]});
   var im=imgsOf(p),off=(p.oldPrice&&p.oldPrice>p.price)?Math.round((1-p.price/p.oldPrice)*100):0;
   var slides=im.length?im.map(function(u,i){return '<div class="slide" data-act="zoom" data-id="'+esc(p.id)+'" data-i="'+i+'"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'"></div>'}).join(''):'<div class="slide"><div class="ph">'+CROWN+'</div></div>';
   var strip=im.length>1?'<div class="strip">'+im.map(function(u,i){return '<button type="button" data-act="pic" data-i="'+i+'" aria-label="Photo '+(i+1)+'"'+(i===0?' aria-current="true"':'')+'><img src="'+esc(u)+'" alt=""></button>'}).join('')+'</div>':'';
@@ -348,6 +349,18 @@ function renderFab(){
   var n=count();
   $('#fab').innerHTML=n?'<button class="btn" data-act="cart"><span>View cart ('+n+')</span><span>'+money(total())+'</span></button>':'';
 }
+var gaLoaded=false;
+function initAnalytics(){
+  var id=state.settings.gaId;
+  if(gaLoaded||owner||!id||!/^G-[A-Z0-9]{4,}$/i.test(id))return;
+  gaLoaded=true;
+  window.dataLayer=window.dataLayer||[];
+  window.gtag=function(){window.dataLayer.push(arguments)};
+  window.gtag('js',new Date());window.gtag('config',id);
+  var sc=document.createElement('script');sc.async=true;sc.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(id);document.head.appendChild(sc);
+}
+function track(name,params){if(gaLoaded&&window.gtag){try{window.gtag('event',name,params||{})}catch(e){}}}
+function gaItem(p,q){return {item_id:p.id,item_name:p.name,item_category:p.category||'',price:p.price,quantity:q||1}}
 function waNum(x){var n=String(x||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='92'+n.slice(1);return n}
 function renderFoot(){
   var st=state.settings;
@@ -418,6 +431,8 @@ function openSettings(){
   '<p class="hint">Customers send their cart to this WhatsApp number. Use your own number, for example 0300 1234567.</p>'+
   '<label for="sok">Order alert key (optional)<input id="sok" value="'+esc(s.orderKey||'')+'" placeholder="paste key from web3forms.com" autocomplete="off"></label>'+
   '<p class="hint">With this key, every order is also emailed to you the moment a customer taps the order button. Get a free key at web3forms.com by entering your email.</p>'+
+  '<label for="sga">Google Analytics ID (optional)<input id="sga" value="'+esc(s.gaId||'')+'" placeholder="G-XXXXXXXXXX" autocomplete="off"></label>'+
+  '<p class="hint">Shows you how many people visit, view products and tap order. Only you can see it, in your Google Analytics account.</p>'+
   '<h3 style="font-size:17px;margin-top:6px">Publish to your website</h3>'+
   '<label for="gtoken">GitHub token'+(ghGet().token?' (already saved, leave empty to keep it)':'')+'<input id="gtoken" type="password" autocomplete="off" placeholder="paste token here"></label>'+
   '<label for="grepo">GitHub repository<input id="grepo" value="'+esc(ghGet().repo||ghRepoGuess())+'" placeholder="username/zayancrown" autocomplete="off"></label>'+
@@ -425,11 +440,12 @@ function openSettings(){
   '<div class="btns"><button class="btn" type="submit">Save settings</button><button class="btn ghost" type="button" data-act="close">Cancel</button></div></form>');
 }
 function saveSettings(){
+  var gv=$('#sga').value.trim();if(gv&&!/^G-[A-Z0-9]{4,}$/i.test(gv)){toast('The Analytics ID should look like G-ABC123XYZ.');return}
   var gc=ghGet(),tk=$('#gtoken').value.trim(),rp=$('#grepo').value.trim();
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.logo=editing.logo||'';
+  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.logo=editing.logo||'';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
@@ -494,7 +510,7 @@ async function publish(btn){
 /* ---------- events ---------- */
 document.addEventListener('click',function(e){
   if(e.target.id==='ovl'){closeModal();return}
-  if(e.target.id==='wa'){if(!cust.name.trim()||!cust.phone.trim()||!cust.addr.trim()){e.preventDefault();toast('Enter your name, phone number and delivery address first.')}else notifyOrder();return}
+  if(e.target.id==='wa'){if(!cust.name.trim()||!cust.phone.trim()||!cust.addr.trim()){e.preventDefault();toast('Enter your name, phone number and delivery address first.')}else{track('begin_checkout',{currency:'PKR',value:total(),items:cartItems().map(function(i){return gaItem(i.p,i.qty)})});notifyOrder()}return}
   var b=e.target.closest('[data-act]');if(!b)return;
   var a=b.dataset.act,id=b.dataset.id;
   if(a==='cat'){cat=b.dataset.cat;renderChips();renderGrid()}
@@ -515,7 +531,7 @@ document.addEventListener('click',function(e){
   else if(a==='zoom')openZoom(id,+b.dataset.i)
   else if(a==='zoomclose'){var zz=document.getElementById('zoom');if(zz)zz.remove()}
   else if(a==='open')openDetail(id);
-  else if(a==='addcart-d'){cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();closeModal();toast('Added to cart')}
+  else if(a==='addcart-d'){var ap=prod(id);if(ap)track('add_to_cart',{currency:'PKR',value:ap.price,items:[gaItem(ap)]});cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();closeModal();toast('Added to cart')}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
   else if(a==='del'){
     if(b.dataset.armed){state.products=state.products.filter(function(p){return p.id!==id});delete cart[id];saveCart();dirty++;persist();closeModal();renderAll();toast('Deleted on this phone. Tap Publish to update customers.')}
@@ -555,14 +571,15 @@ function updateWelcome(){
 function remote(){return Promise.race([fetch('store.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}),new Promise(function(r){setTimeout(function(){r(null)},3000)})])}
 var draft=null;if(ownerFlag){try{draft=JSON.parse(localStorage.getItem('zc-draft')||'null')}catch(e){}}
 owner=ownerFlag;renderBar();renderOwner();
-if(draft&&draft.state){state=draft.state;norm();dirty=draft.dirty||0;loading=false;renderAll()}
+if(draft&&draft.state){state=draft.state;norm();dirty=draft.dirty||0;loading=false;renderAll();initAnalytics()}
 else{
   var cachedRaw=null,cached=null;try{cachedRaw=localStorage.getItem('zc-cache');cached=JSON.parse(cachedRaw||'null')}catch(e){}
-  if(cached&&Array.isArray(cached.products)){state=cached;norm();loading=false;renderAll();updateWelcome()}
+  if(cached&&Array.isArray(cached.products)){state=cached;norm();loading=false;renderAll();updateWelcome();initAnalytics()}
   remote().then(function(r){
     if(r&&Array.isArray(r.products)){
       var raw=JSON.stringify(r);
       if(raw!==cachedRaw){state=r;norm();loading=false;renderAll();updateWelcome();try{localStorage.setItem('zc-cache',raw)}catch(e){}}
+      initAnalytics();
     }else if(loading){loading=false;renderAll();updateWelcome()}
   })
 }
