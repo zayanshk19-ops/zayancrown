@@ -147,6 +147,19 @@ textarea{resize:vertical;min-height:70px}
 @keyframes slidein{from{transform:translateX(100vw)}to{transform:none}}
 @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}}
 </style>
+<div class="wl" id="welcome"><div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome"><div id="wlogo"><svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg></div><h2 id="wtext">Welcome to Crown Zayan</h2><p id="wtag" hidden></p><button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div></div>
+<script>(function(){var w=document.getElementById('welcome');try{
+var seen=sessionStorage.getItem('zc-welcome')==='1';
+if(localStorage.getItem('zc-owner')==='1'||location.hash==='#admin'||seen){w.remove();return}
+sessionStorage.setItem('zc-welcome','1');
+}catch(e){}
+document.body.style.overflow='hidden';
+try{var b=JSON.parse(localStorage.getItem('zc-brand')||'null');if(b){
+if(b.welcome)document.getElementById('wtext').textContent=b.welcome;
+if(b.tagline){var t=document.getElementById('wtag');t.textContent=b.tagline;t.hidden=false}
+if(b.logo){var i=document.createElement('img');i.className='logo';i.alt='';i.src=b.logo;var l=document.getElementById('wlogo');l.textContent='';l.appendChild(i)}}}catch(e){}
+setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();document.body.style.overflow=''}},5500);
+})();</script>
 <div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
 <main class="wrap">
@@ -436,22 +449,18 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#welc
 
 var ownerFlag=false;try{ownerFlag=localStorage.getItem('zc-owner')==='1'}catch(e){}
 if(location.hash==='#admin'){try{localStorage.setItem('zc-owner','1')}catch(e){}ownerFlag=true}
-function showWelcome(){
-  if(ownerFlag)return;
-  var seen=false;try{seen=sessionStorage.getItem('zc-welcome')==='1'}catch(e){}
-  if(seen)return;
-  var w=document.createElement('div');w.className='wl';w.id='welcome';
-  w.innerHTML='<div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome">'+logoHtml()+'<h2>'+esc(state.settings.welcome)+'</h2>'+(state.settings.tagline?'<p>'+esc(state.settings.tagline)+'</p>':'')+'<button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div>';
-  setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();document.body.style.overflow=''}},5500);
-  document.body.appendChild(w);document.body.style.overflow='hidden';
-  try{sessionStorage.setItem('zc-welcome','1')}catch(e){}
-  var wb=document.getElementById('wbtn');if(wb)wb.focus();
+function updateWelcome(){
+  try{localStorage.setItem('zc-brand',JSON.stringify({logo:state.settings.logo||'',welcome:state.settings.welcome,tagline:state.settings.tagline||''}))}catch(e){}
+  var w=document.getElementById('welcome');if(!w)return;
+  document.getElementById('wlogo').innerHTML=logoHtml();
+  document.getElementById('wtext').textContent=state.settings.welcome;
+  var t=document.getElementById('wtag');t.textContent=state.settings.tagline||'';t.hidden=!state.settings.tagline;
 }
 function remote(){return Promise.race([fetch('store.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}),new Promise(function(r){setTimeout(function(){r(null)},3000)})])}
 var draft=null;if(ownerFlag){try{draft=JSON.parse(localStorage.getItem('zc-draft')||'null')}catch(e){}}
 owner=ownerFlag;renderBar();renderOwner();
 if(draft&&draft.state){state=draft.state;norm();dirty=draft.dirty||0;loading=false;renderAll()}
-else{remote().then(function(r){if(r&&Array.isArray(r.products)){state=r;norm()}loading=false;renderAll();showWelcome()})}
+else{remote().then(function(r){if(r&&Array.isArray(r.products)){state=r;norm()}loading=false;renderAll();updateWelcome()})}
 window.addEventListener('hashchange',function(){if(location.hash==='#admin'){owner=true;try{localStorage.setItem('zc-owner','1')}catch(e){}renderAll()}});
 })();
 </script>
