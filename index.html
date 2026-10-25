@@ -460,7 +460,16 @@ function remote(){return Promise.race([fetch('store.json?t='+Date.now(),{cache:'
 var draft=null;if(ownerFlag){try{draft=JSON.parse(localStorage.getItem('zc-draft')||'null')}catch(e){}}
 owner=ownerFlag;renderBar();renderOwner();
 if(draft&&draft.state){state=draft.state;norm();dirty=draft.dirty||0;loading=false;renderAll()}
-else{remote().then(function(r){if(r&&Array.isArray(r.products)){state=r;norm()}loading=false;renderAll();updateWelcome()})}
+else{
+  var cachedRaw=null,cached=null;try{cachedRaw=localStorage.getItem('zc-cache');cached=JSON.parse(cachedRaw||'null')}catch(e){}
+  if(cached&&Array.isArray(cached.products)){state=cached;norm();loading=false;renderAll();updateWelcome()}
+  remote().then(function(r){
+    if(r&&Array.isArray(r.products)){
+      var raw=JSON.stringify(r);
+      if(raw!==cachedRaw){state=r;norm();loading=false;renderAll();updateWelcome();try{localStorage.setItem('zc-cache',raw)}catch(e){}}
+    }else if(loading){loading=false;renderAll();updateWelcome()}
+  })
+}
 window.addEventListener('hashchange',function(){if(location.hash==='#admin'){owner=true;try{localStorage.setItem('zc-owner','1')}catch(e){}renderAll()}});
 })();
 </script>
