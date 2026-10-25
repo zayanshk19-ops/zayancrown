@@ -1,35 +1,29 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
-<title>Zayan Crown</title>
+<title>Zayan Crown</title><meta name="theme-color" content="#D1122B">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
 <style id="sheet">
 /* Layout: sticky brand bar, compact search band, 2-col product grid on phones; owner tools live in a bar above the grid. */
 :root{
-  --bg:#F2F5F3; --surface:#FFFFFF; --ink:#14201B; --muted:#5A6B63; --line:#DAE2DD;
-  --brand:#0E6B52; --brand-ink:#FFFFFF; --gold:#B5851A; --tint:#E6EFEA; --danger:#B3261E; --sale:#B3261E;
+  --bg:#FFFFFF; --surface:#FFFFFF; --ink:#2A0A0F; --muted:#7A5A5E; --line:#F1D5D8;
+  --brand:#D1122B; --brand-ink:#FFFFFF; --gold:#F2B705; --tint:#FDECEE; --danger:#9B0F20; --sale:#B00020;
   --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
   --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0E1613; --surface:#16211D; --ink:#E7EFEA; --muted:#9BADA4; --line:#27362F;
-  --brand:#3FBF98; --brand-ink:#06150F; --gold:#E2B84C; --tint:#1E2D27; --danger:#FF8A80; --sale:#FF8A80; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0E1613; --surface:#16211D; --ink:#E7EFEA; --muted:#9BADA4; --line:#27362F;
-  --brand:#3FBF98; --brand-ink:#06150F; --gold:#E2B84C; --tint:#1E2D27; --danger:#FF8A80; --sale:#FF8A80; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:400 15px/1.5 var(--body);padding-block:0;min-height:100%}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:30}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--brand);z-index:30}
 .wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .crown{fill:var(--gold);width:100%;height:100%}
 
 /* header */
-#hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+#hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--brand);color:#fff}
 .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
 .logo,.brand .crown{width:40px;height:40px;flex:none;object-fit:contain;border-radius:8px}
-.bname{font:700 21px/1.1 var(--display);letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cartbtn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600}
+.bname{color:#fff;font:700 21px/1.1 var(--display);letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cartbtn{display:flex;align-items:center;gap:8px;border:0;background:#fff;color:var(--brand);border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:700}
 .cartbtn b{background:var(--brand);color:var(--brand-ink);border-radius:999px;min-width:22px;height:22px;display:inline-grid;place-items:center;font-size:12px;padding:0 6px}
 
 /* owner bar */
@@ -126,7 +120,7 @@ textarea{resize:vertical;min-height:70px}
 .foot{padding-block:8px 30px;color:var(--muted);font-size:13px}.foot a{color:var(--muted)}
 .sbar{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;max-width:620px}
 .sbar .search{flex:1 1 220px;width:auto}
-.addbtn{flex:0 0 auto;padding:12px 20px;font-size:15px;border-radius:12px;background:var(--gold);color:#1B1405;box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.addbtn{flex:0 0 auto;padding:12px 20px;font-size:15px;border-radius:12px;background:#fff;color:var(--brand);border:2px solid var(--brand);box-shadow:none}
 .addbtn:active{transform:translateY(2px);box-shadow:none}
 .wl{position:fixed;inset:0;z-index:70;background:var(--bg);display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-left,0px));overflow-y:auto}
 .wlbox{max-width:460px;width:100%;text-align:center;display:grid;gap:14px;justify-items:center}
@@ -137,6 +131,21 @@ textarea{resize:vertical;min-height:70px}
 .wlbox .btn{padding:14px 30px;font-size:16px;border-radius:12px;margin-top:6px}
 @media (prefers-reduced-motion:no-preference){.wlbox{animation:rise .5s ease both}@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}}
 @media (prefers-reduced-motion:no-preference){.btn,.chip{transition:background .15s,opacity .15s}}
+
+.wl{background:var(--brand);color:#fff;overflow-x:hidden}
+.wlbox h2{color:#fff}
+.wlbox p{color:rgba(255,255,255,.92)}
+.wlbox .btn{background:#fff;color:var(--brand)}
+.contact{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--tint);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px;color:var(--ink)}
+.contact div{display:grid;gap:2px;min-width:0}
+.contact span{color:var(--muted);font-size:13px}
+.foot .contact .btn{color:var(--brand-ink);font-variant-numeric:tabular-nums}
+.foot p{margin:0}
+@media (prefers-reduced-motion:no-preference){
+.wlbox h2{animation:slidein 1s cubic-bezier(.2,.8,.2,1) both}
+.wlbox p,.wlbox .btn{animation:fadeup .6s .9s ease both}
+@keyframes slidein{from{transform:translateX(100vw)}to{transform:none}}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}}
 </style>
 <div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
@@ -147,7 +156,7 @@ textarea{resize:vertical;min-height:70px}
   </section>
   <div class="chips" id="chips"></div>
   <div class="grid" id="grid"></div>
-  <p class="foot" id="foot"></p>
+  <div class="foot" id="foot"></div>
 </main>
 <div id="fab"></div>
 <div id="modal"></div>
@@ -161,7 +170,7 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to my website',tagline:'',whatsapp:'',currency:'Rs',logo:''},state.settings||{});state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
@@ -238,8 +247,11 @@ function renderFab(){
   var n=count();
   $('#fab').innerHTML=n?'<button class="btn" data-act="cart"><span>View cart ('+n+')</span><span>'+money(total())+'</span></button>':'';
 }
+function waNum(x){var n=String(x||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='92'+n.slice(1);return n}
 function renderFoot(){
-  $('#foot').innerHTML=owner?'Owner mode. Your changes are saved on this phone. Tap Publish changes to show them to customers. <a href="#" data-act="exit">Exit owner mode</a>':(esc('© '+state.settings.name));
+  var st=state.settings;
+  var c='<div class="contact"><div><b>Contact us on WhatsApp</b><span>All Pakistan delivery</span></div><a class="btn" target="_blank" rel="noopener" href="https://wa.me/'+waNum(st.whatsapp)+'">'+esc(st.whatsapp)+'</a></div>';
+  $('#foot').innerHTML=c+(owner?'<p>Owner mode. Your changes are saved on this phone. Tap Publish changes to show them to customers. <a href="#" data-act="exit">Exit owner mode</a></p>':'<p>'+esc('© '+st.name)+'</p>');
 }
 function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderFab();renderFoot()}
 
@@ -343,7 +355,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="chips" id="chips"></div><div class="grid" id="grid"></div><p class="foot" id="foot"></p></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -422,7 +434,8 @@ function showWelcome(){
   var seen=false;try{seen=sessionStorage.getItem('zc-welcome')==='1'}catch(e){}
   if(seen)return;
   var w=document.createElement('div');w.className='wl';w.id='welcome';
-  w.innerHTML='<div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome">'+logoHtml()+'<span class="eyebrow">'+esc(state.settings.welcome||'Welcome to my website')+'</span><h2>'+esc(state.settings.name)+'</h2>'+(state.settings.tagline?'<p>'+esc(state.settings.tagline)+'</p>':'')+'<button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div>';
+  w.innerHTML='<div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome">'+logoHtml()+'<h2>'+esc(state.settings.welcome)+'</h2>'+(state.settings.tagline?'<p>'+esc(state.settings.tagline)+'</p>':'')+'<button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div>';
+  setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();document.body.style.overflow=''}},5500);
   document.body.appendChild(w);document.body.style.overflow='hidden';
   try{sessionStorage.setItem('zc-welcome','1')}catch(e){}
   var wb=document.getElementById('wbtn');if(wb)wb.focus();
