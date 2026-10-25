@@ -146,6 +146,31 @@ textarea{resize:vertical;min-height:70px}
 .wlbox p,.wlbox .btn{animation:fadeup .6s .9s ease both}
 @keyframes slidein{from{transform:translateX(100vw)}to{transform:none}}
 @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}}
+
+.card{cursor:pointer}
+.card .cbody{padding:10px 12px 12px;gap:8px}
+.card .pname{font-size:15px}
+.card:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.dpic{position:relative;aspect-ratio:1/1;max-height:60vh;background:var(--tint);border-radius:12px;overflow:hidden;display:grid;place-items:center}
+.dpic img{width:100%;height:100%;object-fit:contain;display:block}
+.dpic .ph{width:30%}
+.panel .strip{padding:0}
+.panel .strip button{width:56px;height:56px}
+.dbody{display:grid;gap:8px}
+.dbody h3{font:700 24px/1.15 var(--display);margin:0;overflow-wrap:anywhere}
+.dbody .prices{margin-top:0}
+.dbody .price{font-size:26px}
+.dbody .specs{font-size:15px;gap:6px 18px}
+.desc.full{font-size:15px;color:var(--ink);white-space:pre-line}
+
+.gal{gap:10px}
+.gal .g{width:84px;height:104px;border-radius:10px;overflow:hidden;background:var(--tint);border:2px solid transparent;display:block}
+.gal .g.main{border-color:var(--brand)}
+.gal .g img{width:100%;height:84px;object-fit:cover;display:block}
+.gal .g .rm{top:3px;right:3px}
+.gal .mk{position:absolute;left:0;right:0;bottom:0;height:20px;border:0;background:var(--tint);color:var(--ink);font-size:11px;font-weight:600;padding:0;cursor:pointer;display:block;width:100%}
+.gal .mk.on{background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;cursor:default}
+.card .price{font:700 17px/1 var(--display);color:var(--brand)}
 </style>
 <div class="wl" id="welcome"><div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome"><div id="wlogo"><svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg></div><h2 id="wtext">Welcome to Crown Zayan</h2><p id="wtag" hidden></p><button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div></div>
 <script>(function(){var w=document.getElementById('welcome');try{
@@ -230,17 +255,23 @@ function specs(p){
 }
 function card(p){
   var im=imgsOf(p);
-  var img=im.length?'<img src="'+esc(im[0])+'" alt="'+esc(p.name)+'" loading="lazy">':'<div class="ph">'+CROWN+'</div>';
-  var strip=im.length>1?'<div class="strip">'+im.map(function(u,i){return '<button data-act="pic" data-id="'+esc(p.id)+'" aria-label="Photo '+(i+1)+'"'+(i===0?' aria-current="true"':'')+'><img src="'+esc(u)+'" alt=""></button>'}).join('')+'</div>':'';
-  var off=(p.oldPrice&&p.oldPrice>p.price)?Math.round((1-p.price/p.oldPrice)*100):0;
-  var badge=p.soldOut?'<span class="badge so">Sold out</span>':(off?'<span class="badge">-'+off+'%</span>':'');
-  return '<article class="card'+(p.soldOut?' out':'')+'"><div class="pic">'+img+badge+'</div>'+strip+'<div class="cbody">'+
-  (p.category?'<span class="cat">'+esc(p.category)+'</span>':'')+
-  '<div class="pname">'+esc(p.name)+'</div>'+specs(p)+
-  (p.desc?'<p class="desc">'+esc(p.desc)+'</p>':'')+
-  '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+
-  '<div class="acts"><button class="btn sm" data-act="addcart" data-id="'+esc(p.id)+'" '+(p.soldOut?'disabled':'')+'>'+(p.soldOut?'Unavailable':'Add to cart')+'</button>'+
-  (owner?'<button class="btn sm ghost" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+'</div></div></article>';
+  var img=im.length?'<img src="'+esc(im[0])+'" alt="" loading="lazy">':'<div class="ph">'+CROWN+'</div>';
+  var badge=p.soldOut?'<span class="badge so">Sold out</span>':'';
+  return '<article class="card'+(p.soldOut?' out':'')+'" data-act="open" data-id="'+esc(p.id)+'" tabindex="0" role="button" aria-label="'+esc(p.name)+'"><div class="pic">'+img+badge+'</div><div class="cbody"><div class="pname">'+esc(p.name)+'</div><div class="price">'+money(p.price)+'</div>'+(owner?'<button class="btn sm ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+'</div></article>';
+}
+function openDetail(id){
+  var p=prod(id);if(!p)return;
+  var im=imgsOf(p),off=(p.oldPrice&&p.oldPrice>p.price)?Math.round((1-p.price/p.oldPrice)*100):0;
+  var big=im.length?'<img id="dbig" src="'+esc(im[0])+'" alt="'+esc(p.name)+'">':'<div class="ph">'+CROWN+'</div>';
+  var strip=im.length>1?'<div class="strip">'+im.map(function(u,i){return '<button type="button" data-act="pic" aria-label="Photo '+(i+1)+'"'+(i===0?' aria-current="true"':'')+'><img src="'+esc(u)+'" alt=""></button>'}).join('')+'</div>':'';
+  modal('<div class="dpic">'+big+(p.soldOut?'<span class="badge so">Sold out</span>':(off?'<span class="badge">-'+off+'%</span>':''))+'</div>'+strip+
+  '<div class="dbody">'+(p.category?'<span class="cat">'+esc(p.category)+'</span>':'')+'<h3>'+esc(p.name)+'</h3>'+
+  '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+specs(p)+
+  (p.desc?'<p class="desc full">'+esc(p.desc)+'</p>':'')+'</div>'+
+  '<div class="btns"><button class="btn" type="button" data-act="addcart-d" data-id="'+esc(p.id)+'"'+(p.soldOut?' disabled':'')+'>'+(p.soldOut?'Sold out':'Add to cart')+'</button>'+
+  (owner?'<button class="btn ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+
+  '<button class="btn ghost" type="button" data-act="close">Close</button></div>');
+  try{history.pushState({zc:1},'','#product');detailOpen=true}catch(e){}
 }
 function renderGrid(){
   var list=state.products.filter(function(p){
@@ -270,7 +301,10 @@ function renderAll(){renderBar();renderOwner();renderChips();renderGrid();render
 
 /* ---------- modal ---------- */
 function modal(html){$('#modal').innerHTML='<div class="ovl" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';document.body.style.overflow='hidden'}
-function closeModal(){$('#modal').innerHTML='';document.body.style.overflow='';editing=null}
+var detailOpen=false;
+function closeModalRaw(){$('#modal').innerHTML='';document.body.style.overflow='';editing=null}
+function closeModal(){if(detailOpen){detailOpen=false;try{history.back()}catch(e){}}closeModalRaw()}
+window.addEventListener('popstate',function(){if(detailOpen){detailOpen=false;closeModalRaw()}});
 function opts(list,sel){return list.map(function(u){return '<option'+(u===sel?' selected':'')+'>'+u+'</option>'}).join('')}
 
 function shrink(file,max,type,qual){return new Promise(function(res,rej){
@@ -281,8 +315,8 @@ function shrink(file,max,type,qual){return new Promise(function(res,rej){
     x.drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);res(c.toDataURL(type,qual))};
   img.onerror=function(){URL.revokeObjectURL(url);rej()};img.src=url})}
 
-function galHtml(){return editing.imgs.map(function(u,i){return '<div class="g"><img src="'+esc(u)+'" alt=""><button type="button" data-act="rmimg" data-i="'+i+'" aria-label="Remove photo '+(i+1)+'">x</button></div>'}).join('')}
-function refreshGal(){$('#gal').innerHTML=galHtml();$('#gcount').textContent=editing.imgs.length+' of 10 photos. The first photo is the main one.'}
+function galHtml(){return editing.imgs.map(function(u,i){return '<div class="g'+(i===0?' main':'')+'"><img src="'+esc(u)+'" alt=""><button type="button" class="rm" data-act="rmimg" data-i="'+i+'" aria-label="Remove photo '+(i+1)+'">x</button>'+(i===0?'<span class="mk on">MAIN</span>':'<button type="button" class="mk" data-act="mkmain" data-i="'+i+'">Make main</button>')+'</div>'}).join('')}
+function refreshGal(){$('#gal').innerHTML=galHtml();$('#gcount').textContent=editing.imgs.length+' of 10 photos. The photo marked MAIN is the one shown on the home page. Tap Make main under another photo to change it.'}
 function openProduct(id){
   var p=id?prod(id):null;
   editing={id:id||null,imgs:p?imgsOf(p).slice():[]};
@@ -418,8 +452,11 @@ document.addEventListener('click',function(e){
   else if(a==='edit')openProduct(id);
   else if(a==='settings')openSettings();
   else if(a==='publish')publish(b);
+  else if(a==='mkmain'){var mi=+b.dataset.i,mx=editing.imgs.splice(mi,1)[0];editing.imgs.unshift(mx);refreshGal()}
   else if(a==='rmimg'){editing.imgs.splice(+b.dataset.i,1);refreshGal()}
-  else if(a==='pic'){var cd=b.closest('.card');cd.querySelector('.pic img').src=b.querySelector('img').src;cd.querySelectorAll('.strip button').forEach(function(x){x.removeAttribute('aria-current')});b.setAttribute('aria-current','true')}
+  else if(a==='pic'){var bg=document.getElementById('dbig');if(bg){bg.src=b.querySelector('img').src;b.parentNode.querySelectorAll('button').forEach(function(x){x.removeAttribute('aria-current')});b.setAttribute('aria-current','true')}}
+  else if(a==='open')openDetail(id);
+  else if(a==='addcart-d'){cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();closeModal();toast('Added to cart')}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
   else if(a==='del'){
     if(b.dataset.armed){state.products=state.products.filter(function(p){return p.id!==id});delete cart[id];saveCart();dirty++;persist();closeModal();renderAll();toast('Deleted on this phone. Tap Publish to update customers.')}
@@ -445,7 +482,7 @@ document.addEventListener('change',function(e){
     Promise.all(fl.map(function(x){return shrink(x,640,'image/jpeg',.72).catch(function(){return null})})).then(function(r){r.forEach(function(u){if(u)editing.imgs.push(u)});refreshGal();t.value=''})}
   if(t.id==='limg'&&f){shrink(f,280,'image/png').then(function(u){editing.logo=u;$('#lth').innerHTML='<img src="'+esc(u)+'" alt="">'}).catch(function(){toast('That logo could not be read. Try a PNG or JPG.')})}
 });
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#welcome')){$('#welcome').remove();document.body.style.overflow=''}else if($('#ovl'))closeModal()}});
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.matches&&e.target.matches('.card[data-act=open]')){e.target.click();return}if(e.key==='Escape'){if($('#welcome')){$('#welcome').remove();document.body.style.overflow=''}else if($('#ovl'))closeModal()}});
 
 var ownerFlag=false;try{ownerFlag=localStorage.getItem('zc-owner')==='1'}catch(e){}
 if(location.hash==='#admin'){try{localStorage.setItem('zc-owner','1')}catch(e){}ownerFlag=true}
