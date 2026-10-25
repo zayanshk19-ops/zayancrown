@@ -170,7 +170,7 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
@@ -312,6 +312,8 @@ function openSettings(){
   '<div class="row"><label for="scur">Currency symbol<input id="scur" value="'+esc(s.currency)+'" maxlength="6"></label>'+
   '<label for="swa">WhatsApp number for orders<input id="swa" inputmode="tel" value="'+esc(s.whatsapp)+'" placeholder="03xx xxxxxxx"></label></div>'+
   '<p class="hint">Customers send their cart to this WhatsApp number. Use your own number, for example 0300 1234567.</p>'+
+  '<label for="sok">Order alert key (optional)<input id="sok" value="'+esc(s.orderKey||'')+'" placeholder="paste key from web3forms.com" autocomplete="off"></label>'+
+  '<p class="hint">With this key, every order is also emailed to you the moment a customer taps the order button. Get a free key at web3forms.com by entering your email.</p>'+
   '<h3 style="font-size:17px;margin-top:6px">Publish to your website</h3>'+
   '<label for="gtoken">GitHub token'+(ghGet().token?' (already saved, leave empty to keep it)':'')+'<input id="gtoken" type="password" autocomplete="off" placeholder="paste token here"></label>'+
   '<label for="grepo">GitHub repository<input id="grepo" value="'+esc(ghGet().repo||ghRepoGuess())+'" placeholder="username/zayancrown" autocomplete="off"></label>'+
@@ -323,7 +325,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.logo=editing.logo||'';
+  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.logo=editing.logo||'';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
@@ -335,6 +337,11 @@ function waLink(){
   var lines=cartItems().map(function(i){return '- '+i.p.name+' x '+i.qty+' = '+money(i.p.price*i.qty)});
   var msg='Hello '+s.name+', I would like to order:\n'+lines.join('\n')+'\nTotal: '+money(total())+'\n\nName: '+(cust.name||'-')+'\nPhone: '+(cust.phone||'-')+'\nAddress: '+(cust.addr||'-');
   return 'https://wa.me/'+n+'?text='+encodeURIComponent(msg);
+}
+function notifyOrder(){
+  var k=state.settings.orderKey;if(!k)return;
+  var lines=cartItems().map(function(i){return i.p.name+' x '+i.qty+' = '+money(i.p.price*i.qty)});
+  try{fetch('https://api.web3forms.com/submit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:k,subject:'New order - '+state.settings.name,from_name:cust.name,name:cust.name,phone:cust.phone,address:cust.addr,order:lines.join('\n'),total:money(total())})}).catch(function(){})}catch(x){}
 }
 function openCart(){
   var items=cartItems();
@@ -383,7 +390,7 @@ async function publish(btn){
 /* ---------- events ---------- */
 document.addEventListener('click',function(e){
   if(e.target.id==='ovl'){closeModal();return}
-  if(e.target.id==='wa'){if(!cust.name.trim()||!cust.addr.trim()){e.preventDefault();toast('Enter your name and delivery address first.')}return}
+  if(e.target.id==='wa'){if(!cust.name.trim()||!cust.phone.trim()||!cust.addr.trim()){e.preventDefault();toast('Enter your name, phone number and delivery address first.')}else notifyOrder();return}
   var b=e.target.closest('[data-act]');if(!b)return;
   var a=b.dataset.act,id=b.dataset.id;
   if(a==='cat'){cat=b.dataset.cat;renderChips();renderGrid()}
