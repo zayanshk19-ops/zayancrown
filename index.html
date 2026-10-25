@@ -161,10 +161,11 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to my website',tagline:'',whatsapp:'',currency:'Rs',logo:''},state.settings||{});
-state.products=state.products||[];
-var owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to my website',tagline:'',whatsapp:'',currency:'Rs',logo:''},state.settings||{});state.products=state.products||[]}
+norm();
+var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
+function persist(){try{localStorage.setItem('zc-draft',JSON.stringify({state:state,dirty:dirty}))}catch(e){toast('Phone storage is full. Tap Publish now so your products are saved online.')}}
 function saveCart(){try{localStorage.setItem('zc-cart',JSON.stringify(cart))}catch(e){}}
 function prod(id){return state.products.find(function(p){return p.id===id})}
 function imgsOf(p){return p.imgs&&p.imgs.length?p.imgs:(p.img?[p.img]:[])}
@@ -190,7 +191,7 @@ function renderOwner(){
   '<span class="tag">Owner mode</span>'+
   '<button class="btn sm" data-act="add">Add product</button>'+
   '<button class="btn sm ghost" data-act="settings">Store settings</button>'+
-  '<button class="btn sm" data-act="publish" '+(dirty?'':'disabled')+'>'+(dirty?'Download updated store ('+dirty+')':'Nothing to update')+'</button>'+
+  '<button class="btn sm" data-act="publish" '+(dirty?'':'disabled')+'>'+(dirty?'Publish changes ('+dirty+')':'Published')+'</button>'+
   '</div></div>';
 }
 function renderChips(){
@@ -225,9 +226,10 @@ function renderGrid(){
     if(q){var t=(p.name+' '+(p.category||'')+' '+(p.desc||'')).toLowerCase();if(t.indexOf(q.toLowerCase())<0)return false}
     return true});
   var g=$('#grid');
+  if(loading){g.innerHTML='<div class="empty"><p>Loading products...</p></div>';return}
   if(!state.products.length){
     g.innerHTML=owner?
-      '<div class="empty">'+CROWN+'<h3>Your store is ready for its first product</h3><p>Tap Add product, then enter the name, price, height, weight and a photo. When you are done, tap Download updated store and upload that file to your hosting so customers can see it.</p><button class="btn" data-act="add">Add your first product</button></div>':
+      '<div class="empty">'+CROWN+'<h3>Your store is ready for its first product</h3><p>Tap Add product, then enter the name, price, height, weight and a photo. When you are done, tap Publish changes so customers can see it.</p><button class="btn" data-act="add">Add your first product</button></div>':
       '<div class="empty">'+CROWN+'<h3>Products are coming soon</h3><p>This store is being set up. Please check back shortly.</p></div>';
     return}
   g.innerHTML=list.length?list.map(card).join(''):'<div class="empty"><h3>No matches</h3><p>Try a different word or choose another category.</p></div>';
@@ -237,7 +239,7 @@ function renderFab(){
   $('#fab').innerHTML=n?'<button class="btn" data-act="cart"><span>View cart ('+n+')</span><span>'+money(total())+'</span></button>':'';
 }
 function renderFoot(){
-  $('#foot').innerHTML=owner?'Owner mode. Your changes stay on this device until you download the store file and upload it to your hosting. <a href="#" data-act="exit">Exit owner mode</a>':(esc('© '+state.settings.name));
+  $('#foot').innerHTML=owner?'Owner mode. Your changes are saved on this phone. Tap Publish changes to show them to customers. <a href="#" data-act="exit">Exit owner mode</a>':(esc('© '+state.settings.name));
 }
 function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderFab();renderFoot()}
 
@@ -285,7 +287,7 @@ function saveProduct(){
     desc:$('#pdesc').value.trim(),imgs:editing.imgs,soldOut:$('#pso').checked};
   var i=state.products.findIndex(function(x){return x.id===p.id});
   if(i>=0)state.products[i]=p;else state.products.unshift(p);
-  dirty++;closeModal();renderAll();toast('Saved. Tap Download updated store, then upload the file to your hosting.');
+  dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 function openSettings(){
   var s=state.settings;editing={logo:s.logo||''};
@@ -298,13 +300,19 @@ function openSettings(){
   '<div class="row"><label for="scur">Currency symbol<input id="scur" value="'+esc(s.currency)+'" maxlength="6"></label>'+
   '<label for="swa">WhatsApp number for orders<input id="swa" inputmode="tel" value="'+esc(s.whatsapp)+'" placeholder="03xx xxxxxxx"></label></div>'+
   '<p class="hint">Customers send their cart to this WhatsApp number. Use your own number, for example 0300 1234567.</p>'+
+  '<h3 style="font-size:17px;margin-top:6px">Publish to your website</h3>'+
+  '<label for="gtoken">GitHub token'+(ghGet().token?' (already saved, leave empty to keep it)':'')+'<input id="gtoken" type="password" autocomplete="off" placeholder="paste token here"></label>'+
+  '<label for="grepo">GitHub repository<input id="grepo" value="'+esc(ghGet().repo||ghRepoGuess())+'" placeholder="username/zayancrown" autocomplete="off"></label>'+
+  '<p class="hint">Paste the token once. It stays on this phone only and is never put on your website.</p>'+
   '<div class="btns"><button class="btn" type="submit">Save settings</button><button class="btn ghost" type="button" data-act="close">Cancel</button></div></form>');
 }
 function saveSettings(){
+  var gc=ghGet(),tk=$('#gtoken').value.trim(),rp=$('#grepo').value.trim();
+  if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
   s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.logo=editing.logo||'';
-  dirty++;closeModal();renderAll();toast('Saved. Tap Download updated store, then upload the file to your hosting.');
+  dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
 /* ---------- cart ---------- */
@@ -338,10 +346,26 @@ function buildDoc(){
     '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="chips" id="chips"></div><div class="grid" id="grid"></div><p class="foot" id="foot"></p></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
-function publish(btn){
-  var blob=new Blob([buildDoc()],{type:'text/html'}),a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);a.download='index.html';document.body.appendChild(a);a.click();a.remove();
-  dirty=0;renderOwner();toast('Downloaded index.html. Upload it to your hosting to update the live store.');
+function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
+function ghRepoGuess(){var h=location.hostname;if(/\.github\.io$/.test(h)){var r=location.pathname.split('/')[1];return h.split('.')[0]+'/'+(r||h)}return ''}
+function b64(t){var b=new TextEncoder().encode(t),o='',i;for(i=0;i<b.length;i+=32768)o+=String.fromCharCode.apply(null,b.subarray(i,i+32768));return btoa(o)}
+async function ghPut(repo,token,path,text,retry){
+  var base='https://api.github.com/repos/'+repo+'/contents/',h={Authorization:'Bearer '+token,Accept:'application/vnd.github+json'};
+  var l;try{l=await fetch(base+'?ref=main&t='+Date.now(),{headers:h,cache:'no-store'})}catch(e){throw {code:'net'}}
+  if(!l.ok)throw {code:l.status};
+  var arr=await l.json(),f=Array.isArray(arr)?arr.find(function(x){return x.name===path}):null;
+  var body={message:'Update store',content:b64(text),branch:'main'};if(f)body.sha=f.sha;
+  var w;try{w=await fetch(base+path,{method:'PUT',headers:Object.assign({'Content-Type':'application/json'},h),body:JSON.stringify(body)})}catch(e){throw {code:'net'}}
+  if(!w.ok){if((w.status===409||w.status===422)&&!retry)return ghPut(repo,token,path,text,true);throw {code:w.status}}
+}
+async function publish(btn){
+  var c=ghGet(),repo=c.repo||ghRepoGuess();
+  if(!c.token||!repo){openSettings();toast('First paste your GitHub token at the bottom of Store settings.');return}
+  btn.disabled=true;btn.textContent='Publishing...';
+  try{await ghPut(repo,c.token,'store.json',JSON.stringify(state));dirty=0;persist();toast('Published. Customers will see the update in 1 to 2 minutes.')}
+  catch(err){var m=err&&err.code;
+    toast(m===401?'GitHub did not accept the token. Create a new token and paste it again.':(m===403||m===404)?'The token cannot write to "'+repo+'". Give it Contents: Read and write access to that repository.':m==='net'?'No internet. Try again.':'Could not publish ('+(m||'error')+'). Try again.')}
+  renderOwner();
 }
 
 /* ---------- events ---------- */
@@ -366,7 +390,7 @@ document.addEventListener('click',function(e){
   else if(a==='pic'){var cd=b.closest('.card');cd.querySelector('.pic img').src=b.querySelector('img').src;cd.querySelectorAll('.strip button').forEach(function(x){x.removeAttribute('aria-current')});b.setAttribute('aria-current','true')}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
   else if(a==='del'){
-    if(b.dataset.armed){state.products=state.products.filter(function(p){return p.id!==id});delete cart[id];saveCart();dirty++;closeModal();renderAll();toast('Deleted. Tap Download updated store, then upload the file to your hosting.')}
+    if(b.dataset.armed){state.products=state.products.filter(function(p){return p.id!==id});delete cart[id];saveCart();dirty++;persist();closeModal();renderAll();toast('Deleted on this phone. Tap Publish to update customers.')}
     else{b.dataset.armed='1';b.textContent='Tap again to delete'}}
 });
 document.addEventListener('submit',function(e){
@@ -391,20 +415,23 @@ document.addEventListener('change',function(e){
 });
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('#welcome')){$('#welcome').remove();document.body.style.overflow=''}else if($('#ovl'))closeModal()}});
 
-renderAll();
 var ownerFlag=false;try{ownerFlag=localStorage.getItem('zc-owner')==='1'}catch(e){}
 if(location.hash==='#admin'){try{localStorage.setItem('zc-owner','1')}catch(e){}ownerFlag=true}
-if(ownerFlag){owner=true;renderAll()}
-else{
+function showWelcome(){
+  if(ownerFlag)return;
   var seen=false;try{seen=sessionStorage.getItem('zc-welcome')==='1'}catch(e){}
-  if(!seen){
-    var w=document.createElement('div');w.className='wl';w.id='welcome';
-    w.innerHTML='<div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome">'+logoHtml()+'<span class="eyebrow">'+esc(state.settings.welcome||'Welcome to my website')+'</span><h2>'+esc(state.settings.name)+'</h2>'+(state.settings.tagline?'<p>'+esc(state.settings.tagline)+'</p>':'')+'<button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div>';
-    document.body.appendChild(w);document.body.style.overflow='hidden';
-    try{sessionStorage.setItem('zc-welcome','1')}catch(e){}
-    var wb=document.getElementById('wbtn');if(wb)wb.focus();
-  }
+  if(seen)return;
+  var w=document.createElement('div');w.className='wl';w.id='welcome';
+  w.innerHTML='<div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome">'+logoHtml()+'<span class="eyebrow">'+esc(state.settings.welcome||'Welcome to my website')+'</span><h2>'+esc(state.settings.name)+'</h2>'+(state.settings.tagline?'<p>'+esc(state.settings.tagline)+'</p>':'')+'<button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div>';
+  document.body.appendChild(w);document.body.style.overflow='hidden';
+  try{sessionStorage.setItem('zc-welcome','1')}catch(e){}
+  var wb=document.getElementById('wbtn');if(wb)wb.focus();
 }
+function remote(){return Promise.race([fetch('store.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}),new Promise(function(r){setTimeout(function(){r(null)},3000)})])}
+var draft=null;if(ownerFlag){try{draft=JSON.parse(localStorage.getItem('zc-draft')||'null')}catch(e){}}
+owner=ownerFlag;renderBar();renderOwner();
+if(draft&&draft.state){state=draft.state;norm();dirty=draft.dirty||0;loading=false;renderAll()}
+else{remote().then(function(r){if(r&&Array.isArray(r.products)){state=r;norm()}loading=false;renderAll();showWelcome()})}
 window.addEventListener('hashchange',function(){if(location.hash==='#admin'){owner=true;try{localStorage.setItem('zc-owner','1')}catch(e){}renderAll()}});
 })();
 </script>
