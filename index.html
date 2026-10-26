@@ -347,6 +347,14 @@ textarea{resize:vertical;min-height:70px}
 .dbar .btn.buy{background:#12A150;border-color:#12A150;color:#fff;font-weight:800;display:flex;justify-content:space-between;gap:10px;box-shadow:0 6px 18px rgba(18,161,80,.35)}
 .dbar .btn.buy:active{background:#0E8A43}
 .dbar .btn.more{flex:0 0 auto}
+
+/* undo helpers */
+.qs{display:flex;align-items:center;gap:2px;border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:2px;flex:0 0 auto}
+.qs button{width:40px;height:40px;border:0;background:#FFF1F3;color:var(--ink);border-radius:10px;font:800 20px/1 var(--body);cursor:pointer}
+.qs span{min-width:26px;text-align:center;font-weight:800}
+.fabw{display:flex;gap:8px;max-width:520px;margin:0 auto;pointer-events:auto;align-items:stretch}
+#fab .fabw .btn{flex:1;margin:0;width:auto}
+.fclr{flex:0 0 auto;width:48px;border:1.5px solid var(--line);background:#fff;color:#D0112B;border-radius:14px;font:700 26px/1 var(--body);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.18)}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -448,7 +456,7 @@ function card(p){
 function dbarHtml(p){
   var q=cart[p.id]||0,h='';
   if(p.soldOut)h='<button class="btn" type="button" disabled>Sold out</button>';
-  else if(q)h='<button class="btn buy" type="button" data-act="cart"><span>Buy now ('+count()+')</span><span>'+money(total())+'</span></button><button class="btn ghost more" type="button" data-act="addcart-d" data-id="'+esc(p.id)+'">+ Add more</button>';
+  else if(q)h='<button class="btn buy" type="button" data-act="cart"><span>Buy now ('+count()+')</span><span>'+money(total())+'</span></button><div class="qs"><button type="button" data-act="qminus" data-id="'+esc(p.id)+'" aria-label="Remove one">&minus;</button><span>'+q+'</span><button type="button" data-act="addcart-d" data-id="'+esc(p.id)+'" aria-label="Add one more">+</button></div>';
   else h='<button class="btn" type="button" data-act="addcart-d" data-id="'+esc(p.id)+'">Add to cart</button>';
   return h+(owner?'<button class="btn ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'');
 }
@@ -495,7 +503,7 @@ function renderGrid(){
 }
 function renderFab(){
   var n=count();
-  $('#fab').innerHTML=n?'<button class="btn" data-act="cart"><span>Buy now ('+n+')</span><span>'+money(total())+'</span></button>':'';
+  $('#fab').innerHTML=n?'<div class="fabw"><button class="fclr" type="button" data-act="clearcart" aria-label="Clear cart">&times;</button><button class="btn" data-act="cart"><span>Buy now ('+n+')</span><span>'+money(total())+'</span></button></div>':'';
 }
 var gaLoaded=false;
 function initAnalytics(){
@@ -754,6 +762,8 @@ document.addEventListener('click',function(e){
   else if(a==='zoomclose'){var zz=document.getElementById('zoom');if(zz)zz.remove()}
   else if(a==='smile'){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle');toast('Thank you for visiting!')}
   else if(a==='open')openDetail(id);
+  else if(a==='qminus'){var qp=prod(id);if(cart[id]){cart[id]--;if(!cart[id])delete cart[id]}saveCart();renderBar();renderFab();var qd=document.getElementById('dbar');if(qd&&qp)qd.innerHTML=dbarHtml(qp);toast(cart[id]?'Removed one':'Removed from cart')}
+  else if(a==='clearcart'){cart={};promoUsed=false;saveCart();renderBar();renderFab();toast('Cart cleared')}
   else if(a==='addcart-d'){var ap=prod(id);if(ap)track('add_to_cart',{currency:'PKR',value:ap.price,items:[gaItem(ap)]});cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();var db=document.getElementById('dbar');if(db&&ap)db.innerHTML=dbarHtml(ap);toast('Added to cart')}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
   else if(a==='del'){
