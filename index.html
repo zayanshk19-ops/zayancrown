@@ -214,9 +214,57 @@ textarea{resize:vertical;min-height:70px}
 .panel .strip button{width:48px;height:48px}
 .slide{aspect-ratio:4/5;max-height:68vh}
 .pic{aspect-ratio:4/5}
+
+.hero{position:relative}
+.hero h2{padding-right:76px}
+.smile{position:absolute;right:0;top:16px;width:60px;height:60px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.smile svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 3px 4px rgba(0,0,0,.18))}
+@media (prefers-reduced-motion:no-preference){
+.smile.pop{animation:spop .8s cubic-bezier(.3,1.6,.5,1) both,sbob 3.2s .8s ease-in-out infinite}
+.smile .eye{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
+.smile .mouth{transform-box:fill-box;transform-origin:center;animation:grin 3s ease-in-out infinite}
+.smile.wiggle svg{animation:wig .6s ease}
+@keyframes spop{from{transform:scale(0) rotate(-45deg);opacity:0}to{transform:none;opacity:1}}
+@keyframes sbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes grin{0%,100%{transform:scale(1)}50%{transform:scaleX(1.1) scaleY(1.25)}}
+@keyframes wig{0%{transform:rotate(0)}25%{transform:rotate(-18deg) scale(1.1)}60%{transform:rotate(14deg) scale(1.1)}100%{transform:rotate(0)}}
+}
+@media (min-width:900px){
+.wrap{padding-left:32px;padding-right:32px}
+.bar{padding-block:14px}
+.logo,.brand .crown{width:48px;height:48px}
+.bname{font-size:26px}
+.hero{padding-block:36px 10px}
+.hero h2{font-size:46px;max-width:20ch;padding-right:110px}
+.smile{width:92px;height:92px;top:34px}
+.sbar{max-width:640px}
+.grid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
+.card{transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(209,18,43,.14)}
+.card .pname{font-size:15px}
+.card .price{font-size:17px}
+.contact{max-width:640px}
+.ovl.full{align-items:center;justify-content:center;background:rgba(30,6,10,.6)}
+.ovl.full .panel{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:auto auto 1fr auto;column-gap:36px;row-gap:12px;width:min(1040px,94vw);height:min(92vh,860px);border-radius:18px;padding:20px 28px;overflow-y:auto;background:var(--surface)}
+.ovl.full .dtop{grid-column:1/-1;grid-row:1}
+.ovl.full .dpic{grid-column:1;grid-row:2}
+.ovl.full .strip{grid-column:1;grid-row:3;align-self:start}
+.ovl.full .dbody{grid-column:2;grid-row:2/4;align-content:start;gap:10px}
+.ovl.full .dbar{grid-column:2;grid-row:4;position:static;border-top:0;margin-top:0;padding-bottom:0}
+.slide{max-height:none}
+.dbody h3{font-size:28px}
+.dbody .price{font-size:30px}
+.dbody .old{font-size:15px}
+.dbody .cat{font-size:12px}
+.dbody .specs{font-size:15px}
+.desc.full{font-size:15px}
+.dbar .btn{font-size:16px;padding:13px 18px}
+.panel .strip button{width:60px;height:60px}
+}
 </style>
 <div class="wl" id="welcome"><div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome"><div id="wlogo"><svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg></div><h2 id="wtext">Welcome to Crown Zayan</h2><p id="wtag" hidden></p><button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div></div>
-<script>(function(){var w=document.getElementById('welcome');try{
+<script>(function(){var w=document.getElementById('welcome');window.__zcCrown=document.getElementById('wlogo').innerHTML;try{
 var seen=sessionStorage.getItem('zc-welcome')==='1';
 if(localStorage.getItem('zc-owner')==='1'||location.hash==='#admin'||seen){w.remove();return}
 sessionStorage.setItem('zc-welcome','1');
@@ -226,12 +274,14 @@ try{var b=JSON.parse(localStorage.getItem('zc-brand')||'null');if(b){
 if(b.welcome)document.getElementById('wtext').textContent=b.welcome;
 if(b.tagline){var t=document.getElementById('wtag');t.textContent=b.tagline;t.hidden=false}
 if(b.logo){var i=document.createElement('img');i.className='logo';i.alt='';i.src=b.logo;var l=document.getElementById('wlogo');l.textContent='';l.appendChild(i)}}}catch(e){}
+try{if(!b){var li=document.createElement('img');li.className='logo';li.alt='';li.onerror=function(){var l=document.getElementById('wlogo');if(l)l.innerHTML=window.__zcCrown};li.src='logo.png';var l2=document.getElementById('wlogo');l2.textContent='';l2.appendChild(li)}}catch(e){}
 setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();document.body.style.overflow=''}},5500);
 })();</script>
 <div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
 <main class="wrap">
   <section class="hero">
+    <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg></div>
     <h2 id="tag"></h2>
     <div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
   </section>
@@ -264,7 +314,7 @@ function cartItems(){var out=[];Object.keys(cart).forEach(function(id){var p=pro
 function count(){return cartItems().reduce(function(a,i){return a+i.qty},0)}
 function total(){return cartItems().reduce(function(a,i){return a+i.qty*i.p.price},0)}
 var tt;function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true},3600)}
-function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(state.settings.logo)+'" alt="">':CROWN}
+function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(state.settings.logo)+'" alt="">':(loading?'<img class="logo" src="logo.png" alt="" onerror="this.outerHTML=window.__zcCrown">':CROWN)}
 
 /* ---------- render ---------- */
 function renderBar(){
@@ -281,7 +331,7 @@ function renderOwner(){
   '<span class="tag">Owner mode</span>'+
   '<button class="btn sm" data-act="add">Add product</button>'+
   '<button class="btn sm ghost" data-act="settings">Store settings</button>'+
-  '<button class="btn sm" data-act="publish" '+(dirty?'':'disabled')+'>'+(dirty?'Publish changes ('+dirty+')':'Published')+'</button>'+
+  '<button class="btn sm" data-act="publish">'+(dirty?'Publish changes ('+dirty+')':'Publish')+'</button>'+
   '</div></div>';
 }
 function renderChips(){
@@ -445,7 +495,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.logo=editing.logo||'';
+  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
@@ -488,20 +538,25 @@ function buildDoc(){
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
 function ghRepoGuess(){var h=location.hostname;if(/\.github\.io$/.test(h)){var r=location.pathname.split('/')[1];return h.split('.')[0]+'/'+(r||h)}return ''}
 function b64(t){var b=new TextEncoder().encode(t),o='',i;for(i=0;i<b.length;i+=32768)o+=String.fromCharCode.apply(null,b.subarray(i,i+32768));return btoa(o)}
-async function ghPut(repo,token,path,text,retry){
-  var base='https://api.github.com/repos/'+repo+'/contents/',h={Authorization:'Bearer '+token,Accept:'application/vnd.github+json'};
-  var l;try{l=await fetch(base+'?ref=main&t='+Date.now(),{headers:h,cache:'no-store'})}catch(e){throw {code:'net'}}
-  if(!l.ok)throw {code:l.status};
-  var arr=await l.json(),f=Array.isArray(arr)?arr.find(function(x){return x.name===path}):null;
-  var body={message:'Update store',content:b64(text),branch:'main'};if(f)body.sha=f.sha;
-  var w;try{w=await fetch(base+path,{method:'PUT',headers:Object.assign({'Content-Type':'application/json'},h),body:JSON.stringify(body)})}catch(e){throw {code:'net'}}
-  if(!w.ok){if((w.status===409||w.status===422)&&!retry)return ghPut(repo,token,path,text,true);throw {code:w.status}}
+function ghHead(t){return {Authorization:'Bearer '+t,Accept:'application/vnd.github+json'}}
+async function ghList(repo,t){var l;try{l=await fetch('https://api.github.com/repos/'+repo+'/contents/?ref=main&t='+Date.now(),{headers:ghHead(t),cache:'no-store'})}catch(e){throw {code:'net'}}if(!l.ok)throw {code:l.status};var a=await l.json();return Array.isArray(a)?a:[]}
+async function ghWrite(repo,t,path,c64,sha,retry){
+  var body={message:'Update store',content:c64,branch:'main'};if(sha)body.sha=sha;
+  var w;try{w=await fetch('https://api.github.com/repos/'+repo+'/contents/'+path,{method:'PUT',headers:Object.assign({'Content-Type':'application/json'},ghHead(t)),body:JSON.stringify(body)})}catch(e){throw {code:'net'}}
+  if(!w.ok){if((w.status===409||w.status===422)&&!retry){var f=(await ghList(repo,t)).find(function(x){return x.name===path});return ghWrite(repo,t,path,c64,f&&f.sha,true)}throw {code:w.status}}
 }
+async function ghRemove(repo,t,path,sha){try{await fetch('https://api.github.com/repos/'+repo+'/contents/'+path,{method:'DELETE',headers:Object.assign({'Content-Type':'application/json'},ghHead(t)),body:JSON.stringify({message:'Remove logo',sha:sha,branch:'main'})})}catch(e){}}
 async function publish(btn){
   var c=ghGet(),repo=c.repo||ghRepoGuess();
   if(!c.token||!repo){openSettings();toast('First paste your GitHub token at the bottom of Store settings.');return}
   btn.disabled=true;btn.textContent='Publishing...';
-  try{await ghPut(repo,c.token,'store.json',JSON.stringify(state));dirty=0;persist();toast('Published. Customers will see the update in 1 to 2 minutes.')}
+  try{
+    var list=await ghList(repo,c.token),sj=list.find(function(x){return x.name==='store.json'}),lp=list.find(function(x){return x.name==='logo.png'});
+    await ghWrite(repo,c.token,'store.json',b64(JSON.stringify(state)),sj&&sj.sha);
+    var lg=state.settings.logo,pend=false;try{pend=localStorage.getItem('zc-logo-pending')==='1'}catch(e){}
+    if(lg&&/^data:image\/png;base64,/.test(lg)){if(pend||!lp){await ghWrite(repo,c.token,'logo.png',lg.split(',')[1],lp&&lp.sha);try{localStorage.removeItem('zc-logo-pending')}catch(e){}}}
+    else if(!lg&&lp){await ghRemove(repo,c.token,'logo.png',lp.sha);try{localStorage.removeItem('zc-logo-pending')}catch(e){}}
+    dirty=0;persist();toast('Published. Customers will see the update in 1 to 2 minutes.')}
   catch(err){var m=err&&err.code;
     toast(m===401?'GitHub did not accept the token. Create a new token and paste it again.':(m===403||m===404)?'The token cannot write to "'+repo+'". Give it Contents: Read and write access to that repository.':m==='net'?'No internet. Try again.':'Could not publish ('+(m||'error')+'). Try again.')}
   renderOwner();
@@ -530,6 +585,7 @@ document.addEventListener('click',function(e){
   else if(a==='pic'){var cr=document.getElementById('car');if(cr)cr.scrollTo({left:(+b.dataset.i)*cr.clientWidth,behavior:'smooth'})}
   else if(a==='zoom')openZoom(id,+b.dataset.i)
   else if(a==='zoomclose'){var zz=document.getElementById('zoom');if(zz)zz.remove()}
+  else if(a==='smile'){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle');toast('Thank you for visiting!')}
   else if(a==='open')openDetail(id);
   else if(a==='addcart-d'){var ap=prod(id);if(ap)track('add_to_cart',{currency:'PKR',value:ap.price,items:[gaItem(ap)]});cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();closeModal();toast('Added to cart')}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
@@ -557,6 +613,11 @@ document.addEventListener('change',function(e){
     Promise.all(fl.map(function(x){return shrink(x,640,'image/jpeg',.72).catch(function(){return null})})).then(function(r){r.forEach(function(u){if(u)editing.imgs.push(u)});refreshGal();t.value=''})}
   if(t.id==='limg'&&f){shrink(f,280,'image/png').then(function(u){editing.logo=u;$('#lth').innerHTML='<img src="'+esc(u)+'" alt="">'}).catch(function(){toast('That logo could not be read. Try a PNG or JPG.')})}
 });
+(function(){
+  function show(){var m=document.getElementById('smile');if(m&&m.hidden){m.hidden=false;m.classList.add('pop')}}
+  if(!document.getElementById('welcome'))show();
+  else new MutationObserver(function(r,o){if(!document.getElementById('welcome')){o.disconnect();setTimeout(show,250)}}).observe(document.body,{childList:true});
+})();
 document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.matches&&e.target.matches('.card[data-act=open]')){e.target.click();return}if(e.key==='Escape'){if($('#zoom')){$('#zoom').remove()}else if($('#welcome')){$('#welcome').remove();document.body.style.overflow=''}else if($('#ovl'))closeModal()}});
 
 var ownerFlag=false;try{ownerFlag=localStorage.getItem('zc-owner')==='1'}catch(e){}
@@ -575,6 +636,7 @@ if(draft&&draft.state){state=draft.state;norm();dirty=draft.dirty||0;loading=fal
 else{
   var cachedRaw=null,cached=null;try{cachedRaw=localStorage.getItem('zc-cache');cached=JSON.parse(cachedRaw||'null')}catch(e){}
   if(cached&&Array.isArray(cached.products)){state=cached;norm();loading=false;renderAll();updateWelcome();initAnalytics()}
+  else{renderGrid();renderFoot()}
   remote().then(function(r){
     if(r&&Array.isArray(r.products)){
       var raw=JSON.stringify(r);
