@@ -321,6 +321,12 @@ textarea{resize:vertical;min-height:70px}
 .ok{color:#0E7C46;font-weight:600;font-size:14px;margin:0 0 6px}
 .tot.sub{font-weight:500;font-size:15px;opacity:.8}
 .chk{display:flex;align-items:center;gap:8px}.chk input{width:auto}
+
+/* product counter */
+.pcount{color:#7B4A2B;font:600 15px/1.2 var(--body);margin:2px 2px 10px;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.pcount[hidden]{display:none}
+.pcount b{font:800 20px/1 var(--display,var(--body));color:#6B3A1E;margin-right:4px;display:inline-block;min-width:1ch}
+@media (min-width:900px){.pcount{font-size:17px}.pcount b{font-size:24px}}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -346,7 +352,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
     <div class="promo" id="promo" hidden></div>
     <div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
   </section>
-  <div class="chips" id="chips"></div>
+  <div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div>
   <div class="grid" id="grid"></div>
   <div class="foot" id="foot"></div>
 </main>
@@ -496,7 +502,32 @@ function renderFoot(){
   c+=socialHtml(st);
   $('#foot').innerHTML=c+(owner?'<p>Owner mode. Your changes are saved on this phone. Tap Publish changes to show them to customers. <a href="#" data-act="exit">Exit owner mode</a></p>':'<p>'+esc('© '+st.name)+'</p>');
 }
-function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderFab();renderFoot()}
+var shownCount=-1,countRaf=0;
+function renderCount(){
+  var el=$('#pcount');if(!el)return;
+  var n=(state.products||[]).length;
+  if(loading||!n){el.hidden=true;shownCount=-1;return}
+  el.hidden=false;
+  var word=n===1?' product':' products';
+  if(n===shownCount)return;
+  var from=shownCount<0?0:shownCount;shownCount=n;
+  var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+  cancelAnimationFrame(countRaf);
+  if(reduce||from===n){el.innerHTML='<b>'+n+'</b>'+word;return}
+  var dur=Math.min(500+n*40,1500),t0=null;
+  function step(t){
+    if(t0===null)t0=t;
+    var k=Math.min((t-t0)/dur,1),e=1-Math.pow(1-k,3),v=Math.round(from+(n-from)*e);
+    el.innerHTML='<b>'+v+'</b>'+(v===1?' product':' products');
+    if(k<1)countRaf=requestAnimationFrame(step);else el.innerHTML='<b>'+n+'</b>'+word;
+  }
+  var go=function(){countRaf=requestAnimationFrame(step)};
+  if(document.getElementById('welcome')){
+    el.innerHTML='<b>'+from+'</b>'+(from===1?' product':' products');
+    var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);go()}},120);
+  }else go();
+}
+function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
 
 /* ---------- modal ---------- */
 function modal(html,cls){$('#modal').innerHTML='<div class="ovl'+(cls?' '+cls:'')+'" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';document.body.style.overflow='hidden'}
@@ -624,7 +655,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -729,7 +760,7 @@ if(draft&&draft.state){state=draft.state;norm();dirty=draft.dirty||0;loading=fal
 else{
   var cachedRaw=null,cached=null;try{cachedRaw=localStorage.getItem('zc-cache');cached=JSON.parse(cachedRaw||'null')}catch(e){}
   if(cached&&Array.isArray(cached.products)){state=cached;norm();loading=false;renderAll();updateWelcome();initAnalytics()}
-  else{renderGrid();renderFoot()}
+  else{renderGrid();renderCount();renderFoot()}
   remote().then(function(r){
     if(r&&Array.isArray(r.products)){
       var raw=JSON.stringify(r);
