@@ -287,6 +287,11 @@ textarea{resize:vertical;min-height:70px}
 .card .price{font-size:18px}
 }
 @media (min-width:1500px){.wrap{max-width:1360px}.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
+.social{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;color:var(--ink)}
+.social b{margin-right:4px}
+.foot .social a{color:var(--brand);border:1.5px solid var(--brand);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:13px;text-decoration:none}
+.foot .social a:hover{background:var(--brand);color:var(--brand-ink)}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -327,7 +332,7 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
@@ -438,9 +443,16 @@ function initAnalytics(){
 function track(name,params){if(gaLoaded&&window.gtag){try{window.gtag('event',name,params||{})}catch(e){}}}
 function gaItem(p,q){return {item_id:p.id,item_name:p.name,item_category:p.category||'',price:p.price,quantity:q||1}}
 function waNum(x){var n=String(x||'').replace(/\D/g,'');if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='92'+n.slice(1);return n}
+function cleanUrl(v){v=String(v||'').trim();if(!v)return '';if(!/^https?:\/\//i.test(v))v='https://'+v;try{var u=new URL(v);return /^https?:$/.test(u.protocol)&&u.hostname.indexOf('.')>0?u.href:''}catch(e){return ''}}
+function socialHtml(st){
+  var items=[['Facebook',st.fb],['Instagram',st.ig],['TikTok',st.tt],['YouTube',st.yt]].filter(function(x){return x[1]});
+  if(!items.length)return '';
+  return '<div class="social"><b>Follow us</b>'+items.map(function(x){return '<a href="'+esc(x[1])+'" target="_blank" rel="noopener noreferrer">'+x[0]+'</a>'}).join('')+'</div>';
+}
 function renderFoot(){
   var st=state.settings;
   var c='<div class="contact"><div><b>Contact us on WhatsApp</b><span>All Pakistan delivery</span></div><a class="btn" target="_blank" rel="noopener" href="https://wa.me/'+waNum(st.whatsapp)+'">'+esc(st.whatsapp)+'</a></div>';
+  c+=socialHtml(st);
   $('#foot').innerHTML=c+(owner?'<p>Owner mode. Your changes are saved on this phone. Tap Publish changes to show them to customers. <a href="#" data-act="exit">Exit owner mode</a></p>':'<p>'+esc('© '+st.name)+'</p>');
 }
 function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderFab();renderFoot()}
@@ -509,6 +521,12 @@ function openSettings(){
   '<p class="hint">With this key, every order is also emailed to you the moment a customer taps the order button. Get a free key at web3forms.com by entering your email.</p>'+
   '<label for="sga">Google Analytics ID (optional)<input id="sga" value="'+esc(s.gaId||'')+'" placeholder="G-XXXXXXXXXX" autocomplete="off"></label>'+
   '<p class="hint">Shows you how many people visit, view products and tap order. Only you can see it, in your Google Analytics account.</p>'+
+  '<h3 style="font-size:17px;margin-top:6px">Social media links</h3>'+
+  '<label for="sfb">Facebook page<input id="sfb" inputmode="url" value="'+esc(s.fb||'')+'" placeholder="facebook.com/yourpage" autocomplete="off" autocapitalize="none"></label>'+
+  '<label for="sig">Instagram<input id="sig" inputmode="url" value="'+esc(s.ig||'')+'" placeholder="instagram.com/yourname" autocomplete="off" autocapitalize="none"></label>'+
+  '<label for="stt">TikTok<input id="stt" inputmode="url" value="'+esc(s.tt||'')+'" placeholder="tiktok.com/@yourname" autocomplete="off" autocapitalize="none"></label>'+
+  '<label for="syt">YouTube<input id="syt" inputmode="url" value="'+esc(s.yt||'')+'" placeholder="youtube.com/@yourchannel" autocomplete="off" autocapitalize="none"></label>'+
+  '<p class="hint">Leave a box empty to hide that button. The buttons show at the bottom of your store.</p>'+
   '<h3 style="font-size:17px;margin-top:6px">Publish to your website</h3>'+
   '<label for="gtoken">GitHub token'+(ghGet().token?' (already saved, leave empty to keep it)':'')+'<input id="gtoken" type="password" autocomplete="off" placeholder="paste token here"></label>'+
   '<label for="grepo">GitHub repository<input id="grepo" value="'+esc(ghGet().repo||ghRepoGuess())+'" placeholder="username/zayancrown" autocomplete="off"></label>'+
@@ -521,7 +539,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';
+  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
