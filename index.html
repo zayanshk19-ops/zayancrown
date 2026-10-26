@@ -4,7 +4,7 @@
 <style id="sheet">
 /* Layout: sticky brand bar, compact search band, 2-col product grid on phones; owner tools live in a bar above the grid. */
 :root{
-  --bg:#FFFFFF; --surface:#FFFFFF; --ink:#2A0A0F; --muted:#7A5A5E; --line:#F1D5D8;
+  --bg:#FFF5F6; --surface:#FFFFFF; --ink:#2A0A0F; --muted:#7A5A5E; --line:#F1D5D8;
   --brand:#D1122B; --brand-ink:#FFFFFF; --gold:#F2B705; --tint:#FDECEE; --danger:#9B0F20; --sale:#B00020;
   --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
   --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -271,6 +271,22 @@ textarea{resize:vertical;min-height:70px}
 .scap{font-size:10px;padding:3px 8px}
 .hero h2{padding-right:98px}
 @media (min-width:900px){.scap{font-size:13px;padding:5px 14px}.hero h2{max-width:none;padding-right:200px}}
+
+/* product boxes */
+.grid{gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px;gap:6px;box-shadow:0 2px 10px rgba(209,18,43,.08)}
+.card .pic{border-radius:11px;overflow:hidden}
+.card .cbody{padding:4px 6px 8px}
+@media (min-width:900px){
+.wrap{max-width:1240px}
+.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px;padding-bottom:140px}
+.card{padding:10px;border-radius:18px;box-shadow:0 3px 14px rgba(209,18,43,.09)}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(209,18,43,.18)}
+.card .cbody{padding:6px 8px 10px;gap:6px}
+.card .pname{font-size:16px}
+.card .price{font-size:18px}
+}
+@media (min-width:1500px){.wrap{max-width:1360px}.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
