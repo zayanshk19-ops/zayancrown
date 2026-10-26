@@ -307,6 +307,20 @@ textarea{resize:vertical;min-height:70px}
 /* tagline: black text, soft shadow, no banner */
 .hero h2{background:none;border-radius:0;padding-block:0;padding-left:0;width:auto;color:#111;-webkit-text-stroke:0;text-shadow:0 2px 4px rgba(0,0,0,.28),0 1px 1px rgba(0,0,0,.18)}
 @media (min-width:900px){.hero h2{padding:0 200px 0 0;width:auto}}
+
+/* discount bar */
+.promo{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:2px dashed var(--red,#D0112B);color:#111;border-radius:12px;padding:9px 12px;font-weight:600;font-size:14px;margin-top:2px}
+.promo[hidden]{display:none}
+.promo .pk{background:var(--red,#D0112B);color:#fff;border-radius:8px;padding:4px 9px;font-weight:800;letter-spacing:.02em}
+.promo b{letter-spacing:.08em;color:var(--red,#D0112B)}
+@media (min-width:900px){.promo{font-size:16px;width:calc(100% - 210px)}}
+@media (max-width:899px){.promo{width:calc(100% - 104px);font-size:13px}}
+.pcode{display:flex;gap:8px;margin:8px 0}
+.pcode input{flex:1;min-width:0;text-transform:uppercase}
+.pcode .btn{width:auto;padding-inline:16px}
+.ok{color:#0E7C46;font-weight:600;font-size:14px;margin:0 0 6px}
+.tot.sub{font-weight:500;font-size:15px;opacity:.8}
+.chk{display:flex;align-items:center;gap:8px}.chk input{width:auto}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -329,6 +343,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
   <section class="hero">
     <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face: Buy and Enjoy" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg><span class="scap">Buy and Enjoy</span></div>
     <h2 id="tag"></h2>
+    <div class="promo" id="promo" hidden></div>
     <div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
   </section>
   <div class="chips" id="chips"></div>
@@ -347,7 +362,7 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',promoCode:'',promoPct:20,promoOn:true,fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
@@ -358,7 +373,12 @@ function imgsOf(p){return p.imgs&&p.imgs.length?p.imgs:(p.img?[p.img]:[])}
 function money(n){return state.settings.currency+' '+Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2})}
 function cartItems(){var out=[];Object.keys(cart).forEach(function(id){var p=prod(id);if(p&&!p.soldOut&&cart[id]>0)out.push({p:p,qty:cart[id]})});return out}
 function count(){return cartItems().reduce(function(a,i){return a+i.qty},0)}
-function total(){return cartItems().reduce(function(a,i){return a+i.qty*i.p.price},0)}
+function subtotal(){return cartItems().reduce(function(a,i){return a+i.qty*i.p.price},0)}
+var promoUsed=false;
+function promoOk(){var st=state.settings;return !!(st.promoOn!==false&&(st.promoCode||'').trim()&&+st.promoPct>0)}
+function discount(){return promoUsed&&promoOk()?Math.round(subtotal()*Math.min(+state.settings.promoPct,90)/100):0}
+function total(){return Math.max(subtotal()-discount(),0)}
+function renderPromo(){var b=$('#promo');if(!b)return;var st=state.settings;if(!promoOk()){b.hidden=true;return}b.hidden=false;b.innerHTML='<span class="pk">'+(+st.promoPct)+'% OFF</span><span>Use code <b>'+esc(st.promoCode.trim().toUpperCase())+'</b> at checkout</span>'}
 var tt;function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true},3600)}
 function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(state.settings.logo)+'" alt="">':(loading?'<img class="logo" src="logo.png" alt="" onerror="this.outerHTML=window.__zcCrown">':CROWN)}
 
@@ -368,6 +388,7 @@ function renderBar(){
   '<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button>';
   $('#tag').textContent=state.settings.tagline||'';
   $('#tag').hidden=!state.settings.tagline;
+  renderPromo();
 }
 function renderOwner(){
   var ab=document.querySelector('.addbtn');if(ab)ab.hidden=!owner;
@@ -541,6 +562,11 @@ function openSettings(){
   '<p class="hint">With this key, every order is also emailed to you the moment a customer taps the order button. Get a free key at web3forms.com by entering your email.</p>'+
   '<label for="sga">Google Analytics ID (optional)<input id="sga" value="'+esc(s.gaId||'')+'" placeholder="G-XXXXXXXXXX" autocomplete="off"></label>'+
   '<p class="hint">Shows you how many people visit, view products and tap order. Only you can see it, in your Google Analytics account.</p>'+
+  '<h3 style="font-size:17px;margin-top:6px">Discount offer</h3>'+
+  '<div class="row"><label for="spc">Discount code<input id="spc" value="'+esc(s.promoCode||'')+'" placeholder="e.g. CROWN20" maxlength="20" autocomplete="off" autocapitalize="characters"></label>'+
+  '<label for="spp">Discount %<input id="spp" inputmode="numeric" value="'+esc(String(s.promoPct==null?20:s.promoPct))+'" maxlength="2"></label></div>'+
+  '<label class="chk" for="spo"><input type="checkbox" id="spo"'+(s.promoOn!==false?' checked':'')+'> Show the offer bar to customers</label>'+
+  '<p class="hint">The bar appears under the tagline. Customers type the code in their cart to get the discount. Leave the code empty to hide it.</p>'+
   '<h3 style="font-size:17px;margin-top:6px">Social media links</h3>'+
   '<label for="sfb">Facebook page<input id="sfb" inputmode="url" value="'+esc(s.fb||'')+'" placeholder="facebook.com/yourpage" autocomplete="off" autocapitalize="none"></label>'+
   '<label for="sig">Instagram<input id="sig" inputmode="url" value="'+esc(s.ig||'')+'" placeholder="instagram.com/yourname" autocomplete="off" autocapitalize="none"></label>'+
@@ -559,7 +585,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';
+  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.promoPct=Math.min(Math.max(parseInt($('#spp').value,10)||20,1),90);s.promoOn=$('#spo').checked;promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
@@ -569,19 +595,21 @@ function waLink(){
   if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='92'+n.slice(1);
   if(!n)return '';
   var lines=cartItems().map(function(i){return '- '+i.p.name+' x '+i.qty+' = '+money(i.p.price*i.qty)});
-  var msg='Hello '+s.name+', I would like to order:\n'+lines.join('\n')+'\nTotal: '+money(total())+'\n\nName: '+(cust.name||'-')+'\nPhone: '+(cust.phone||'-')+'\nAddress: '+(cust.addr||'-');
+  var msg='Hello '+s.name+', I would like to order:\n'+lines.join('\n')+(discount()?'\nSubtotal: '+money(subtotal())+'\nDiscount ('+state.settings.promoCode.trim().toUpperCase()+' '+(+state.settings.promoPct)+'%): -'+money(discount()):'')+'\nTotal: '+money(total())+'\n\nName: '+(cust.name||'-')+'\nPhone: '+(cust.phone||'-')+'\nAddress: '+(cust.addr||'-');
   return 'https://wa.me/'+n+'?text='+encodeURIComponent(msg);
 }
 function notifyOrder(){
   var k=state.settings.orderKey;if(!k)return;
   var lines=cartItems().map(function(i){return i.p.name+' x '+i.qty+' = '+money(i.p.price*i.qty)});
-  try{fetch('https://api.web3forms.com/submit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:k,subject:'New order - '+state.settings.name,from_name:cust.name,name:cust.name,phone:cust.phone,address:cust.addr,order:lines.join('\n'),total:money(total())})}).catch(function(){})}catch(x){}
+  try{fetch('https://api.web3forms.com/submit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:k,subject:'New order - '+state.settings.name,from_name:cust.name,name:cust.name,phone:cust.phone,address:cust.addr,order:lines.join('\n'),promo:discount()?state.settings.promoCode.trim().toUpperCase()+' -'+money(discount()):'none',total:money(total())})}).catch(function(){})}catch(x){}
 }
 function openCart(){
   var items=cartItems();
   if(!items.length){modal('<h3>Your cart</h3><div class="empty"><p>Your cart is empty. Add something you like.</p></div><button class="btn ghost" data-act="close">Keep shopping</button>');return}
   var hasWa=!!waLink();
   modal('<h3>Your cart</h3><div>'+items.map(function(i){return '<div class="line"><span class="n">'+esc(i.p.name)+'</span><div class="qty"><button data-act="dec" data-id="'+esc(i.p.id)+'" aria-label="Fewer">-</button><span>'+i.qty+'</span><button data-act="inc" data-id="'+esc(i.p.id)+'" aria-label="More">+</button></div><span class="s">'+money(i.p.price)+' each = '+money(i.p.price*i.qty)+'</span></div>'}).join('')+'</div>'+
+  (promoOk()?'<div class="pcode"><input id="pcin" placeholder="Discount code" autocomplete="off" autocapitalize="characters" value="'+(promoUsed?esc(state.settings.promoCode.trim().toUpperCase()):'')+'"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div>'+(promoUsed?'<p class="ok">Code applied. You save '+money(discount())+'.</p>':'')+'<p class="err" id="pcerr" hidden>That code is not correct.</p>':'')+
+  (discount()?'<div class="tot sub"><span>Subtotal</span><span>'+money(subtotal())+'</span></div><div class="tot sub"><span>Discount</span><span>-'+money(discount())+'</span></div>':'')+
   '<div class="tot"><span>Total</span><span>'+money(total())+'</span></div>'+
   '<label for="cn">Your name<input id="cn" value="'+esc(cust.name)+'" autocomplete="name"></label>'+
   '<label for="cp">Phone number<input id="cp" inputmode="tel" value="'+esc(cust.phone)+'" autocomplete="tel"></label>'+
@@ -596,7 +624,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -635,6 +663,7 @@ document.addEventListener('click',function(e){
   if(a==='cat'){cat=b.dataset.cat;renderChips();renderGrid()}
   else if(a==='addcart'){cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();toast('Added to cart')}
   else if(a==='cart')openCart();
+  else if(a==='applypromo'){if(promoUsed){promoUsed=false;renderFab();openCart()}else{var v=($('#pcin').value||'').trim().toUpperCase();if(v&&v===state.settings.promoCode.trim().toUpperCase()){promoUsed=true;renderFab();openCart();track('select_promotion',{promotion_id:v})}else{var er=$('#pcerr');if(er)er.hidden=false}}}
   else if(a==='inc'||a==='dec'){cart[id]=Math.max(0,(cart[id]||0)+(a==='inc'?1:-1));if(!cart[id])delete cart[id];saveCart();renderBar();renderFab();openCart()}
   else if(a==='close')closeModal();
   else if(a==='add')openProduct();
