@@ -262,9 +262,20 @@ textarea{resize:vertical;min-height:70px}
 .dbar .btn{font-size:16px;padding:13px 18px}
 .panel .strip button{width:60px;height:60px}
 }
+
+.smile{width:auto;height:auto;display:grid;justify-items:center;gap:4px}
+.smile svg{width:60px;height:60px}
+.scap{font:700 11px/1 var(--body);letter-spacing:.05em;text-transform:uppercase;color:var(--brand);white-space:nowrap;background:var(--tint);padding:4px 9px;border-radius:999px}
+.hero h2{padding-right:104px}
+@media (min-width:900px){.smile svg{width:92px;height:92px}.scap{font-size:13px;padding:5px 14px}.hero h2{padding-right:170px}}
+.scap{font-size:10px;padding:3px 8px}
+.hero h2{padding-right:98px}
+@media (min-width:900px){.scap{font-size:13px;padding:5px 14px}.hero h2{max-width:none;padding-right:200px}}
 </style>
-<div class="wl" id="welcome"><div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome"><div id="wlogo"><svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg></div><h2 id="wtext">Welcome to Crown Zayan</h2><p id="wtag" hidden></p><button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div></div>
-<script>(function(){var w=document.getElementById('welcome');window.__zcCrown=document.getElementById('wlogo').innerHTML;try{
+<link rel="preload" as="image" href="logo.png">
+<script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
+<div class="wl" id="welcome"><div class="wlbox" role="dialog" aria-modal="true" aria-label="Welcome"><div id="wlogo"><img class="logo" id="wli" src="logo.png" alt="" style="visibility:hidden" onload="this.style.visibility='visible'" onerror="this.outerHTML=window.__zcCrown"></div><h2 id="wtext">Welcome to Crown Zayan</h2><p id="wtag" hidden></p><button class="btn" type="button" data-act="welcome" id="wbtn">Start shopping</button></div></div>
+<script>(function(){var w=document.getElementById('welcome');try{
 var seen=sessionStorage.getItem('zc-welcome')==='1';
 if(localStorage.getItem('zc-owner')==='1'||location.hash==='#admin'||seen){w.remove();return}
 sessionStorage.setItem('zc-welcome','1');
@@ -273,15 +284,14 @@ document.body.style.overflow='hidden';
 try{var b=JSON.parse(localStorage.getItem('zc-brand')||'null');if(b){
 if(b.welcome)document.getElementById('wtext').textContent=b.welcome;
 if(b.tagline){var t=document.getElementById('wtag');t.textContent=b.tagline;t.hidden=false}
-if(b.logo){var i=document.createElement('img');i.className='logo';i.alt='';i.src=b.logo;var l=document.getElementById('wlogo');l.textContent='';l.appendChild(i)}}}catch(e){}
-try{if(!b){var li=document.createElement('img');li.className='logo';li.alt='';li.onerror=function(){var l=document.getElementById('wlogo');if(l)l.innerHTML=window.__zcCrown};li.src='logo.png';var l2=document.getElementById('wlogo');l2.textContent='';l2.appendChild(li)}}catch(e){}
+var im=document.getElementById('wli');if(b.logo){if(im){im.src=b.logo;im.style.visibility='visible'}}else{var l=document.getElementById('wlogo');if(l)l.innerHTML=window.__zcCrown}}}catch(e){}
 setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();document.body.style.overflow=''}},5500);
 })();</script>
 <div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
 <main class="wrap">
   <section class="hero">
-    <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg></div>
+    <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face: Buy and Enjoy" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg><span class="scap">Buy and Enjoy</span></div>
     <h2 id="tag"></h2>
     <div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
   </section>
