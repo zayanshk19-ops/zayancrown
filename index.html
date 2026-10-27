@@ -511,6 +511,33 @@ i.otime{font-style:normal;background:none;padding:0;color:#FFE680;-webkit-text-s
 .mblack{background:#111;border-color:#111;color:#fff}
 .mblack:active{background:#000}
 .linkb{border:0;background:none;color:#111;font:700 14px/1.2 var(--body);text-decoration:underline;padding:6px 0;cursor:pointer;text-align:left}
+
+/* wishlist page */
+.ovl.wishpg{align-items:stretch;background:var(--bg)}
+.ovl.wishpg .panel{max-width:none;height:100%;max-height:none;border-radius:0;align-content:start;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+@media (min-width:900px){.ovl.wishpg{align-items:center;justify-content:center;background:rgba(30,6,10,.6)}.ovl.wishpg .panel{width:min(980px,94vw);height:min(90vh,820px);border-radius:18px}}
+.whead{display:flex;align-items:center;gap:12px}.whead h3{margin:0}
+.wtabs{display:flex;gap:8px}
+.wt{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px;font:700 14px/1 var(--body);cursor:pointer;color:var(--ink)}
+.wt.on{background:#111;color:#fff;border-color:#111}
+.wgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:640px){.wgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:900px){.wgrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.wcard{position:relative;border:2px solid var(--line);border-radius:14px;background:#fff;padding:8px;display:grid;gap:4px;align-content:start;cursor:pointer;transition:border-color .2s,background .2s}
+.wcard.on{border-color:#D0112B;background:#FFF1F3}
+.wimg{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--tint);display:grid;place-items:center}
+.wimg img{width:100%;height:100%;object-fit:cover;display:block}
+.wimg>svg{width:40%}
+.wh{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.96);display:grid;place-items:center;color:#555;box-shadow:0 2px 6px rgba(0,0,0,.22)}
+.wh svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.wcard.on .wh{color:#D0112B}.wcard.on .wh svg{fill:currentColor}
+.wnm{font:700 13px/1.25 var(--body);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.wpr{color:var(--brand);font-weight:800;font-size:14px}
+.wview{border:0;background:none;color:#111;text-decoration:underline;font:700 12px/1.2 var(--body);text-align:left;padding:2px 0;cursor:pointer}
+/* 100% line and black line */
+.kws{text-align:center;font:400 12.5px/1.3 var(--body);color:#8a8a8a;letter-spacing:.02em;margin:0 0 6px}
+.kws b{font-weight:600;color:#6b6b6b;display:inline-block;min-width:2.1ch;text-align:right;font-variant-numeric:tabular-nums}
+.blkline{height:3px;background:#111;border-radius:3px;margin:20px 0 14px}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -535,7 +562,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
     <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face: Buy and Enjoy" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg><span class="scap">Buy and Enjoy</span></div>
     <h2 id="tag"></h2>
     <div class="promo" id="promo" hidden></div>
-    <div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
+    <div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="kws" id="kws"><b id="kwn">100</b>% best experience when you use.</div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
   </section>
   <div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div>
   <div class="grid" id="grid"></div>
@@ -727,7 +754,7 @@ function socialHtml(st){
 }
 function renderFoot(){
   var st=state.settings;
-  var c='<div class="contact"><div><b>Contact us on WhatsApp</b><span>All Pakistan delivery</span></div><a class="btn" target="_blank" rel="noopener" href="https://wa.me/'+waNum(st.whatsapp)+'">'+esc(st.whatsapp)+'</a></div>';
+  var c='<div class="blkline"></div><div class="contact"><div><b>Contact us on WhatsApp</b><span>All Pakistan delivery</span></div><a class="btn" target="_blank" rel="noopener" href="https://wa.me/'+waNum(st.whatsapp)+'">'+esc(st.whatsapp)+'</a></div>';
   c+=socialHtml(st);
   $('#foot').innerHTML=c+(owner?'<p>Owner mode. Your changes are saved on this phone. Tap Publish changes to show them to customers. <a href="#" data-act="exit">Exit owner mode</a></p>':'<p>'+esc('© '+st.name)+'</p>');
 }
@@ -757,7 +784,8 @@ function renderCount(){
   }else go();
 }
 
-onWelcomeGone(function(){var e=document.getElementById('opbox');if(e)e.classList.add('go');renderOffer(true)});
+(function(){var n=document.getElementById('kwn');if(n&&document.getElementById('welcome'))n.textContent='1'})();
+onWelcomeGone(function(){var e=document.getElementById('opbox');if(e)e.classList.add('go');renderOffer(true);kwCount()});
 /* ---------- install as app ---------- */
 var instEv=null;
 function isIos(){try{return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream}catch(e){return false}}
@@ -814,7 +842,7 @@ var wish=[];try{wish=JSON.parse(localStorage.getItem('zc-wish')||'[]');if(!Array
 function isWish(id){return wish.indexOf(id)>-1}
 function saveWish(){try{localStorage.setItem('zc-wish',JSON.stringify(wish))}catch(e){}}
 function heartHtml(id,inl){return '<button type="button" class="heart'+(inl?' inl':'')+(isWish(id)?' on':'')+'" data-act="wish" data-id="'+esc(id)+'" aria-label="Save to wishlist">'+HEARTSVG+'</button>'}
-function refreshHearts(){Array.prototype.forEach.call(document.querySelectorAll('[data-act=wish]'),function(h){h.classList.toggle('on',isWish(h.dataset.id))})}
+function refreshHearts(){Array.prototype.forEach.call(document.querySelectorAll('[data-act=wish]'),function(h){h.classList.toggle('on',isWish(h.dataset.id))});var wc=document.getElementById('wcount');if(wc)wc.textContent=wishItems().length}
 function getUser(){try{var u=JSON.parse(localStorage.getItem('zc-user')||'null');return u&&u.name?u:null}catch(e){return null}}
 (function(){var u=getUser();if(u){cust.name=cust.name||u.name}})();
 function wishItems(){return wish.map(function(id){return prod(id)}).filter(Boolean)}
@@ -825,9 +853,17 @@ function openMenu(){
     '<button class="dlink" type="button" data-act="mywish">'+HEARTSVG+'<span>My wishlist</span><i class="mc">'+n+'</i></button>'+
     (u?'<button class="dlink" type="button" data-act="signout"><span>Sign out</span></button>':'<button class="btn block mblack" type="button" data-act="signin">Sign in</button>'),'drawer');
 }
+var wishOnly=false;
+function wcardHtml(p){
+  var im=imgsOf(p),on=isWish(p.id);
+  return '<div class="wcard'+(on?' on':'')+'" data-act="wish" data-id="'+esc(p.id)+'" role="button" tabindex="0" aria-label="Save '+esc(p.name)+' to wishlist"><div class="wimg">'+(im.length?'<img src="'+esc(im[0])+'" alt="" loading="lazy">':CROWN)+'<span class="wh">'+HEARTSVG+'</span></div><div class="wnm">'+esc(p.name)+'</div><div class="wpr">'+money(p.price)+'</div><button type="button" class="wview" data-act="open" data-id="'+esc(p.id)+'">View product</button></div>';
+}
 function openWish(){
-  var items=wishItems();
-  modal('<h3>My wishlist</h3><div id="wlist">'+(items.length?items.map(function(p){var im=imgsOf(p);return '<div class="wrow" data-act="open" data-id="'+esc(p.id)+'"><div class="wth">'+(im.length?'<img src="'+esc(im[0])+'" alt="">':CROWN)+'</div><div class="wmid"><b>'+esc(p.name)+'</b><span>'+money(p.price)+'</span></div>'+heartHtml(p.id,1).replace('class="heart inl','class="heart inl')+'</div>'}).join(''):'<div class="empty"><p>Nothing saved yet. Tap the heart on a product to save it here.</p></div>')+'</div><button class="btn ghost block" type="button" data-act="close">Close</button>');
+  var all=state.products||[],list=wishOnly?all.filter(function(p){return isWish(p.id)}):all;
+  modal('<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>My wishlist</h3></div>'+
+    '<p class="hint" style="margin:0">Tap a product to save it to your wishlist. Tap it again to remove it.</p>'+
+    '<div class="wtabs"><button type="button" class="wt'+(wishOnly?'':' on')+'" data-act="wtab" data-v="all">All products</button><button type="button" class="wt'+(wishOnly?' on':'')+'" data-act="wtab" data-v="saved">Saved (<span id="wcount">'+wishItems().length+'</span>)</button></div>'+
+    '<div id="wlist" class="wgrid">'+(list.length?list.map(wcardHtml).join(''):'<p class="hint">'+(wishOnly?'You have not saved anything yet. Open "All products" and tap the ones you like.':'No products yet.')+'</p>')+'</div>','wishpg');
 }
 function toHex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
 async function hashPw(pw,saltHex){
@@ -871,6 +907,14 @@ async function saveJoin(){
   try{localStorage.setItem('zc-user',JSON.stringify({name:nm,email:em}))}catch(e){}
   cust.name=nm;track('login',{method:'email'});
   closeModal();toast('Welcome, '+nm+'!');
+}
+function kwCount(){
+  var n=document.getElementById('kwn');if(!n)return;
+  var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}
+  if(reduce)return;
+  var t0=null,dur=1700;n.textContent='1';
+  function step(t){if(t0===null)t0=t;var k=Math.min((t-t0)/dur,1),v=Math.max(1,Math.round(1+99*(1-Math.pow(1-k,2))));n.textContent=v;if(k<1)requestAnimationFrame(step);else n.textContent='100'}
+  requestAnimationFrame(step);
 }
 function onWelcomeGone(fn){if(!document.getElementById('welcome')){fn();return}var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);fn()}},120)}
 function renderAll(){renderBanner();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
@@ -1024,7 +1068,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div class="offer" id="offer" hidden></div><div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div class="offer" id="offer" hidden></div><div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="kws" id="kws"><b id="kwn">100</b>% best experience when you use.</div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -1098,11 +1142,12 @@ document.addEventListener('click',function(e){
     else{try{navigator.clipboard.writeText(oc).then(okc,okc)}catch(x){okc()}}
   }
   else if(a==='menu')openMenu();
-  else if(a==='mywish')openWish();
+  else if(a==='mywish'){wishOnly=false;openWish()}
+  else if(a==='wtab'){wishOnly=b.dataset.v==='saved';openWish()}
   else if(a==='signin')openSignin('in');
   else if(a==='signup')openSignin('up');
   else if(a==='signout'){try{localStorage.removeItem('zc-user')}catch(x){}cust={name:'',phone:'',addr:''};openMenu();toast('Signed out')}
-  else if(a==='wish'){var wi=wish.indexOf(id);if(wi>-1){wish.splice(wi,1);toast('Removed from wishlist')}else{wish.push(id);var wp=prod(id);if(wp)track('add_to_wishlist',{currency:'PKR',value:wp.price,items:[gaItem(wp)]});toast('Saved to wishlist')}saveWish();refreshHearts();if(document.getElementById('wlist'))openWish()}
+  else if(a==='wish'){var wi=wish.indexOf(id);if(wi>-1){wish.splice(wi,1);toast('Removed from wishlist')}else{wish.push(id);var wp=prod(id);if(wp)track('add_to_wishlist',{currency:'PKR',value:wp.price,items:[gaItem(wp)]});toast('Saved to wishlist')}saveWish();refreshHearts();if(wishOnly&&document.getElementById('wlist'))openWish()}
   else if(a==='bngo'){var bt=document.getElementById('bnt');if(bt){bnPause=Date.now()+4000;bt.scrollTo({left:(+b.dataset.i)*bt.clientWidth,behavior:'smooth'})}}
   else if(a==='bnup'||a==='bndn'||a==='bnrm'){var bl=editing.banners,bi=+b.dataset.i;if(a==='bnrm')bl.splice(bi,1);else{var bj=a==='bnup'?bi-1:bi+1;if(bj>=0&&bj<bl.length){var tmp=bl[bi];bl[bi]=bl[bj];bl[bj]=tmp}}bnRefresh()}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
