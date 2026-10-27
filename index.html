@@ -368,6 +368,13 @@ textarea{resize:vertical;min-height:70px}
 .inbtn{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85);background:rgba(255,255,255,.16);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .inbtn:active{background:rgba(255,255,255,.3)}
 .inl{padding-left:20px;display:grid;gap:8px;margin:6px 0 14px}
+
+/* store banner */
+.banner{margin:14px 0 6px;border-radius:16px;overflow:hidden;background:#0b0b0b;box-shadow:0 10px 30px rgba(42,10,15,.28),0 0 0 1.5px rgba(245,184,0,.55);line-height:0}
+.banner[hidden]{display:none}
+.banner img{display:block;width:100%;height:auto;aspect-ratio:1672/941}
+@media (min-width:900px){.banner{margin:22px 0 10px;border-radius:22px}}
+@media (prefers-reduced-motion:no-preference){.banner{animation:bnin .6s ease both}@keyframes bnin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -387,6 +394,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
 <div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
 <main class="wrap">
+  <div class="banner" id="banner"><img src="banner.jpg" width="1672" height="941" alt="Crown Kitchens: quality kitchenware, free delivery all over Pakistan, cash on delivery" decoding="async" onerror="this.parentNode.hidden=true"></div>
   <section class="hero">
     <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face: Buy and Enjoy" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg><span class="scap">Buy and Enjoy</span></div>
     <h2 id="tag"></h2>
@@ -733,7 +741,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="banner" id="banner"><img src="banner.jpg" width="1672" height="941" alt="Crown Kitchens: quality kitchenware, free delivery all over Pakistan, cash on delivery" decoding="async" onerror="this.parentNode.hidden=true"></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
