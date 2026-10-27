@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
-<title>Zayan Crown</title><meta name="theme-color" content="#D1122B">
+<title>Zayan Crown</title><meta name="theme-color" content="#D1122B"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crown Bazaar">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
 <style id="sheet">
 /* Layout: sticky brand bar, compact search band, 2-col product grid on phones; owner tools live in a bar above the grid. */
@@ -355,6 +355,13 @@ textarea{resize:vertical;min-height:70px}
 .fabw{display:flex;gap:8px;max-width:520px;margin:0 auto;pointer-events:auto;align-items:stretch}
 #fab .fabw .btn{flex:1;margin:0;width:auto}
 .fclr{flex:0 0 auto;width:48px;border:1.5px solid var(--line);background:#fff;color:#D0112B;border-radius:14px;font:700 26px/1 var(--body);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+
+/* install bar */
+.inst{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:8px 8px 8px 14px;margin:2px 0 10px;font-size:14px}
+.inst[hidden]{display:none}
+.inst .it{flex:1;min-width:0}
+.inst .ib{border:0;background:#12A150;color:#fff;border-radius:10px;padding:9px 16px;font:800 14px/1 var(--body);cursor:pointer}
+.inst .ix{border:0;background:transparent;color:var(--muted);font:700 24px/1 var(--body);width:34px;height:34px;cursor:pointer}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -380,7 +387,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
     <div class="promo" id="promo" hidden></div>
     <div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
   </section>
-  <div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div>
+  <div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div>
   <div class="grid" id="grid"></div>
   <div class="foot" id="foot"></div>
 </main>
@@ -560,6 +567,21 @@ function renderCount(){
     var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);go()}},120);
   }else go();
 }
+
+/* ---------- install as app ---------- */
+var instEv=null;
+function isStandalone(){try{return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}}
+function instDismissed(){try{return localStorage.getItem('zc-inst-no')==='1'}catch(e){return false}}
+function showInst(mode){
+  var el=document.getElementById('inst');if(!el||isStandalone()||instDismissed()||owner)return;
+  if(mode==='ios')el.innerHTML='<span class="it">Add this store to your phone: tap <b>Share</b>, then <b>Add to Home Screen</b>.</span><button type="button" class="ix" data-act="instno" aria-label="Close">&times;</button>';
+  else el.innerHTML='<span class="it">Get the <b>Crown Bazaar</b> app on your phone</span><button type="button" class="ib" data-act="instgo">Install</button><button type="button" class="ix" data-act="instno" aria-label="Close">&times;</button>';
+  el.hidden=false;
+}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEv=e;showInst('prompt')});
+window.addEventListener('appinstalled',function(){instEv=null;var el=document.getElementById('inst');if(el)el.hidden=true});
+try{if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream){setTimeout(function(){showInst('ios')},1500)}}catch(e){}
+try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
 function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
 
 /* ---------- modal ---------- */
@@ -705,7 +727,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -762,6 +784,8 @@ document.addEventListener('click',function(e){
   else if(a==='zoomclose'){var zz=document.getElementById('zoom');if(zz)zz.remove()}
   else if(a==='smile'){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle');toast('Thank you for visiting!')}
   else if(a==='open')openDetail(id);
+  else if(a==='instgo'){if(instEv){var ie=instEv;instEv=null;ie.prompt();try{ie.userChoice.then(function(){var el=document.getElementById('inst');if(el)el.hidden=true})}catch(x){}}}
+  else if(a==='instno'){var el2=document.getElementById('inst');if(el2)el2.hidden=true;try{localStorage.setItem('zc-inst-no','1')}catch(x){}}
   else if(a==='qminus'){var qp=prod(id);if(cart[id]){cart[id]--;if(!cart[id])delete cart[id]}saveCart();renderBar();renderFab();var qd=document.getElementById('dbar');if(qd&&qp)qd.innerHTML=dbarHtml(qp);toast(cart[id]?'Removed one':'Removed from cart')}
   else if(a==='clearcart'){cart={};promoUsed=false;saveCart();renderBar();renderFab();toast('Cart cleared')}
   else if(a==='addcart-d'){var ap=prod(id);if(ap)track('add_to_cart',{currency:'PKR',value:ap.price,items:[gaItem(ap)]});cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();var db=document.getElementById('dbar');if(db&&ap)db.innerHTML=dbarHtml(ap);toast('Added to cart')}
