@@ -496,6 +496,21 @@ i.otime{font-style:normal;background:none;padding:0;color:#FFE680;-webkit-text-s
 
 /* offer bar text: black with a soft shadow */
 .offer .otx,.offer .otx2,.offer .osub,.offer i.otime,.offer .ook{color:#111;-webkit-text-stroke:0;paint-order:normal;text-shadow:0 2px 3px rgba(0,0,0,.22)}
+
+/* menu drawer from the left */
+.ovl.drawer{align-items:stretch;justify-content:flex-start}
+.ovl.drawer .panel{width:min(84vw,330px);max-width:none;height:100%;max-height:none;border-radius:0 20px 20px 0;align-content:start;padding-top:calc(16px + env(safe-area-inset-top,0px));box-shadow:10px 0 34px rgba(0,0,0,.32);animation:dsl .32s cubic-bezier(.2,.8,.2,1) both}
+@keyframes dsl{from{transform:translateX(-102%)}to{transform:none}}
+.dhead{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1.5px solid var(--line)}
+.dhead .logo,.dhead .crown{width:40px;height:40px}
+.dhead b{flex:1;min-width:0;font:800 18px/1.2 var(--display);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dx{border:0;background:#F3E6E8;width:34px;height:34px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;color:#333}
+.dlink{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:14px;background:#fff;font:700 16px/1.2 var(--body);color:var(--ink);cursor:pointer;text-align:left}
+.dlink svg{fill:none;stroke:#D0112B;stroke-width:2;stroke-linejoin:round;width:22px;height:22px;flex:none}
+.dlink i.mc{margin-left:auto;font-style:normal;background:var(--brand);color:#fff;border-radius:99px;padding:2px 10px;font-size:14px}
+.mblack{background:#111;border-color:#111;color:#fff}
+.mblack:active{background:#000}
+.linkb{border:0;background:none;color:#111;font:700 14px/1.2 var(--body);text-decoration:underline;padding:6px 0;cursor:pointer;text-align:left}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -801,39 +816,61 @@ function saveWish(){try{localStorage.setItem('zc-wish',JSON.stringify(wish))}cat
 function heartHtml(id,inl){return '<button type="button" class="heart'+(inl?' inl':'')+(isWish(id)?' on':'')+'" data-act="wish" data-id="'+esc(id)+'" aria-label="Save to wishlist">'+HEARTSVG+'</button>'}
 function refreshHearts(){Array.prototype.forEach.call(document.querySelectorAll('[data-act=wish]'),function(h){h.classList.toggle('on',isWish(h.dataset.id))})}
 function getUser(){try{var u=JSON.parse(localStorage.getItem('zc-user')||'null');return u&&u.name?u:null}catch(e){return null}}
-(function(){var u=getUser();if(u){cust.name=cust.name||u.name;cust.phone=cust.phone||u.phone}})();
+(function(){var u=getUser();if(u){cust.name=cust.name||u.name}})();
 function wishItems(){return wish.map(function(id){return prod(id)}).filter(Boolean)}
 function openMenu(){
   var u=getUser(),n=wishItems().length;
-  modal('<h3>Menu</h3>'+(u?'<p class="mhi">Hi, <b>'+esc(u.name)+'</b></p>':'')+
-    '<button class="btn block mbtn" type="button" data-act="mywish">My wishlist <span class="mc">'+n+'</span></button>'+
-    (u?'<button class="btn ghost block mbtn" type="button" data-act="signout">Sign out</button>':'<button class="btn block mbtn mgreen" type="button" data-act="signin">Sign in</button>')+
-    '<button class="btn ghost block" type="button" data-act="close">Close</button>');
+  modal('<div class="dhead">'+logoHtml()+'<b>'+esc(state.settings.name)+'</b><button type="button" class="dx" data-act="close" aria-label="Close">&times;</button></div>'+
+    (u?'<p class="mhi">Hi, <b>'+esc(u.name)+'</b></p>':'')+
+    '<button class="dlink" type="button" data-act="mywish">'+HEARTSVG+'<span>My wishlist</span><i class="mc">'+n+'</i></button>'+
+    (u?'<button class="dlink" type="button" data-act="signout"><span>Sign out</span></button>':'<button class="btn block mblack" type="button" data-act="signin">Sign in</button>'),'drawer');
 }
 function openWish(){
   var items=wishItems();
   modal('<h3>My wishlist</h3><div id="wlist">'+(items.length?items.map(function(p){var im=imgsOf(p);return '<div class="wrow" data-act="open" data-id="'+esc(p.id)+'"><div class="wth">'+(im.length?'<img src="'+esc(im[0])+'" alt="">':CROWN)+'</div><div class="wmid"><b>'+esc(p.name)+'</b><span>'+money(p.price)+'</span></div>'+heartHtml(p.id,1).replace('class="heart inl','class="heart inl')+'</div>'}).join(''):'<div class="empty"><p>Nothing saved yet. Tap the heart on a product to save it here.</p></div>')+'</div><button class="btn ghost block" type="button" data-act="close">Close</button>');
 }
-function openSignin(){
-  var u=getUser()||{};
-  modal('<form id="jf" novalidate><h3>Sign in</h3><p class="hint">Enter your name and phone number. We use them to fill your order details faster and to tell you about new products.</p>'+
-    '<label for="jn">Your name<input id="jn" value="'+esc(u.name||'')+'" autocomplete="name"></label>'+
-    '<label for="jp">Phone number (WhatsApp)<input id="jp" inputmode="tel" value="'+esc(u.phone||'')+'" autocomplete="tel"></label>'+
-    '<p class="err" id="jerr" hidden>Please enter your name and a correct phone number.</p>'+
-    '<div class="btns"><button class="btn" type="submit">Sign in</button><button class="btn ghost" type="button" data-act="close">Cancel</button></div></form>');
+function toHex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
+async function hashPw(pw,saltHex){
+  var key=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);
+  var salt=new Uint8Array(saltHex.match(/../g).map(function(h){return parseInt(h,16)}));
+  return toHex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:salt,iterations:120000,hash:'SHA-256'},key,256));
 }
-function saveJoin(){
-  var n=$('#jn').value.trim(),ph=$('#jp').value.trim();
-  if(!n||ph.replace(/\D/g,'').length<10){$('#jerr').hidden=false;return}
-  var prev=getUser();
-  try{localStorage.setItem('zc-user',JSON.stringify({name:n,phone:ph}))}catch(e){}
-  cust.name=n;cust.phone=ph;
-  if(!prev||prev.phone!==ph){
-    track('login',{method:'phone'});
-    var k=state.settings.orderKey;
-    if(k){try{fetch('https://api.web3forms.com/submit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:k,subject:'New customer signed in - '+state.settings.name,from_name:n,name:n,phone:ph,message:'This customer signed in on your website. Send them a WhatsApp message when you add new products.'})}).catch(function(){})}catch(x){}}
-  }
-  closeModal();toast('Welcome, '+n+'!');
+function accts(){try{return JSON.parse(localStorage.getItem('zc-accts')||'{}')||{}}catch(e){return {}}}
+function openSignin(mode){
+  var up=mode==='up';
+  modal('<form id="jf" data-mode="'+(up?'up':'in')+'" novalidate><h3>'+(up?'Create account':'Sign in')+'</h3>'+
+    (up?'<label for="jn">Your name<input id="jn" autocomplete="name"></label>':'')+
+    '<label for="je">Email<input id="je" type="email" inputmode="email" autocomplete="email" autocapitalize="none"></label>'+
+    '<label for="jw">Password'+(up?' (at least 6 characters)':'')+'<input id="jw" type="password" autocomplete="'+(up?'new-password':'current-password')+'"></label>'+
+    '<p class="err" id="jerr" hidden></p>'+
+    '<div class="btns"><button class="btn mblack" type="submit">'+(up?'Create account':'Sign in')+'</button><button class="btn ghost" type="button" data-act="close">Cancel</button></div>'+
+    '<button type="button" class="linkb" data-act="'+(up?'signin':'signup')+'">'+(up?'I already have an account':'New here? Create an account')+'</button>'+
+    '<p class="hint">Your account is saved on this phone only. Nobody else, including the store owner, can see your email or password.</p></form>');
+}
+async function saveJoin(){
+  var f=document.getElementById('jf'),up=f.dataset.mode==='up',em=$('#je').value.trim().toLowerCase(),pw=$('#jw').value,nm=up?$('#jn').value.trim():'',er=$('#jerr');
+  function bad(t){er.textContent=t;er.hidden=false}
+  if(!window.crypto||!crypto.subtle){bad('Sign in does not work in this browser. Please open the store in Chrome.');return}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){bad('Please enter a correct email.');return}
+  var A=accts();
+  try{
+    if(up){
+      if(!nm){bad('Please enter your name.');return}
+      if(pw.length<6){bad('The password needs at least 6 characters.');return}
+      if(A[em]){bad('This email already has an account on this phone. Tap "I already have an account".');return}
+      var salt=toHex(crypto.getRandomValues(new Uint8Array(16)));
+      A[em]={name:nm,salt:salt,hash:await hashPw(pw,salt)};
+      try{localStorage.setItem('zc-accts',JSON.stringify(A))}catch(e){bad('Could not save the account on this phone.');return}
+    }else{
+      var a=A[em];
+      if(!a){bad('No account for this email on this phone. Tap "New here? Create an account".');return}
+      if(await hashPw(pw,a.salt)!==a.hash){bad('The email or password is not correct.');return}
+      nm=a.name;
+    }
+  }catch(e){bad('Something went wrong. Please try again.');return}
+  try{localStorage.setItem('zc-user',JSON.stringify({name:nm,email:em}))}catch(e){}
+  cust.name=nm;track('login',{method:'email'});
+  closeModal();toast('Welcome, '+nm+'!');
 }
 function onWelcomeGone(fn){if(!document.getElementById('welcome')){fn();return}var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);fn()}},120)}
 function renderAll(){renderBanner();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
@@ -1062,7 +1099,8 @@ document.addEventListener('click',function(e){
   }
   else if(a==='menu')openMenu();
   else if(a==='mywish')openWish();
-  else if(a==='signin')openSignin();
+  else if(a==='signin')openSignin('in');
+  else if(a==='signup')openSignin('up');
   else if(a==='signout'){try{localStorage.removeItem('zc-user')}catch(x){}cust={name:'',phone:'',addr:''};openMenu();toast('Signed out')}
   else if(a==='wish'){var wi=wish.indexOf(id);if(wi>-1){wish.splice(wi,1);toast('Removed from wishlist')}else{wish.push(id);var wp=prod(id);if(wp)track('add_to_wishlist',{currency:'PKR',value:wp.price,items:[gaItem(wp)]});toast('Saved to wishlist')}saveWish();refreshHearts();if(document.getElementById('wlist'))openWish()}
   else if(a==='bngo'){var bt=document.getElementById('bnt');if(bt){bnPause=Date.now()+4000;bt.scrollTo({left:(+b.dataset.i)*bt.clientWidth,behavior:'smooth'})}}
