@@ -432,6 +432,39 @@ textarea{resize:vertical;min-height:70px}
 .kw span{white-space:nowrap;font-size:clamp(11px,3.6vw,22px);letter-spacing:.17em;padding-left:.17em}
 .kw::before,.kw::after{flex:1 1 0;width:auto;max-width:70px}
 @media (min-width:900px){.kw span{font-size:26px;letter-spacing:.24em}}
+
+/* strip text: one line, runs across and comes out from behind the icons */
+.opm{flex:1;min-width:0;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.opk{display:flex;width:max-content;animation:opmq 24s linear infinite;will-change:transform}
+.opm .opt{flex:none;white-space:nowrap;text-align:left;padding-right:56px;font-size:clamp(13px,3.7vw,18px)}
+@keyframes opmq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (min-width:900px){.opm .opt{font-size:20px;padding-right:90px}}
+@media (prefers-reduced-motion:reduce){.opk{animation:none;justify-content:center;width:100%}.opm .opt:nth-child(n+2){display:none}.opm .opt{padding:0}}
+/* header: menu button beside search */
+.bsrch{display:flex;align-items:center;gap:8px}
+.hbtn{flex:0 0 auto;width:38px;height:38px;border-radius:12px;border:1.5px solid rgba(255,255,255,.85);background:rgba(255,255,255,.16);color:#fff;display:grid;place-items:center;padding:0;cursor:pointer}
+.hbtn:active{background:rgba(255,255,255,.3)}
+.bsrch .hsearch{flex:1;min-width:0;width:auto;padding-left:30px;padding-right:8px;background-position:9px center;background-size:16px}
+@media (min-width:900px){.hbtn{width:42px;height:42px}.bsrch .hsearch{padding-left:38px;background-position:12px center;background-size:18px}}
+/* hearts */
+.heart{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.94);color:#555;display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.22);cursor:pointer;z-index:2;padding:0}
+.heart svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.heart.on{color:#D0112B}
+.heart.on svg{fill:currentColor}
+.heart.inl{position:static;flex:0 0 auto;margin-left:10px;box-shadow:none;background:#FFF1F3;border:1.5px solid var(--line)}
+.dtop .dtitle{margin-left:auto}
+/* menu, wishlist, sign in */
+.mbtn{margin:8px 0}
+.mbtn .mc{display:inline-block;background:#fff;color:var(--brand);border-radius:99px;padding:1px 9px;margin-left:8px;font-weight:800}
+.mgreen{background:#12A150;border-color:#12A150;color:#fff}
+.mhi{margin:0 0 4px;font-size:16px}
+.wrow{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:14px;padding:8px;margin:8px 0;background:#fff;cursor:pointer}
+.wth{width:58px;height:58px;border-radius:10px;overflow:hidden;background:var(--tint);flex:none;display:grid;place-items:center}
+.wth img{width:100%;height:100%;object-fit:cover;display:block}
+.wth svg{width:60%}
+.wmid{flex:1;min-width:0;display:grid;gap:3px}
+.wmid b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wmid span{color:var(--brand);font-weight:700}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -451,7 +484,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
 <div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
 <main class="wrap">
-  <div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div>
+  <div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div>
   <section class="hero">
     <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face: Buy and Enjoy" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg><span class="scap">Buy and Enjoy</span></div>
     <h2 id="tag"></h2>
@@ -496,7 +529,7 @@ function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(sta
 
 /* ---------- render ---------- */
 function renderBar(){
-  $('#bar').innerHTML='<div class="bsrch"><input class="search hsearch" id="q" type="search" placeholder="Search" aria-label="Search products" autocomplete="off" value="'+esc(q)+'"></div>'+
+  $('#bar').innerHTML='<div class="bsrch"><button class="hbtn" type="button" data-act="menu" aria-label="Menu"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button><input class="search hsearch" id="q" type="search" placeholder="Search" aria-label="Search products" autocomplete="off" value="'+esc(q)+'"></div>'+
   '<div class="brand brandc">'+logoHtml()+'<h1 class="bname sr" style="margin:0">'+esc(state.settings.name)+'</h1></div>'+
   '<div class="barr">'+''+'<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button></div>';
   $('#tag').textContent=state.settings.tagline||'';
@@ -530,7 +563,7 @@ function card(p){
   var im=imgsOf(p);
   var img=im.length?'<img src="'+esc(im[0])+'" alt="" loading="lazy">':'<div class="ph">'+CROWN+'</div>';
   var badge=p.soldOut?'<span class="badge so">Sold out</span>':'';
-  return '<article class="card'+(p.soldOut?' out':'')+'" data-act="open" data-id="'+esc(p.id)+'" tabindex="0" role="button" aria-label="'+esc(p.name)+'"><div class="pic">'+img+badge+'</div><div class="cbody"><div class="pname">'+esc(p.name)+'</div><div class="price">'+money(p.price)+'</div>'+(p.oldPrice&&p.oldPrice>p.price?'<div class="oldp">'+money(p.oldPrice)+'</div>':'')+(owner?'<button class="btn sm ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+'</div></article>';
+  return '<article class="card'+(p.soldOut?' out':'')+'" data-act="open" data-id="'+esc(p.id)+'" tabindex="0" role="button" aria-label="'+esc(p.name)+'"><div class="pic">'+img+badge+heartHtml(p.id)+'</div><div class="cbody"><div class="pname">'+esc(p.name)+'</div><div class="price">'+money(p.price)+'</div>'+(p.oldPrice&&p.oldPrice>p.price?'<div class="oldp">'+money(p.oldPrice)+'</div>':'')+(owner?'<button class="btn sm ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+'</div></article>';
 }
 function dbarHtml(p){
   var q=cart[p.id]||0,h='';
@@ -545,7 +578,7 @@ function openDetail(id){
   var im=imgsOf(p),off=(p.oldPrice&&p.oldPrice>p.price)?Math.round((1-p.price/p.oldPrice)*100):0;
   var slides=im.length?im.map(function(u,i){return '<div class="slide" data-act="zoom" data-id="'+esc(p.id)+'" data-i="'+i+'"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'"></div>'}).join(''):'<div class="slide"><div class="ph">'+CROWN+'</div></div>';
   var strip=im.length>1?'<div class="strip">'+im.map(function(u,i){return '<button type="button" data-act="pic" data-i="'+i+'" aria-label="Photo '+(i+1)+'"'+(i===0?' aria-current="true"':'')+'><img src="'+esc(u)+'" alt=""></button>'}).join('')+'</div>':'';
-  modal('<div class="dtop"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><span class="dtitle">'+esc(state.settings.name)+'</span></div>'+
+  modal('<div class="dtop"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><span class="dtitle">'+esc(state.settings.name)+'</span>'+heartHtml(p.id,1)+'</div>'+
   '<div class="dpic"><div class="car" id="car">'+slides+'</div>'+(im.length>1?'<span class="cnt" id="cnt">1 / '+im.length+'</span><span class="flash" id="flash"></span>':'')+(p.soldOut?'<span class="badge so">Sold out</span>':(off?'<span class="badge">-'+off+'%</span>':''))+'</div>'+strip+
   '<div class="dbody">'+(p.category?'<span class="cat">'+esc(p.category)+'</span>':'')+'<h3>'+esc(p.name)+'</h3>'+
   '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+specs(p)+
@@ -692,6 +725,49 @@ function bnAdminHtml(){
   return l.map(function(u,i){return '<div class="bnrow"><img src="'+esc(u)+'" alt=""><div class="bnb"><button type="button" class="btn sm ghost" data-act="bnup" data-i="'+i+'"'+(i?'':' disabled')+' aria-label="Move up">&uarr;</button><button type="button" class="btn sm ghost" data-act="bndn" data-i="'+i+'"'+(i<l.length-1?'':' disabled')+' aria-label="Move down">&darr;</button><button type="button" class="btn sm ghost" data-act="bnrm" data-i="'+i+'">Remove</button></div></div>'}).join('');
 }
 function bnRefresh(){var b=document.getElementById('bnlist');if(b)b.innerHTML=bnAdminHtml()}
+
+/* ---------- wishlist, menu and sign in ---------- */
+var HEARTSVG='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+var wish=[];try{wish=JSON.parse(localStorage.getItem('zc-wish')||'[]');if(!Array.isArray(wish))wish=[]}catch(e){wish=[]}
+function isWish(id){return wish.indexOf(id)>-1}
+function saveWish(){try{localStorage.setItem('zc-wish',JSON.stringify(wish))}catch(e){}}
+function heartHtml(id,inl){return '<button type="button" class="heart'+(inl?' inl':'')+(isWish(id)?' on':'')+'" data-act="wish" data-id="'+esc(id)+'" aria-label="Save to wishlist">'+HEARTSVG+'</button>'}
+function refreshHearts(){Array.prototype.forEach.call(document.querySelectorAll('[data-act=wish]'),function(h){h.classList.toggle('on',isWish(h.dataset.id))})}
+function getUser(){try{var u=JSON.parse(localStorage.getItem('zc-user')||'null');return u&&u.name?u:null}catch(e){return null}}
+(function(){var u=getUser();if(u){cust.name=cust.name||u.name;cust.phone=cust.phone||u.phone}})();
+function wishItems(){return wish.map(function(id){return prod(id)}).filter(Boolean)}
+function openMenu(){
+  var u=getUser(),n=wishItems().length;
+  modal('<h3>Menu</h3>'+(u?'<p class="mhi">Hi, <b>'+esc(u.name)+'</b></p>':'')+
+    '<button class="btn block mbtn" type="button" data-act="mywish">My wishlist <span class="mc">'+n+'</span></button>'+
+    (u?'<button class="btn ghost block mbtn" type="button" data-act="signout">Sign out</button>':'<button class="btn block mbtn mgreen" type="button" data-act="signin">Sign in</button>')+
+    '<button class="btn ghost block" type="button" data-act="close">Close</button>');
+}
+function openWish(){
+  var items=wishItems();
+  modal('<h3>My wishlist</h3><div id="wlist">'+(items.length?items.map(function(p){var im=imgsOf(p);return '<div class="wrow" data-act="open" data-id="'+esc(p.id)+'"><div class="wth">'+(im.length?'<img src="'+esc(im[0])+'" alt="">':CROWN)+'</div><div class="wmid"><b>'+esc(p.name)+'</b><span>'+money(p.price)+'</span></div>'+heartHtml(p.id,1).replace('class="heart inl','class="heart inl')+'</div>'}).join(''):'<div class="empty"><p>Nothing saved yet. Tap the heart on a product to save it here.</p></div>')+'</div><button class="btn ghost block" type="button" data-act="close">Close</button>');
+}
+function openSignin(){
+  var u=getUser()||{};
+  modal('<form id="jf" novalidate><h3>Sign in</h3><p class="hint">Enter your name and phone number. We use them to fill your order details faster and to tell you about new products.</p>'+
+    '<label for="jn">Your name<input id="jn" value="'+esc(u.name||'')+'" autocomplete="name"></label>'+
+    '<label for="jp">Phone number (WhatsApp)<input id="jp" inputmode="tel" value="'+esc(u.phone||'')+'" autocomplete="tel"></label>'+
+    '<p class="err" id="jerr" hidden>Please enter your name and a correct phone number.</p>'+
+    '<div class="btns"><button class="btn" type="submit">Sign in</button><button class="btn ghost" type="button" data-act="close">Cancel</button></div></form>');
+}
+function saveJoin(){
+  var n=$('#jn').value.trim(),ph=$('#jp').value.trim();
+  if(!n||ph.replace(/\D/g,'').length<10){$('#jerr').hidden=false;return}
+  var prev=getUser();
+  try{localStorage.setItem('zc-user',JSON.stringify({name:n,phone:ph}))}catch(e){}
+  cust.name=n;cust.phone=ph;
+  if(!prev||prev.phone!==ph){
+    track('login',{method:'phone'});
+    var k=state.settings.orderKey;
+    if(k){try{fetch('https://api.web3forms.com/submit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:k,subject:'New customer signed in - '+state.settings.name,from_name:n,name:n,phone:ph,message:'This customer signed in on your website. Send them a WhatsApp message when you add new products.'})}).catch(function(){})}catch(x){}}
+  }
+  closeModal();toast('Welcome, '+n+'!');
+}
 function onWelcomeGone(fn){if(!document.getElementById('welcome')){fn();return}var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);fn()}},120)}
 function renderAll(){renderBanner();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
 
@@ -843,7 +919,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -909,6 +985,11 @@ document.addEventListener('click',function(e){
   else if(a==='qminus'){var qp=prod(id);if(cart[id]){cart[id]--;if(!cart[id])delete cart[id]}saveCart();renderBar();renderFab();var qd=document.getElementById('dbar');if(qd&&qp)qd.innerHTML=dbarHtml(qp);toast(cart[id]?'Removed one':'Removed from cart')}
   else if(a==='clearcart'){cart={};promoUsed=false;saveCart();renderBar();renderFab();toast('Cart cleared')}
   else if(a==='addcart-d'){var ap=prod(id);if(ap)track('add_to_cart',{currency:'PKR',value:ap.price,items:[gaItem(ap)]});cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();var db=document.getElementById('dbar');if(db&&ap)db.innerHTML=dbarHtml(ap);toast('Added to cart')}
+  else if(a==='menu')openMenu();
+  else if(a==='mywish')openWish();
+  else if(a==='signin')openSignin();
+  else if(a==='signout'){try{localStorage.removeItem('zc-user')}catch(x){}cust={name:'',phone:'',addr:''};openMenu();toast('Signed out')}
+  else if(a==='wish'){var wi=wish.indexOf(id);if(wi>-1){wish.splice(wi,1);toast('Removed from wishlist')}else{wish.push(id);var wp=prod(id);if(wp)track('add_to_wishlist',{currency:'PKR',value:wp.price,items:[gaItem(wp)]});toast('Saved to wishlist')}saveWish();refreshHearts();if(document.getElementById('wlist'))openWish()}
   else if(a==='bngo'){var bt=document.getElementById('bnt');if(bt){bnPause=Date.now()+4000;bt.scrollTo({left:(+b.dataset.i)*bt.clientWidth,behavior:'smooth'})}}
   else if(a==='bnup'||a==='bndn'||a==='bnrm'){var bl=editing.banners,bi=+b.dataset.i;if(a==='bnrm')bl.splice(bi,1);else{var bj=a==='bnup'?bi-1:bi+1;if(bj>=0&&bj<bl.length){var tmp=bl[bi];bl[bi]=bl[bj];bl[bj]=tmp}}bnRefresh()}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
@@ -920,6 +1001,7 @@ document.addEventListener('submit',function(e){
   e.preventDefault();
   if(e.target.id==='pf')saveProduct();
   else if(e.target.id==='sf')saveSettings();
+  else if(e.target.id==='jf')saveJoin();
 });
 document.addEventListener('input',function(e){
   var t=e.target;
