@@ -432,7 +432,7 @@ function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(sta
 /* ---------- render ---------- */
 function renderBar(){
   $('#bar').innerHTML='<div class="brand">'+logoHtml()+'<h1 class="bname" style="margin:0">'+esc(state.settings.name)+'</h1></div>'+
-  '<div class="barr">'+(isStandalone()?'':'<button class="inbtn" type="button" data-act="instopen" aria-label="Install app" title="Install app"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3v11m0 0-4.5-4.5M12 14l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>')+'<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button></div>';
+  '<div class="barr">'+''+'<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button></div>';
   $('#tag').textContent=state.settings.tagline||'';
   $('#tag').hidden=!state.settings.tagline;
   renderPromo();
@@ -791,11 +791,7 @@ document.addEventListener('click',function(e){
   else if(a==='smile'){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle');toast('Thank you for visiting!')}
   else if(a==='open')openDetail(id);
   else if(a==='instopen'){
-    if(instEv){var ie2=instEv;ie2.prompt();try{ie2.userChoice.then(function(c){if(c&&c.outcome==='accepted'){instEv=null;renderBar()}})}catch(x){}}
-    else{var ua2=navigator.userAgent||'';
-      if(isIos())toast('Tap Share, then Add to Home Screen.');
-      else if(/FBAN|FBAV|Instagram|TikTok|musical_ly|Line\/|Snapchat/i.test(ua2))toast('Open this page in Chrome to install the app.');
-      else toast('Almost ready. Tap the button again in a few seconds.')}}
+    if(instEv){var ie2=instEv;ie2.prompt();try{ie2.userChoice.then(function(c){if(c&&c.outcome==='accepted'){instEv=null;renderBar()}})}catch(x){}}}
   else if(a==='instgo'){if(instEv){var ie=instEv;instEv=null;ie.prompt();try{ie.userChoice.then(function(){var el=document.getElementById('inst');if(el)el.hidden=true})}catch(x){}}}
   else if(a==='instno'){var el2=document.getElementById('inst');if(el2)el2.hidden=true;try{localStorage.setItem('zc-inst-no','1')}catch(x){}}
   else if(a==='qminus'){var qp=prod(id);if(cart[id]){cart[id]--;if(!cart[id])delete cart[id]}saveCart();renderBar();renderFab();var qd=document.getElementById('dbar');if(qd&&qp)qd.innerHTML=dbarHtml(qp);toast(cart[id]?'Removed one':'Removed from cart')}
