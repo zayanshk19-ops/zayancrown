@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
 <title>Zayan Crown</title><meta name="theme-color" content="#D1122B"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crown Bazaar">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap">
 <style id="sheet">
 /* Layout: sticky brand bar, compact search band, 2-col product grid on phones; owner tools live in a bar above the grid. */
 :root{
@@ -375,6 +375,63 @@ textarea{resize:vertical;min-height:70px}
 .banner img{display:block;width:100%;height:auto;aspect-ratio:1672/941}
 @media (min-width:900px){.banner{margin:22px 0 10px;border-radius:22px}}
 @media (prefers-reduced-motion:no-preference){.banner{animation:bnin .6s ease both}@keyframes bnin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}}
+
+/* banner slider */
+.banner{position:relative}
+.bn-track{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;aspect-ratio:1672/941;overscroll-behavior-x:contain}
+.bn-track::-webkit-scrollbar{display:none}
+.bn-slide{flex:0 0 100%;scroll-snap-align:start;background:#0b0b0b;display:flex;align-items:center;justify-content:center}
+.banner .bn-slide img{width:100%;height:100%;aspect-ratio:auto;object-fit:contain}
+.bn-dots{position:absolute;left:0;right:0;bottom:7px;display:flex;justify-content:center;gap:7px;line-height:0;pointer-events:none}
+.bn-dots button{pointer-events:auto;width:9px;height:9px;border-radius:99px;border:0;padding:0;background:rgba(255,255,255,.6);box-shadow:0 0 0 1px rgba(0,0,0,.35);cursor:pointer;transition:width .25s,background .25s}
+.bn-dots button.on{width:22px;background:#F5B800}
+.bnrow{display:flex;align-items:center;gap:10px;margin:6px 0;border:1.5px solid var(--line);border-radius:12px;padding:6px;background:#fff}
+.bnrow img{width:96px;aspect-ratio:16/9;object-fit:contain;background:#0b0b0b;border-radius:8px;flex:0 0 auto}
+.bnb{display:flex;gap:6px;flex-wrap:wrap}
+
+/* header: search left, logo centre, cart right */
+.bar{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;justify-content:normal}
+.bsrch{min-width:0}
+.hsearch{display:block;width:100%;max-width:270px;height:38px;padding:0 12px 0 34px;border:0;border-radius:999px;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.4' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>") no-repeat 10px center/18px;font-size:14px;color:#111;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.brandc{justify-content:center}
+.brandc .logo,.brandc .crown{width:44px;height:44px}
+.barr{justify-self:end}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (min-width:900px){.brandc .logo,.brandc .crown{width:52px;height:52px}.hsearch{height:42px;font-size:15px;padding-left:38px;background-position:12px center}}
+.sbar[hidden]{display:none}
+/* cookware line with slow polish */
+.kw{display:flex;align-items:center;justify-content:center;gap:12px;margin:2px 0 4px}
+.kw::before,.kw::after{content:"";height:2px;width:clamp(22px,9vw,70px);border-radius:2px;background:linear-gradient(90deg,transparent,#F5B800)}
+.kw::after{transform:scaleX(-1)}
+.kw span{display:inline-block;font:700 clamp(14px,4.4vw,22px)/1.25 "Oswald","Arial Narrow","Bricolage Grotesque",system-ui,sans-serif;letter-spacing:.24em;text-transform:uppercase;padding-left:.24em;color:#0a0a0a;
+  background:linear-gradient(105deg,#0a0a0a 0%,#0a0a0a 38%,#80808a 45%,#dcdce2 50%,#80808a 55%,#0a0a0a 62%,#0a0a0a 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:kwpol 5.2s ease-in-out infinite}
+@keyframes kwpol{0%{background-position:125% 0}65%,100%{background-position:-25% 0}}
+@media (min-width:900px){.kw span{font-size:26px}}
+/* open-box strip: comes out from behind the header */
+.opbox{position:relative;z-index:1;margin:14px 0 0;opacity:0;transform:translateY(-170%) scale(.96);pointer-events:none}
+.opbox.go{opacity:1;transform:none;transition:transform .85s cubic-bezier(.2,.9,.25,1.12),opacity .5s ease}
+.opin{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px;border-radius:18px;background:linear-gradient(100deg,#DCEBFF,#EAE3FF 50%,#FADFF0);background-size:200% 100%;box-shadow:0 8px 22px rgba(80,60,140,.16);animation:opbg 8s ease-in-out infinite alternate}
+@keyframes opbg{from{background-position:0 0}to{background-position:100% 0}}
+.opi{flex:0 0 auto;width:42px;height:42px;border-radius:13px;background:#fff;display:grid;place-items:center;box-shadow:0 3px 8px rgba(0,0,0,.08)}
+.opbox.go .opi:first-child{animation:opw 3.2s ease-in-out 1s infinite}
+.opbox.go .opi:last-child{animation:opw 3.2s ease-in-out 1.6s infinite}
+@keyframes opw{0%,70%,100%{transform:none}78%{transform:rotate(-9deg) scale(1.06)}86%{transform:rotate(7deg) scale(1.06)}94%{transform:none}}
+.opt{flex:1;text-align:center;font:800 clamp(13px,3.7vw,18px)/1.25 var(--body);color:#1d1b33;letter-spacing:.01em}
+.opt b{color:#7B3FE4;margin:0 2px}
+@media (min-width:900px){.opin{padding:10px 12px;border-radius:22px}.opi{width:50px;height:50px}.opt{font-size:20px}.opbox{margin-top:22px}}
+/* old price on cards */
+.card .oldp{color:#111;font:600 13px/1 var(--body);text-decoration:line-through;text-decoration-thickness:1.5px;margin-top:-2px}
+/* white flash when the photo changes */
+.dpic .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:3}
+.dpic .flash.on{animation:phf .6s ease both}
+@keyframes phf{0%{opacity:0}35%{opacity:.95}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.kw span,.opin,.opbox.go .opi{animation:none!important}.opbox{opacity:1;transform:none}.dpic .flash.on{animation:none}}
+
+/* tweaks: dots below the banner, cookware line on one row */
+.bn-dots{position:static;background:#0b0b0b;padding:6px 0 9px;line-height:0}
+.kw span{white-space:nowrap;font-size:clamp(11px,3.6vw,22px);letter-spacing:.17em;padding-left:.17em}
+.kw::before,.kw::after{flex:1 1 0;width:auto;max-width:70px}
+@media (min-width:900px){.kw span{font-size:26px;letter-spacing:.24em}}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -394,12 +451,12 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
 <div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
 <main class="wrap">
-  <div class="banner" id="banner"><img src="banner.jpg" width="1672" height="941" alt="Crown Kitchens: quality kitchenware, free delivery all over Pakistan, cash on delivery" decoding="async" onerror="this.parentNode.hidden=true"></div>
+  <div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div>
   <section class="hero">
     <div class="smile" id="smile" data-act="smile" role="img" aria-label="Smiling face: Buy and Enjoy" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFD43B" stroke="#F2A900" stroke-width="3"/><ellipse cx="25" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse cx="75" cy="62" rx="9" ry="6" fill="#FF8A80" opacity=".65"/><ellipse class="eye" cx="36" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><ellipse class="eye" cx="64" cy="42" rx="5.5" ry="8" fill="#3A2A00"/><circle cx="38" cy="39" r="1.8" fill="#fff"/><circle cx="66" cy="39" r="1.8" fill="#fff"/><path class="mouth" d="M30 60 Q50 84 70 60" fill="none" stroke="#3A2A00" stroke-width="5.5" stroke-linecap="round"/></svg><span class="scap">Buy and Enjoy</span></div>
     <h2 id="tag"></h2>
     <div class="promo" id="promo" hidden></div>
-    <div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
+    <div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div>
   </section>
   <div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div>
   <div class="grid" id="grid"></div>
@@ -411,13 +468,13 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
 <script type="application/json" id="data">{"settings":{"name":"Zayan Crown","tagline":"Quality products, delivered to your door.","whatsapp":"","currency":"Rs","logo":""},"products":[]}</script>
 <script id="app">
 (function(){
-var HEAD='<title>Zayan Crown</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">';
+var HEAD='<title>Zayan Crown</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap">';
 var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',promoCode:'',promoPct:20,promoOn:true,payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoOn:true,payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
@@ -439,14 +496,15 @@ function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(sta
 
 /* ---------- render ---------- */
 function renderBar(){
-  $('#bar').innerHTML='<div class="brand">'+logoHtml()+'<h1 class="bname" style="margin:0">'+esc(state.settings.name)+'</h1></div>'+
+  $('#bar').innerHTML='<div class="bsrch"><input class="search hsearch" id="q" type="search" placeholder="Search" aria-label="Search products" autocomplete="off" value="'+esc(q)+'"></div>'+
+  '<div class="brand brandc">'+logoHtml()+'<h1 class="bname sr" style="margin:0">'+esc(state.settings.name)+'</h1></div>'+
   '<div class="barr">'+''+'<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button></div>';
   $('#tag').textContent=state.settings.tagline||'';
   $('#tag').hidden=!state.settings.tagline;
   renderPromo();
 }
 function renderOwner(){
-  var ab=document.querySelector('.addbtn');if(ab)ab.hidden=!owner;
+  var ab=document.querySelector('.addbtn');if(ab){ab.hidden=!owner;if(ab.parentNode)ab.parentNode.hidden=!owner}
   var el=$('#own');
   if(!owner){el.innerHTML='';return}
   el.innerHTML='<div class="own"><div class="own-in wrap" style="padding:0">'+
@@ -472,7 +530,7 @@ function card(p){
   var im=imgsOf(p);
   var img=im.length?'<img src="'+esc(im[0])+'" alt="" loading="lazy">':'<div class="ph">'+CROWN+'</div>';
   var badge=p.soldOut?'<span class="badge so">Sold out</span>':'';
-  return '<article class="card'+(p.soldOut?' out':'')+'" data-act="open" data-id="'+esc(p.id)+'" tabindex="0" role="button" aria-label="'+esc(p.name)+'"><div class="pic">'+img+badge+'</div><div class="cbody"><div class="pname">'+esc(p.name)+'</div><div class="price">'+money(p.price)+'</div>'+(owner?'<button class="btn sm ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+'</div></article>';
+  return '<article class="card'+(p.soldOut?' out':'')+'" data-act="open" data-id="'+esc(p.id)+'" tabindex="0" role="button" aria-label="'+esc(p.name)+'"><div class="pic">'+img+badge+'</div><div class="cbody"><div class="pname">'+esc(p.name)+'</div><div class="price">'+money(p.price)+'</div>'+(p.oldPrice&&p.oldPrice>p.price?'<div class="oldp">'+money(p.oldPrice)+'</div>':'')+(owner?'<button class="btn sm ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+'</div></article>';
 }
 function dbarHtml(p){
   var q=cart[p.id]||0,h='';
@@ -488,14 +546,16 @@ function openDetail(id){
   var slides=im.length?im.map(function(u,i){return '<div class="slide" data-act="zoom" data-id="'+esc(p.id)+'" data-i="'+i+'"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'"></div>'}).join(''):'<div class="slide"><div class="ph">'+CROWN+'</div></div>';
   var strip=im.length>1?'<div class="strip">'+im.map(function(u,i){return '<button type="button" data-act="pic" data-i="'+i+'" aria-label="Photo '+(i+1)+'"'+(i===0?' aria-current="true"':'')+'><img src="'+esc(u)+'" alt=""></button>'}).join('')+'</div>':'';
   modal('<div class="dtop"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><span class="dtitle">'+esc(state.settings.name)+'</span></div>'+
-  '<div class="dpic"><div class="car" id="car">'+slides+'</div>'+(im.length>1?'<span class="cnt" id="cnt">1 / '+im.length+'</span>':'')+(p.soldOut?'<span class="badge so">Sold out</span>':(off?'<span class="badge">-'+off+'%</span>':''))+'</div>'+strip+
+  '<div class="dpic"><div class="car" id="car">'+slides+'</div>'+(im.length>1?'<span class="cnt" id="cnt">1 / '+im.length+'</span><span class="flash" id="flash"></span>':'')+(p.soldOut?'<span class="badge so">Sold out</span>':(off?'<span class="badge">-'+off+'%</span>':''))+'</div>'+strip+
   '<div class="dbody">'+(p.category?'<span class="cat">'+esc(p.category)+'</span>':'')+'<h3>'+esc(p.name)+'</h3>'+
   '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+specs(p)+
   (p.desc?'<p class="desc full">'+esc(p.desc)+'</p>':'')+'</div>'+
   '<div class="dbar" id="dbar">'+dbarHtml(p)+'</div>','full');
   var car=document.getElementById('car');
+  var lastI=0;
   if(car&&im.length>1)car.addEventListener('scroll',function(){
     var i=Math.round(car.scrollLeft/car.clientWidth);
+    if(i!==lastI){lastI=i;var fl=document.getElementById('flash');if(fl){fl.classList.remove('on');void fl.offsetWidth;fl.classList.add('on')}}
     document.getElementById('cnt').textContent=(i+1)+' / '+im.length;
     document.querySelectorAll('.panel .strip button').forEach(function(x,k){if(k===i)x.setAttribute('aria-current','true');else x.removeAttribute('aria-current')});
   },{passive:true});
@@ -582,6 +642,7 @@ function renderCount(){
   }else go();
 }
 
+onWelcomeGone(function(){var e=document.getElementById('opbox');if(e)e.classList.add('go')});
 /* ---------- install as app ---------- */
 var instEv=null;
 function isIos(){try{return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream}catch(e){return false}}
@@ -596,7 +657,43 @@ function showInst(mode){
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEv=e;try{renderBar()}catch(x){}});
 window.addEventListener('appinstalled',function(){instEv=null;try{renderBar()}catch(x){}var el=document.getElementById('inst');if(el)el.hidden=true});
 try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
-function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
+
+/* ---------- banner slider ---------- */
+var bnTimer=0,bnSig='',bnPause=0,bnHover=false;
+function bannerList(){var b=state.settings.banners;if(!Array.isArray(b))return ['banner.jpg'];return b.filter(Boolean)}
+function bnErr(img){var sl=img.parentNode,t=sl.parentNode;sl.remove();var el=document.getElementById('banner');if(t&&!t.children.length&&el){el.hidden=true;stopBn()}}
+function stopBn(){if(bnTimer){clearInterval(bnTimer);bnTimer=0}}
+function bnDots(){var t=document.getElementById('bnt'),d=document.getElementById('bnd');if(!t||!d)return;var i=Math.round(t.scrollLeft/Math.max(t.clientWidth,1));Array.prototype.forEach.call(d.children,function(x,k){x.className=k===i?'on':''})}
+function startBn(){
+  stopBn();var t=document.getElementById('bnt');if(!t||t.children.length<2)return;
+  var ms=Math.max(1,Math.min(+state.settings.bannerSecs||2,15))*1000;
+  t.addEventListener('scroll',bnDots,{passive:true});
+  ['touchstart','pointerdown','wheel'].forEach(function(ev){t.addEventListener(ev,function(){bnPause=Date.now()+4000},{passive:true})});
+  var bx=document.getElementById('banner');
+  bx.onmouseenter=function(){bnHover=true};bx.onmouseleave=function(){bnHover=false};
+  bnTimer=setInterval(function(){
+    if(document.hidden||bnHover||bnPause>Date.now())return;
+    var w=t.clientWidth,i=Math.round(t.scrollLeft/Math.max(w,1)),n=t.children.length,nx=(i+1)%n;
+    if(nx===0)t.scrollTo({left:0,behavior:'auto'});else t.scrollTo({left:nx*w,behavior:'smooth'});
+  },ms);
+}
+function renderBanner(){
+  var el=document.getElementById('banner');if(!el)return;
+  var l=bannerList(),sig=l.length+'|'+l.map(function(u){return u.length+u.slice(-24)}).join(',')+'|'+(state.settings.bannerSecs||2);
+  if(!l.length){el.hidden=true;el.innerHTML='';stopBn();bnSig='';return}
+  if(sig===bnSig&&el.children.length)return;
+  bnSig=sig;el.hidden=false;
+  el.innerHTML='<div class="bn-track" id="bnt">'+l.map(function(u,i){return '<div class="bn-slide"><img src="'+esc(u)+'" alt="Store banner '+(i+1)+'" decoding="async"'+(i?' loading="lazy"':'')+' onerror="bnErr(this)"></div>'}).join('')+'</div>'+(l.length>1?'<div class="bn-dots" id="bnd">'+l.map(function(u,i){return '<button type="button" data-act="bngo" data-i="'+i+'" aria-label="Banner '+(i+1)+'"'+(i===0?' class="on"':'')+'></button>'}).join('')+'</div>':'');
+  startBn();
+}
+function bnAdminHtml(){
+  var l=editing.banners||[];
+  if(!l.length)return '<p class="hint">No banners yet. Add a photo below.</p>';
+  return l.map(function(u,i){return '<div class="bnrow"><img src="'+esc(u)+'" alt=""><div class="bnb"><button type="button" class="btn sm ghost" data-act="bnup" data-i="'+i+'"'+(i?'':' disabled')+' aria-label="Move up">&uarr;</button><button type="button" class="btn sm ghost" data-act="bndn" data-i="'+i+'"'+(i<l.length-1?'':' disabled')+' aria-label="Move down">&darr;</button><button type="button" class="btn sm ghost" data-act="bnrm" data-i="'+i+'">Remove</button></div></div>'}).join('');
+}
+function bnRefresh(){var b=document.getElementById('bnlist');if(b)b.innerHTML=bnAdminHtml()}
+function onWelcomeGone(fn){if(!document.getElementById('welcome')){fn();return}var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);fn()}},120)}
+function renderAll(){renderBanner();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
 
 /* ---------- modal ---------- */
 function modal(html,cls){$('#modal').innerHTML='<div class="ovl'+(cls?' '+cls:'')+'" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';document.body.style.overflow='hidden';if(!detailOpen){try{history.pushState({zc:1},'',location.href.split('#')[0]+'#view');detailOpen=true}catch(e){}}}
@@ -648,10 +745,15 @@ function saveProduct(){
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 function openSettings(){
-  var s=state.settings;editing={logo:s.logo||''};
+  var s=state.settings;editing={logo:s.logo||'',banners:bannerList().slice()};
   modal('<form id="sf" novalidate><h3>Store settings</h3>'+
   '<div class="up"><div class="thumb" id="lth">'+(editing.logo?'<img src="'+esc(editing.logo)+'" alt="">':CROWN)+'</div>'+
   '<div><label for="limg">Store logo<input id="limg" type="file" accept="image/*"></label><button type="button" class="btn sm ghost" data-act="rmlogo" style="margin-top:6px">Use default crown</button></div></div>'+
+  '<h3 style="font-size:17px;margin-top:6px">Banners (slider)</h3>'+
+  '<div id="bnlist">'+bnAdminHtml()+'</div>'+
+  '<label for="bnimg">Add banner photos<input id="bnimg" type="file" accept="image/*" multiple></label>'+
+  '<label for="bnsec">Seconds each banner stays<input id="bnsec" inputmode="numeric" value="'+esc(String(s.bannerSecs||2))+'" maxlength="2"></label>'+
+  '<p class="hint">Use wide pictures (like 16:9). They are made smaller automatically. Up to 8 banners. With more than one, they change by themselves. Tap Publish after saving.</p>'+
   '<label for="sname">Store name<input id="sname" value="'+esc(s.name)+'" maxlength="40"></label>'+
   '<label for="stag">Tagline<input id="stag" value="'+esc(s.tagline)+'" maxlength="90"></label>'+
   '<label for="swl">Welcome message (shown when visitors arrive)<input id="swl" value="'+esc(s.welcome)+'" maxlength="60"></label>'+
@@ -691,7 +793,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.promoPct=Math.min(Math.max(parseInt($('#spp').value,10)||20,1),90);s.promoOn=$('#spo').checked;s.payJc=$('#sjc').value.trim();s.payJcT=$('#sjct').value.trim();s.payEp=$('#sep').value.trim();s.payEpT=$('#sept').value.trim();s.payBkN=$('#sbn').value.trim();s.payBk=$('#sbk').value.trim();s.payBkT=$('#sbkt').value.trim();promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';
+  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.promoPct=Math.min(Math.max(parseInt($('#spp').value,10)||20,1),90);s.promoOn=$('#spo').checked;s.payJc=$('#sjc').value.trim();s.payJcT=$('#sjct').value.trim();s.payEp=$('#sep').value.trim();s.payEpT=$('#sept').value.trim();s.payBkN=$('#sbn').value.trim();s.payBk=$('#sbk').value.trim();s.payBkT=$('#sbkt').value.trim();promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';s.banners=(editing.banners||[]).slice(0,8);s.bannerSecs=Math.min(Math.max(parseInt($('#bnsec').value,10)||2,1),15);bnSig='';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
@@ -741,7 +843,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="banner" id="banner"><img src="banner.jpg" width="1672" height="941" alt="Crown Kitchens: quality kitchenware, free delivery all over Pakistan, cash on delivery" decoding="async" onerror="this.parentNode.hidden=true"></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="sbar"><input class="search" id="q" type="search" placeholder="Search products" aria-label="Search products" autocomplete="off"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -761,6 +863,8 @@ async function publish(btn){
   btn.disabled=true;btn.textContent='Publishing...';
   try{
     var list=await ghList(repo,c.token),sj=list.find(function(x){return x.name==='store.json'}),lp=list.find(function(x){return x.name==='logo.png'});
+    var bl2=state.settings.banners;
+    if(Array.isArray(bl2)){for(var bk=0;bk<bl2.length;bk++){if(/^data:image\/jpeg;base64,/.test(bl2[bk])){var bn='banners/b'+Date.now().toString(36)+bk+'.jpg';await ghWrite(repo,c.token,bn,bl2[bk].split(',')[1]);bl2[bk]=bn}}}
     await ghWrite(repo,c.token,'store.json',b64(JSON.stringify(state)),sj&&sj.sha);
     var lg=state.settings.logo,pend=false;try{pend=localStorage.getItem('zc-logo-pending')==='1'}catch(e){}
     if(lg&&/^data:image\/png;base64,/.test(lg)){if(pend||!lp){await ghWrite(repo,c.token,'logo.png',lg.split(',')[1],lp&&lp.sha);try{localStorage.removeItem('zc-logo-pending')}catch(e){}}}
@@ -805,6 +909,8 @@ document.addEventListener('click',function(e){
   else if(a==='qminus'){var qp=prod(id);if(cart[id]){cart[id]--;if(!cart[id])delete cart[id]}saveCart();renderBar();renderFab();var qd=document.getElementById('dbar');if(qd&&qp)qd.innerHTML=dbarHtml(qp);toast(cart[id]?'Removed one':'Removed from cart')}
   else if(a==='clearcart'){cart={};promoUsed=false;saveCart();renderBar();renderFab();toast('Cart cleared')}
   else if(a==='addcart-d'){var ap=prod(id);if(ap)track('add_to_cart',{currency:'PKR',value:ap.price,items:[gaItem(ap)]});cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();var db=document.getElementById('dbar');if(db&&ap)db.innerHTML=dbarHtml(ap);toast('Added to cart')}
+  else if(a==='bngo'){var bt=document.getElementById('bnt');if(bt){bnPause=Date.now()+4000;bt.scrollTo({left:(+b.dataset.i)*bt.clientWidth,behavior:'smooth'})}}
+  else if(a==='bnup'||a==='bndn'||a==='bnrm'){var bl=editing.banners,bi=+b.dataset.i;if(a==='bnrm')bl.splice(bi,1);else{var bj=a==='bnup'?bi-1:bi+1;if(bj>=0&&bj<bl.length){var tmp=bl[bi];bl[bi]=bl[bj];bl[bj]=tmp}}bnRefresh()}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
   else if(a==='del'){
     if(b.dataset.armed){state.products=state.products.filter(function(p){return p.id!==id});delete cart[id];saveCart();dirty++;persist();closeModal();renderAll();toast('Deleted on this phone. Tap Publish to update customers.')}
@@ -829,6 +935,11 @@ document.addEventListener('change',function(e){
     var room=Math.max(10-editing.imgs.length,0),fl=Array.prototype.slice.call(t.files,0,room);
     $('#perr').textContent=t.files.length>room?'Only 10 photos fit per product. The extra photos were skipped.':'';
     Promise.all(fl.map(function(x){return shrink(x,640,'image/jpeg',.72).catch(function(){return null})})).then(function(r){r.forEach(function(u){if(u)editing.imgs.push(u)});refreshGal();t.value=''})}
+  if(t.id==='bnimg'&&t.files.length){
+    var room2=Math.max(8-(editing.banners||[]).length,0),fl2=Array.prototype.slice.call(t.files,0,room2);
+    if(!fl2.length){toast('You already have 8 banners. Remove one first.');return}
+    Promise.all(fl2.map(function(ff){return shrink(ff,1400,'image/jpeg',0.8).catch(function(){return null})})).then(function(r){r.forEach(function(u){if(u)editing.banners.push(u)});bnRefresh();t.value=''});
+    return}
   if(t.id==='limg'&&f){shrink(f,280,'image/png').then(function(u){editing.logo=u;$('#lth').innerHTML='<img src="'+esc(u)+'" alt="">'}).catch(function(){toast('That logo could not be read. Try a PNG or JPG.')})}
 });
 (function(){
