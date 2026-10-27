@@ -465,6 +465,37 @@ textarea{resize:vertical;min-height:70px}
 .wmid{flex:1;min-width:0;display:grid;gap:3px}
 .wmid b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .wmid span{color:var(--brand);font-weight:700}
+
+/* discount offer bar above the red header */
+.offer{position:relative;overflow:hidden;background:linear-gradient(100deg,#E9A800,#FFD23F 40%,#F2B705 70%,#DE9C00);padding:8px 12px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.offer[hidden]{display:none}
+.offer::after{content:"";position:absolute;top:0;bottom:0;left:0;width:55%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.85) 50%,transparent 70%);transform:translateX(-120%) skewX(-12deg);animation:ofpol 3.6s ease-in-out infinite;pointer-events:none}
+@keyframes ofpol{0%{transform:translateX(-120%) skewX(-12deg)}55%,100%{transform:translateX(260%) skewX(-12deg)}}
+.oin{position:relative;z-index:1;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 10px;max-width:1176px;margin:0 auto}
+.otx{font:800 20px/1 var(--display,var(--body));color:#FFE680;-webkit-text-stroke:1.5px #1a1200;paint-order:stroke fill;text-shadow:0 2px 0 #1a1200;letter-spacing:.02em}
+.osub{font:800 14px/1 var(--body);color:#FFE680;-webkit-text-stroke:1px #1a1200;paint-order:stroke fill;text-shadow:0 1.5px 0 #1a1200}
+.ocode{background:#1a1200;color:#FFD84D;border:1.5px dashed #FFD84D;border-radius:9px;padding:5px 12px;font:800 16px/1 var(--body);letter-spacing:.12em}
+.ocopy{border:0;background:#fff;color:#1a1200;border-radius:9px;padding:7px 14px;font:800 14px/1 var(--body);cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.ocopy:active{transform:translateY(2px);box-shadow:none}
+.otime{background:#1a1200;color:#FFD84D;border-radius:9px;padding:6px 10px;font:800 15px/1 var(--body);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.ook{font:800 14px/1.2 var(--body);color:#1a1200}
+@media (min-width:900px){.offer{padding:10px 16px}.otx{font-size:26px}.osub{font-size:17px}.ocode{font-size:19px;padding:6px 16px}.ocopy{font-size:16px;padding:9px 18px}.otime{font-size:18px;padding:8px 12px}}
+@media (prefers-reduced-motion:reduce){.offer::after{animation:none;display:none}}
+
+/* offer bar: headline row + code row */
+.oin{flex-direction:column;flex-wrap:nowrap;gap:7px}
+.orow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:5px 10px}
+.otx2{font:800 14px/1 var(--body);color:#FFE680;-webkit-text-stroke:1px #1a1200;paint-order:stroke fill;text-shadow:0 1.5px 0 #1a1200}
+.ocode{background:#fff;color:#1a1200;border:0;border-radius:10px;padding:7px 16px;font:800 17px/1 var(--body);letter-spacing:.06em;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.ocopy{background:#1a1200;color:#FFD84D;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.osep{color:#1a1200;font-weight:800;opacity:.7}
+i.otime{font-style:normal;background:none;padding:0;color:#FFE680;-webkit-text-stroke:1px #1a1200;paint-order:stroke fill;text-shadow:0 1.5px 0 #1a1200;font:800 16px/1 var(--body);font-variant-numeric:tabular-nums}
+@media (min-width:900px){.otx2{font-size:18px}.ocode{font-size:20px;padding:8px 20px}i.otime{font-size:19px}.oin{gap:9px}}
+
+@media (max-width:520px){.orow{gap:5px 7px}.osep{display:none}.offer .osub{font-size:12.5px}.ocode{font-size:14.5px;padding:6px 10px;letter-spacing:.03em}.ocopy{font-size:13px;padding:7px 11px}i.otime{font-size:14px}.otx{font-size:18px}.otx2{font-size:12.5px}}
+
+/* offer bar text: black with a soft shadow */
+.offer .otx,.offer .otx2,.offer .osub,.offer i.otime,.offer .ook{color:#111;-webkit-text-stroke:0;paint-order:normal;text-shadow:0 2px 3px rgba(0,0,0,.22)}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -481,7 +512,7 @@ if(b.tagline){var t=document.getElementById('wtag');t.textContent=b.tagline;t.hi
 var im=document.getElementById('wli');if(b.logo){if(im){im.src=b.logo;im.style.visibility='visible'}}else{var l=document.getElementById('wlogo');if(l)l.innerHTML=window.__zcCrown}}}catch(e){}
 setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();document.body.style.overflow=''}},5500);
 })();</script>
-<div id="hdr"><div class="wrap bar" id="bar"></div></div>
+<div class="offer" id="offer" hidden></div><div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
 <main class="wrap">
   <div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div>
@@ -507,7 +538,7 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoOn:true,payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,promoOn:true,payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
@@ -523,7 +554,43 @@ var promoUsed=false;
 function promoOk(){var st=state.settings;return !!(st.promoOn!==false&&(st.promoCode||'').trim()&&+st.promoPct>0)}
 function discount(){return promoUsed&&promoOk()?Math.round(subtotal()*Math.min(+state.settings.promoPct,90)/100):0}
 function total(){return Math.max(subtotal()-discount(),0)}
-function renderPromo(){var b=$('#promo');if(!b)return;var st=state.settings;if(!promoOk()){b.hidden=true;return}b.hidden=false;b.innerHTML='<span class="pk">'+(+st.promoPct)+'% OFF</span><span>Use code <b>'+esc(st.promoCode.trim().toUpperCase())+'</b> at checkout</span>'}
+function offerMins(){return Math.min(Math.max(parseInt(state.settings.promoMins,10)||5,1),120)}
+function offerKey(){var st=state.settings;return (st.promoCode||'').trim().toUpperCase()+'|'+(+st.promoPct)+'|'+offerMins()}
+function offerRec(){var o=null;try{o=JSON.parse(localStorage.getItem('zc-offer')||'null')}catch(e){}return o&&o.key===offerKey()?o:null}
+function offerState(){
+  if(!promoOk())return {st:'none'};
+  var o=offerRec();
+  if(!o||!o.start)return {st:'new',left:offerMins()*60};
+  if(o.claimed)return {st:'claimed'};
+  var left=Math.ceil((o.start+offerMins()*60000-Date.now())/1000);
+  return left>0?{st:'live',left:left}:{st:'ended'};
+}
+function offerAllows(){if(owner)return true;var x=offerState().st;return x==='live'||x==='claimed'||x==='new'}
+function offerWrite(o){try{localStorage.setItem('zc-offer',JSON.stringify(o))}catch(e){}}
+function fmtLeft(n){n=Math.max(n,0);var m=Math.floor(n/60),r=n%60;return (m<10?'0':'')+m+':'+(r<10?'0':'')+r}
+var offSig='',offTick=0;
+function renderOffer(force){
+  var el=document.getElementById('offer');if(!el)return;
+  var st=state.settings,x=offerState();
+  if(!owner&&x.st==='new'&&!document.getElementById('welcome')&&!loading){offerWrite({key:offerKey(),start:Date.now(),claimed:false});x=offerState()}
+  if(x.st==='none'||x.st==='ended'){el.hidden=true;el.innerHTML='';offSig='';if(offTick){clearInterval(offTick);offTick=0}return}
+  var code=esc((st.promoCode||'').trim().toUpperCase()),pct=(+st.promoPct),sig=x.st+'|'+code+'|'+pct;
+  if(!force&&sig===offSig&&!el.hidden)return;
+  offSig=sig;el.hidden=false;
+  var r1='<div class="orow"><span class="otx">'+pct+'% OFF</span><span class="otx2">&middot; Special discount for you</span></div>';
+  if(x.st==='claimed')el.innerHTML='<div class="oin">'+r1+'<div class="orow"><span class="osub">Code copied:</span><b class="ocode">'+code+'</b><span class="ook">&#10003; Now apply it in your cart</span></div></div>';
+  else el.innerHTML='<div class="oin">'+r1+'<div class="orow"><span class="osub">Use Code:</span><b class="ocode">'+code+'</b><button type="button" class="ocopy" data-act="offcopy">Copy</button><span class="osep">|</span><span class="osub">Ends in <i class="otime" id="otime">'+fmtLeft(x.left)+'</i></span></div></div>';
+  if(offTick){clearInterval(offTick);offTick=0}
+  if(x.st==='live'||(x.st==='new')){
+    if(!owner)offTick=setInterval(function(){
+      var y=offerState(),t=document.getElementById('otime');
+      if(y.st==='live'){if(t)t.textContent=fmtLeft(y.left)}
+      else if(y.st==='new'){renderOffer()}
+      else{renderOffer(true);if(y.st==='ended')toast('The discount offer has ended.')}
+    },1000);
+  }
+}
+function renderPromo(){var b=$('#promo');if(b)b.hidden=true;renderOffer()}
 var tt;function toast(m){var t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true},3600)}
 function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(state.settings.logo)+'" alt="">':(loading?'<img class="logo" src="logo.png" alt="" onerror="this.outerHTML=window.__zcCrown">':CROWN)}
 
@@ -675,7 +742,7 @@ function renderCount(){
   }else go();
 }
 
-onWelcomeGone(function(){var e=document.getElementById('opbox');if(e)e.classList.add('go')});
+onWelcomeGone(function(){var e=document.getElementById('opbox');if(e)e.classList.add('go');renderOffer(true)});
 /* ---------- install as app ---------- */
 var instEv=null;
 function isIos(){try{return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream}catch(e){return false}}
@@ -843,6 +910,7 @@ function openSettings(){
   '<h3 style="font-size:17px;margin-top:6px">Discount offer</h3>'+
   '<div class="row"><label for="spc">Discount code<input id="spc" value="'+esc(s.promoCode||'')+'" placeholder="e.g. CROWN20" maxlength="20" autocomplete="off" autocapitalize="characters"></label>'+
   '<label for="spp">Discount %<input id="spp" inputmode="numeric" value="'+esc(String(s.promoPct==null?20:s.promoPct))+'" maxlength="2"></label></div>'+
+  '<label for="spm">Offer timer (minutes customers have to copy the code)<input id="spm" inputmode="numeric" value="'+esc(String(s.promoMins||5))+'" maxlength="3"></label>'+
   '<label class="chk" for="spo"><input type="checkbox" id="spo"'+(s.promoOn!==false?' checked':'')+'> Show the offer bar to customers</label>'+
   '<p class="hint">The bar appears under the tagline. Customers type the code in their cart to get the discount. Leave the code empty to hide it.</p>'+
   '<h3 style="font-size:17px;margin-top:6px">Payment details (shown in cart)</h3>'+
@@ -869,7 +937,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.promoPct=Math.min(Math.max(parseInt($('#spp').value,10)||20,1),90);s.promoOn=$('#spo').checked;s.payJc=$('#sjc').value.trim();s.payJcT=$('#sjct').value.trim();s.payEp=$('#sep').value.trim();s.payEpT=$('#sept').value.trim();s.payBkN=$('#sbn').value.trim();s.payBk=$('#sbk').value.trim();s.payBkT=$('#sbkt').value.trim();promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';s.banners=(editing.banners||[]).slice(0,8);s.bannerSecs=Math.min(Math.max(parseInt($('#bnsec').value,10)||2,1),15);bnSig='';
+  s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.promoPct=Math.min(Math.max(parseInt($('#spp').value,10)||20,1),90);s.promoOn=$('#spo').checked;s.promoMins=Math.min(Math.max(parseInt($('#spm').value,10)||5,1),120);offSig='';s.payJc=$('#sjc').value.trim();s.payJcT=$('#sjct').value.trim();s.payEp=$('#sep').value.trim();s.payEpT=$('#sept').value.trim();s.payBkN=$('#sbn').value.trim();s.payBk=$('#sbk').value.trim();s.payBkT=$('#sbkt').value.trim();promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';s.banners=(editing.banners||[]).slice(0,8);s.bannerSecs=Math.min(Math.max(parseInt($('#bnsec').value,10)||2,1),15);bnSig='';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
 
@@ -902,7 +970,7 @@ function openCart(){
   if(!items.length){modal('<h3>Your cart</h3><div class="empty"><p>Your cart is empty. Add something you like.</p></div><button class="btn ghost" data-act="close">Keep shopping</button>');return}
   var hasWa=!!waLink();
   modal('<h3>Your cart</h3><div>'+items.map(function(i){return '<div class="line"><span class="n">'+esc(i.p.name)+'</span><div class="qty"><button data-act="dec" data-id="'+esc(i.p.id)+'" aria-label="Fewer">-</button><span>'+i.qty+'</span><button data-act="inc" data-id="'+esc(i.p.id)+'" aria-label="More">+</button></div><span class="s">'+money(i.p.price)+' each = '+money(i.p.price*i.qty)+'</span></div>'}).join('')+'</div>'+
-  (promoOk()?'<div class="pcode"><input id="pcin" placeholder="Discount code" autocomplete="off" autocapitalize="characters" value="'+(promoUsed?esc(state.settings.promoCode.trim().toUpperCase()):'')+'"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div>'+(promoUsed?'<p class="ok">Code applied. You save '+money(discount())+'.</p>':'')+'<p class="err" id="pcerr" hidden>That code is not correct.</p>':'')+
+  (promoOk()&&offerAllows()?'<div class="pcode"><input id="pcin" placeholder="Discount code" autocomplete="off" autocapitalize="characters" value="'+((promoUsed||offerState().st==='claimed')?esc(state.settings.promoCode.trim().toUpperCase()):'')+'"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div>'+(promoUsed?'<p class="ok">Code applied. You save '+money(discount())+'.</p>':'')+'<p class="err" id="pcerr" hidden>That code is not correct.</p>':'')+
   (discount()?'<div class="tot sub"><span>Subtotal</span><span>'+money(subtotal())+'</span></div><div class="tot sub"><span>Discount</span><span>-'+money(discount())+'</span></div>':'')+
   '<div class="tot"><span>Total</span><span>'+money(total())+'</span></div>'+
   '<label for="cn">Your name<input id="cn" value="'+esc(cust.name)+'" autocomplete="name"></label>'+
@@ -919,7 +987,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div class="offer" id="offer" hidden></div><div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -960,7 +1028,7 @@ document.addEventListener('click',function(e){
   if(a==='cat'){cat=b.dataset.cat;renderChips();renderGrid()}
   else if(a==='addcart'){cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();toast('Added to cart')}
   else if(a==='cart')openCart();
-  else if(a==='applypromo'){if(promoUsed){promoUsed=false;renderFab();openCart()}else{var v=($('#pcin').value||'').trim().toUpperCase();if(v&&v===state.settings.promoCode.trim().toUpperCase()){promoUsed=true;renderFab();openCart();track('select_promotion',{promotion_id:v})}else{var er=$('#pcerr');if(er)er.hidden=false}}}
+  else if(a==='applypromo'){if(promoUsed){promoUsed=false;renderFab();openCart()}else{var v=($('#pcin').value||'').trim().toUpperCase();if(v&&v===state.settings.promoCode.trim().toUpperCase()&&offerAllows()){promoUsed=true;renderFab();openCart();track('select_promotion',{promotion_id:v})}else{var er=$('#pcerr');if(er)er.hidden=false}}}
   else if(a==='inc'||a==='dec'){cart[id]=Math.max(0,(cart[id]||0)+(a==='inc'?1:-1));if(!cart[id])delete cart[id];saveCart();renderBar();renderFab();openCart()}
   else if(a==='copypay'){var v=b.dataset.v||'';var done=function(){toast('Copied: '+v)};try{navigator.clipboard.writeText(v).then(done,function(){toast(v)})}catch(x){toast(v)}}
   else if(a==='close')closeModal();
@@ -985,6 +1053,13 @@ document.addEventListener('click',function(e){
   else if(a==='qminus'){var qp=prod(id);if(cart[id]){cart[id]--;if(!cart[id])delete cart[id]}saveCart();renderBar();renderFab();var qd=document.getElementById('dbar');if(qd&&qp)qd.innerHTML=dbarHtml(qp);toast(cart[id]?'Removed one':'Removed from cart')}
   else if(a==='clearcart'){cart={};promoUsed=false;saveCart();renderBar();renderFab();toast('Cart cleared')}
   else if(a==='addcart-d'){var ap=prod(id);if(ap)track('add_to_cart',{currency:'PKR',value:ap.price,items:[gaItem(ap)]});cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();var db=document.getElementById('dbar');if(db&&ap)db.innerHTML=dbarHtml(ap);toast('Added to cart')}
+  else if(a==='offcopy'){
+    var oc=(state.settings.promoCode||'').trim().toUpperCase();
+    var okc=function(){if(!owner){var o=offerRec()||{key:offerKey(),start:Date.now()};if(Date.now()<=o.start+offerMins()*60000||o.claimed){o.claimed=true;offerWrite(o)}}renderOffer(true);toast(owner?'Preview: code copied':'Code copied. Apply it in your cart.')};
+    var offs=offerState();
+    if(!owner&&offs.st==='ended'){toast('The offer has ended.')}
+    else{try{navigator.clipboard.writeText(oc).then(okc,okc)}catch(x){okc()}}
+  }
   else if(a==='menu')openMenu();
   else if(a==='mywish')openWish();
   else if(a==='signin')openSignin();
