@@ -362,6 +362,12 @@ textarea{resize:vertical;min-height:70px}
 .inst .it{flex:1;min-width:0}
 .inst .ib{border:0;background:#12A150;color:#fff;border-radius:10px;padding:9px 16px;font:800 14px/1 var(--body);cursor:pointer}
 .inst .ix{border:0;background:transparent;color:var(--muted);font:700 24px/1 var(--body);width:34px;height:34px;cursor:pointer}
+
+/* header install button */
+.barr{display:flex;align-items:center;gap:8px}
+.inbtn{width:38px;height:38px;border-radius:50%;border:1.5px solid rgba(255,255,255,.85);background:rgba(255,255,255,.16);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.inbtn:active{background:rgba(255,255,255,.3)}
+.inl{padding-left:20px;display:grid;gap:8px;margin:6px 0 14px}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -426,7 +432,7 @@ function logoHtml(){return state.settings.logo?'<img class="logo" src="'+esc(sta
 /* ---------- render ---------- */
 function renderBar(){
   $('#bar').innerHTML='<div class="brand">'+logoHtml()+'<h1 class="bname" style="margin:0">'+esc(state.settings.name)+'</h1></div>'+
-  '<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button>';
+  '<div class="barr">'+(isStandalone()||!(instEv||isIos())?'':'<button class="inbtn" type="button" data-act="instopen" aria-label="Install app" title="Install app"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3v11m0 0-4.5-4.5M12 14l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>')+'<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button></div>';
   $('#tag').textContent=state.settings.tagline||'';
   $('#tag').hidden=!state.settings.tagline;
   renderPromo();
@@ -570,6 +576,7 @@ function renderCount(){
 
 /* ---------- install as app ---------- */
 var instEv=null;
+function isIos(){try{return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream}catch(e){return false}}
 function isStandalone(){try{return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}}
 function instDismissed(){try{return localStorage.getItem('zc-inst-no')==='1'}catch(e){return false}}
 function showInst(mode){
@@ -578,9 +585,8 @@ function showInst(mode){
   else el.innerHTML='<span class="it">Get the <b>Crown Bazaar</b> app on your phone</span><button type="button" class="ib" data-act="instgo">Install</button><button type="button" class="ix" data-act="instno" aria-label="Close">&times;</button>';
   el.hidden=false;
 }
-window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEv=e;showInst('prompt')});
-window.addEventListener('appinstalled',function(){instEv=null;var el=document.getElementById('inst');if(el)el.hidden=true});
-try{if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream){setTimeout(function(){showInst('ios')},1500)}}catch(e){}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEv=e;try{renderBar()}catch(x){}});
+window.addEventListener('appinstalled',function(){instEv=null;try{renderBar()}catch(x){}var el=document.getElementById('inst');if(el)el.hidden=true});
 try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
 function renderAll(){renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
 
@@ -784,6 +790,9 @@ document.addEventListener('click',function(e){
   else if(a==='zoomclose'){var zz=document.getElementById('zoom');if(zz)zz.remove()}
   else if(a==='smile'){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle');toast('Thank you for visiting!')}
   else if(a==='open')openDetail(id);
+  else if(a==='instopen'){
+    if(instEv){var ie2=instEv;ie2.prompt();try{ie2.userChoice.then(function(c){if(c&&c.outcome==='accepted'){instEv=null;renderBar()}})}catch(x){}}
+    else if(isIos()){modal('<h3>Get the app</h3><ol class="inl"><li>Tap the <b>Share</b> button at the bottom of Safari.</li><li>Choose <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li></ol><button class="btn" data-act="close">OK</button>')}}
   else if(a==='instgo'){if(instEv){var ie=instEv;instEv=null;ie.prompt();try{ie.userChoice.then(function(){var el=document.getElementById('inst');if(el)el.hidden=true})}catch(x){}}}
   else if(a==='instno'){var el2=document.getElementById('inst');if(el2)el2.hidden=true;try{localStorage.setItem('zc-inst-no','1')}catch(x){}}
   else if(a==='qminus'){var qp=prod(id);if(cart[id]){cart[id]--;if(!cart[id])delete cart[id]}saveCart();renderBar();renderFab();var qd=document.getElementById('dbar');if(qd&&qp)qd.innerHTML=dbarHtml(qp);toast(cart[id]?'Removed one':'Removed from cart')}
