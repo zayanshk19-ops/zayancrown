@@ -555,14 +555,21 @@ i.otime{font-style:normal;background:none;padding:0;color:#FFE680;-webkit-text-s
 .vsec .blkline{margin:22px 0 12px}
 .vh{margin:0 0 10px;text-align:left;font:800 22px/1.2 var(--display);color:#111}
 .vwrap{position:relative}
-.vrow{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.vrow{position:relative;display:flex;align-items:center;gap:16px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:22px 0 22px}
 .vrow::-webkit-scrollbar{display:none}
-.vcard{flex:0 0 auto;scroll-snap-align:start;background:#000;border-radius:16px;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.2)}
-.vcard.vf{width:clamp(200px,58vw,270px);aspect-ratio:9/16}
-.vcard.vy{width:clamp(270px,84vw,440px);aspect-ratio:16/9}
-.vcard video,.vcard iframe{width:100%;height:100%;display:block;border:0;object-fit:contain;background:#000}
-.varr{display:none}
-@media (min-width:900px){.varr{display:grid;place-items:center;position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:44px;height:44px;border-radius:50%;border:0;background:#111;color:#fff;font-size:28px;line-height:1;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35)}.varr.vl{left:-14px}.varr.vr{right:-14px}.vcard.vf{width:260px}.vcard.vy{width:440px}}
+.vcard{position:relative;flex:0 0 auto;scroll-snap-align:center;background:#000;border-radius:18px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.18);transform:scale(.84);opacity:.65;transition:transform .35s ease,opacity .35s ease,box-shadow .35s ease}
+.vcard.on{transform:scale(1.08);opacity:1;box-shadow:0 12px 28px rgba(0,0,0,.32)}
+.vcard.vf{width:172px;aspect-ratio:9/16}
+.vcard.vy{width:290px;aspect-ratio:16/9}
+.vcard video,.vcard iframe{width:100%;height:100%;display:block;border:0;object-fit:cover;background:#000}
+.vcard.vy iframe{pointer-events:none}
+.vmute{position:absolute;right:8px;bottom:8px;z-index:3;width:34px;height:34px;border-radius:50%;border:0;background:rgba(0,0,0,.62);display:grid;place-items:center;cursor:pointer;padding:0}
+.vmute svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.vmute .son{display:none}
+.vmute.un .son{display:block}.vmute.un .soff{display:none}
+.vnav{display:flex;justify-content:center;gap:14px;margin-top:2px}
+.varr{width:44px;height:44px;border-radius:50%;border:1.5px solid #111;background:#fff;color:#111;font-size:26px;line-height:1;display:grid;place-items:center;cursor:pointer;padding:0 0 3px;box-shadow:0 3px 10px rgba(0,0,0,.14)}
+.varr:active{background:#111;color:#fff}
 .vlab{flex:1;min-width:0;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis}
 /* follow us: black, brand coloured buttons */
 .social b{color:#111}
@@ -581,7 +588,6 @@ i.otime{font-style:normal;background:none;padding:0;color:#FFE680;-webkit-text-s
 @media (min-width:900px){.contact{padding:18px 24px}.contact b{font-size:18px}.foot .contact .wabtn{padding:14px 28px;font-size:18px}}
 @media (prefers-reduced-motion:reduce){.wabtn::after{animation:none;display:none}}
 
-.vrow{align-items:flex-start}
 .foot .contact .wabtn span{color:#fff;font-size:inherit;font-weight:800}
 
 /* bottom navigation bar */
@@ -896,13 +902,54 @@ function renderVideos(){
   var sig=l.map(function(v){return v.t+(v.id||v.src||v.pend)}).join('|');
   if(sig===vSig&&el.children.length){el.hidden=false;return}
   vSig=sig;el.hidden=false;
-  el.innerHTML='<div class="blkline"></div><h2 class="vh">Videos</h2><div class="vwrap"><button type="button" class="varr vl" data-act="vscroll" data-d="-1" aria-label="Previous video">&lsaquo;</button><div class="vrow" id="vrow">'+
+  var SP='<button type="button" class="vmute" data-act="vmute" aria-label="Sound on or off"><svg class="soff" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/></svg><svg class="son" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button>';
+  el.innerHTML='<div class="blkline"></div><h2 class="vh">Videos</h2><div class="vrow" id="vrow">'+
     l.map(function(v){
-      if(v.t==='y')return '<div class="vcard vy"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(v.id)+'" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Product video"></iframe></div>';
+      if(v.t==='y')return '<div class="vcard vy"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(v.id)+'?enablejsapi=1&mute=1&controls=0&playsinline=1&loop=1&rel=0&playlist='+esc(v.id)+'" allow="autoplay; encrypted-media; picture-in-picture" title="Product video"></iframe>'+SP+'</div>';
       var src=v.src||(pendV[v.pend]&&pendV[v.pend].url)||'';
-      return '<div class="vcard vf"><video src="'+esc(src)+'" controls playsinline preload="metadata"></video></div>';
-    }).join('')+'</div><button type="button" class="varr vr" data-act="vscroll" data-d="1" aria-label="Next video">&rsaquo;</button></div>';
+      return '<div class="vcard vf"><video src="'+esc(src)+'" muted loop playsinline preload="metadata"></video>'+SP+'</div>';
+    }).join('')+'</div><div class="vnav"><button type="button" class="varr" data-act="vscroll" data-d="-1" aria-label="Previous video">&lsaquo;</button><button type="button" class="varr" data-act="vscroll" data-d="1" aria-label="Next video">&rsaquo;</button></div>';
+  var row=document.getElementById('vrow');
+  row.addEventListener('scroll',function(){if(!vRaf)vRaf=requestAnimationFrame(function(){vRaf=0;vUpdate()})},{passive:true});
+  Array.prototype.forEach.call(row.querySelectorAll('iframe'),function(f){f.addEventListener('load',function(){vUpdate(true)})});
+  vLayout();vCur=-1;vUpdate(true);
 }
+var vRaf=0,vCur=-1,vSeen=false;
+function vCmd(c,fn,arg){var f=c.querySelector('iframe');if(f&&f.contentWindow)try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:fn,args:arg||[]}),'*')}catch(e){}}
+function vSound(c,on){
+  var m=c.querySelector('.vmute'),v=c.querySelector('video');
+  if(v)v.muted=!on;else vCmd(c,on?'unMute':'mute');
+  c.dataset.s=on?'1':'';if(m)m.classList.toggle('un',on);
+}
+function vPlay(c,on){
+  var v=c.querySelector('video');
+  if(on){if(v){var p=v.play();if(p&&p.catch)p.catch(function(){})}else vCmd(c,'playVideo')}
+  else{vSound(c,false);if(v)v.pause();else vCmd(c,'pauseVideo')}
+}
+function vLayout(){
+  var r=document.getElementById('vrow');if(!r||!r.children.length)return;
+  var f=r.children[0],l=r.children[r.children.length-1];
+  r.style.paddingLeft=Math.max(8,(r.clientWidth-f.offsetWidth)/2)+'px';
+  r.style.paddingRight=Math.max(8,(r.clientWidth-l.offsetWidth)/2)+'px';
+}
+function vUpdate(force){
+  var r=document.getElementById('vrow');if(!r)return;
+  var mid=r.scrollLeft+r.clientWidth/2,best=0,bd=1e9,cs=r.children;
+  for(var i=0;i<cs.length;i++){var d=Math.abs(cs[i].offsetLeft+cs[i].offsetWidth/2-mid);if(d<bd){bd=d;best=i}}
+  if(best===vCur&&!force)return;
+  vCur=best;
+  for(i=0;i<cs.length;i++){var on=i===best;cs[i].classList.toggle('on',on);vPlay(cs[i],on&&vSeen)}
+}
+function vGo(i){
+  var r=document.getElementById('vrow');if(!r)return;i=Math.max(0,Math.min(r.children.length-1,i));
+  var c=r.children[i];r.scrollTo({left:c.offsetLeft+c.offsetWidth/2-r.clientWidth/2,behavior:'smooth'});
+}
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  var io=new IntersectionObserver(function(es){var s=es[0].isIntersecting;if(s!==vSeen){vSeen=s;vUpdate(true)}},{threshold:.4});
+  var t=setInterval(function(){var e=document.getElementById('vsec');if(e){io.observe(e);clearInterval(t)}},300);
+})();
+window.addEventListener('resize',function(){vLayout()});
 document.addEventListener('play',function(e){if(e.target&&e.target.tagName==='VIDEO'){Array.prototype.forEach.call(document.querySelectorAll('#vrow video'),function(v){if(v!==e.target)v.pause()})}},true);
 function vAdminHtml(){
   var l=editing.videos||[];
@@ -1113,7 +1160,7 @@ function openSettings(){
   '<div id="vlist">'+vAdminHtml()+'</div>'+
   '<label for="vfile">Add video from your phone<input id="vfile" type="file" accept="video/*"></label>'+
   '<div class="row"><label for="vyt">Or paste a YouTube link<input id="vyt" inputmode="url" placeholder="https://youtu.be/..." autocomplete="off" autocapitalize="none"></label><button class="btn sm ghost" type="button" data-act="vadd" style="align-self:end">Add</button></div>'+
-  '<p class="hint">Up to 5 videos. They show in a row under your products and customers swipe sideways. Phone videos should be under 25 MB (for longer ones use a YouTube link). Tap Publish after saving.</p>'+
+  '<p class="hint">Add one video at a time, tap Publish, and add the next one later (up to 5 in total). Earlier videos stay. Phone videos should be under 25 MB (for longer ones use a YouTube link). Tap Publish after saving.</p>'+
   '<label for="sname">Store name<input id="sname" value="'+esc(s.name)+'" maxlength="40"></label>'+
   '<label for="stag">Tagline<input id="stag" value="'+esc(s.tagline)+'" maxlength="90"></label>'+
   '<label for="swl">Welcome message (shown when visitors arrive)<input id="swl" value="'+esc(s.welcome)+'" maxlength="60"></label>'+
@@ -1302,7 +1349,8 @@ document.addEventListener('click',function(e){
   else if(a==='wish'){var wi=wish.indexOf(id);if(wi>-1){wish.splice(wi,1);toast('Removed from wishlist')}else{wish.push(id);var wp=prod(id);if(wp)track('add_to_wishlist',{currency:'PKR',value:wp.price,items:[gaItem(wp)]});toast('Saved to wishlist')}saveWish();refreshHearts();if(wishOnly&&document.getElementById('wlist'))openWish()}
   else if(a==='vadd'){var yi=ytId($('#vyt').value);if(!yi){toast('That is not a YouTube link.')}else if((editing.videos||[]).length>=5){toast('You can add up to 5 videos.')}else{editing.videos.push({t:'y',id:yi});$('#vyt').value='';vRefresh()}}
   else if(a==='vup'||a==='vdn'||a==='vrm'){var vl=editing.videos,vi=+b.dataset.i;if(a==='vrm'){var rv=vl.splice(vi,1)[0];if(rv&&rv.pend)delete pendV[rv.pend]}else{var vj=a==='vup'?vi-1:vi+1;if(vj>=0&&vj<vl.length){var vt=vl[vi];vl[vi]=vl[vj];vl[vj]=vt}}vRefresh()}
-  else if(a==='vscroll'){var vr=document.getElementById('vrow');if(vr)vr.scrollBy({left:(+b.dataset.d)*vr.clientWidth*0.8,behavior:'smooth'})}
+  else if(a==='vscroll'){vGo(vCur+(+b.dataset.d))}
+  else if(a==='vmute'){var vc=b.closest('.vcard');if(vc){var i0=Array.prototype.indexOf.call(vc.parentNode.children,vc);if(i0!==vCur){vGo(i0)}else vSound(vc,!vc.dataset.s)}}
   else if(a==='bngo'){var bt=document.getElementById('bnt');if(bt){bnPause=Date.now()+4000;bt.scrollTo({left:(+b.dataset.i)*bt.clientWidth,behavior:'smooth'})}}
   else if(a==='bnup'||a==='bndn'||a==='bnrm'){var bl=editing.banners,bi=+b.dataset.i;if(a==='bnrm')bl.splice(bi,1);else{var bj=a==='bnup'?bi-1:bi+1;if(bj>=0&&bj<bl.length){var tmp=bl[bi];bl[bi]=bl[bj];bl[bj]=tmp}}bnRefresh()}
   else if(a==='rmlogo'){editing.logo='';$('#lth').innerHTML=CROWN}
