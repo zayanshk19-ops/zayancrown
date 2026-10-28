@@ -714,6 +714,7 @@ body.nokb .bnav{display:none}
 .crow .card{flex:0 0 150px;scroll-snap-align:start}
 @media (min-width:900px){.crow .card{flex-basis:210px}}
 #catrows{margin-bottom:6px}
+#grid{padding-bottom:18px!important}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1014,7 +1015,7 @@ window.addEventListener('resize',fitOp);window.addEventListener('load',function(
 var catSig='',catTick=0;
 function renderCats(){
   var host=document.getElementById('catrows');
-  if(!host){var ch=document.getElementById('chips');if(!ch||!ch.parentNode)return;host=document.createElement('div');host.id='catrows';ch.parentNode.insertBefore(host,ch)}
+  if(!host){var gr=document.getElementById('grid');if(!gr||!gr.parentNode)return;host=document.createElement('div');host.id='catrows';gr.parentNode.insertBefore(host,gr.nextSibling)}
   var groups=[],map={};
   (state.products||[]).forEach(function(p){var c=(p.category||'').trim();if(!c)return;var k=c.toLowerCase();if(!map[k]){map[k]={name:c,list:[]};groups.push(map[k])}map[k].list.push(p)});
   if(loading||q||!groups.length){host.innerHTML='';catSig='';return}
