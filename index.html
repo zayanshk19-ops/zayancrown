@@ -583,6 +583,25 @@ i.otime{font-style:normal;background:none;padding:0;color:#FFE680;-webkit-text-s
 
 .vrow{align-items:flex-start}
 .foot .contact .wabtn span{color:#fff;font-size:inherit;font-weight:800}
+
+/* bottom navigation bar */
+body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-around;align-items:stretch;background:#fff;color:#111;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border-radius:22px 22px 0 0;box-shadow:0 -8px 28px rgba(0,0,0,.14);border-top:1px solid rgba(0,0,0,.06)}
+.nb{position:relative;flex:1;min-width:0;display:grid;justify-items:center;align-content:center;gap:3px;border:0;background:none;color:#111;font:800 12.5px/1 var(--body);padding:4px 2px;cursor:pointer;letter-spacing:.02em}
+.nb .ni{width:46px;height:30px;border-radius:15px;display:grid;place-items:center;transition:background .25s,transform .25s}
+.nb svg{width:23px;height:23px;fill:none;stroke:#111;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s}
+.nb[aria-current=page] .ni{background:#111;transform:translateY(-2px)}
+.nb[aria-current=page] svg{stroke:#fff}
+.nb[aria-current=page] .nl{font-weight:800}
+.nbd{position:absolute;top:0;left:calc(50% + 8px);min-width:18px;height:18px;border-radius:9px;background:#111;color:#fff;font:800 11px/18px var(--body);font-style:normal;text-align:center;padding:0 4px;box-shadow:0 0 0 2px #fff}
+@media (min-width:900px){.bnav{left:50%;right:auto;width:min(560px,92vw);transform:translateX(-50%);bottom:12px;border-radius:24px;padding-bottom:6px}}
+#fab{bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+@media (min-width:900px){#fab{bottom:76px}}
+.vsec{scroll-margin-top:84px}
+
+.ovl .panel{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+.sbuy{bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+#toast{z-index:70}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -613,7 +632,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
   <div class="grid" id="grid"></div><div class="vsec" id="vsec" hidden></div>
   <div class="foot" id="foot"></div>
 </main>
-<div id="fab"></div>
+<div id="fab"></div><nav class="bnav" id="bnav" aria-label="Main menu"></nav>
 <div id="modal"></div>
 <div id="toast" role="status" aria-live="polite" hidden></div>
 <script type="application/json" id="data">{"settings":{"name":"Zayan Crown","tagline":"Quality products, delivered to your door.","whatsapp":"","currency":"Rs","logo":""},"products":[]}</script>
@@ -688,7 +707,7 @@ function renderBar(){
   '<div class="barr">'+''+'<button class="cartbtn" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button></div>';
   $('#tag').textContent=state.settings.tagline||'';
   $('#tag').hidden=!state.settings.tagline;
-  renderPromo();
+  renderPromo();renderNav();
 }
 function renderOwner(){
   var ab=document.querySelector('.addbtn');if(ab){ab.hidden=!owner;if(ab.parentNode)ab.parentNode.hidden=!owner}
@@ -846,6 +865,26 @@ window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();ins
 window.addEventListener('appinstalled',function(){instEv=null;try{renderBar()}catch(x){}var el=document.getElementById('inst');if(el)el.hidden=true});
 try{if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(function(){})}catch(e){}
 
+/* ---------- bottom navigation ---------- */
+var navTab='home';
+var NAVI={
+  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h4.5v-5.5h4v5.5h4.5V10"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
+  videos:'<rect x="3" y="5" width="18" height="14" rx="3.5"/><path d="M10.5 9.5v5l4.2-2.5z"/>',
+  account:'<circle cx="12" cy="8.5" r="3.7"/><path d="M4.5 20c.9-3.7 3.8-5.6 7.5-5.6s6.6 1.9 7.5 5.6"/>',
+  cart:'<path d="M5 8h14l-1.2 11H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/>'};
+function renderNav(){
+  var el=document.getElementById('bnav');if(!el)return;
+  var n=count(),items=[['home','Home','navhome'],['search','Search','navsearch'],['videos','Videos','navvideos'],['account','Account','navacct'],['cart','Cart','navcart']];
+  el.innerHTML=items.map(function(x){return '<button type="button" class="nb" data-act="'+x[2]+'"'+(navTab===x[0]?' aria-current="page"':'')+'><span class="ni"><svg viewBox="0 0 24 24" aria-hidden="true">'+NAVI[x[0]]+'</svg></span><span class="nl">'+x[1]+'</span>'+(x[0]==='cart'&&n?'<i class="nbd">'+n+'</i>':'')+'</button>'}).join('');
+}
+function setTab(t){if(navTab!==t){navTab=t;renderNav()}}
+window.addEventListener('scroll',function(){
+  if(document.getElementById('modal')&&document.getElementById('modal').innerHTML)return;
+  var v=document.getElementById('vsec'),t='home';
+  if(v&&!v.hidden){var r=v.getBoundingClientRect();if(r.top<window.innerHeight*0.6&&r.bottom>90)t='videos'}
+  setTab(t);
+},{passive:true});
 /* ---------- product videos ---------- */
 var pendV={},vSig='';
 function ytId(u){var m=String(u||'').match(/(?:youtu\.be\/|[?&]v=|shorts\/|embed\/)([A-Za-z0-9_-]{11})/);return m?m[1]:''}
@@ -938,11 +977,12 @@ function shopGridHtml(){
 }
 function shopBarHtml(){var n=count();return n?'<button class="btn buy block" type="button" data-act="cart"><span>Buy now ('+n+')</span><span>'+money(total())+'</span></button>':''}
 function updateShopBar(){var b=document.getElementById('sbuy');if(b)b.innerHTML=shopBarHtml()}
-function openShop(){
-  shopTerm='';
-  modal('<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>Products</h3><button class="sico" type="button" data-act="shopsearch" aria-label="Search products"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>'+
-    '<div class="ssearch" id="ssearch" hidden><input id="sq" type="search" placeholder="Search products" autocomplete="off"></div>'+
+function openShop(mode){
+  shopTerm='';var srch=mode==='search';
+  modal('<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>'+(srch?'Search':'Products')+'</h3><button class="sico" type="button" data-act="shopsearch" aria-label="Search products"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>'+
+    '<div class="ssearch" id="ssearch"'+(srch?'':' hidden')+'><input id="sq" type="search" placeholder="Search products" autocomplete="off"></div>'+
     '<div class="sgrid" id="sgrid">'+shopGridHtml()+'</div><div class="sbuy" id="sbuy">'+shopBarHtml()+'</div>','wishpg');
+  if(srch){var si=document.getElementById('sq');if(si)setTimeout(function(){si.focus()},80)}
 }
 var wishOnly=false;
 function wcardHtml(p){
@@ -1008,12 +1048,12 @@ function kwCount(){
   requestAnimationFrame(step);
 }
 function onWelcomeGone(fn){if(!document.getElementById('welcome')){fn();return}var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);fn()}},120)}
-function renderAll(){renderBanner();renderVideos();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
+function renderAll(){renderNav();renderBanner();renderVideos();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
 
 /* ---------- modal ---------- */
 function modal(html,cls){$('#modal').innerHTML='<div class="ovl'+(cls?' '+cls:'')+'" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';document.body.style.overflow='hidden';if(!detailOpen){try{history.pushState({zc:1},'',location.href.split('#')[0]+'#view');detailOpen=true}catch(e){}}}
 var detailOpen=false;
-function closeModalRaw(){var z=document.getElementById('zoom');if(z)z.remove();$('#modal').innerHTML='';document.body.style.overflow='';editing=null}
+function closeModalRaw(){try{setTab('home')}catch(e){}var z=document.getElementById('zoom');if(z)z.remove();$('#modal').innerHTML='';document.body.style.overflow='';editing=null}
 function closeModal(){if(detailOpen){detailOpen=false;try{history.back()}catch(e){}}closeModalRaw()}
 window.addEventListener('popstate',function(){if(detailOpen){detailOpen=false;closeModalRaw()}});
 function opts(list,sel){return list.map(function(u){return '<option'+(u===sel?' selected':'')+'>'+u+'</option>'}).join('')}
@@ -1164,7 +1204,7 @@ function buildDoc(){
   var json=JSON.stringify(state).replace(/</g,'\\u003c');
   return '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+'</style></head><body>'+
     HEAD+'<style id="sheet">'+$('#sheet').textContent+'</style>'+
-    '<div class="offer" id="offer" hidden></div><div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="kws" id="kws"><b id="kwn">100</b>% best experience when you use.</div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="vsec" id="vsec" hidden></div><div class="foot" id="foot"></div></main><div id="fab"></div><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
+    '<div class="offer" id="offer" hidden></div><div id="hdr"><div class="wrap bar" id="bar"></div></div><div id="own"></div><main class="wrap"><div class="opbox" id="opbox"><div class="opin"><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><path d="M24 5 7 13v22l17 8 17-8V13z" fill="#D9A15C"/><path d="M24 5 7 13l17 8 17-8z" fill="#EBC184"/><path d="M24 21v22" stroke="#B9803F" stroke-width="2"/><path d="M15 9.5l17 8v6l-5 2.3v-6z" fill="#F7E3B8" opacity=".9"/></svg></span><span class="opm"><span class="opk"><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span><span class="opt">Pehla box open karen <b>-</b> phir payment karen</span></span></span><span class="opi" aria-hidden="true"><svg viewBox="0 0 48 48" width="28" height="28"><rect x="4" y="10" width="40" height="28" rx="5" fill="#F5B800"/><rect x="4" y="16" width="40" height="7" fill="#7B4A12"/><rect x="9" y="28" width="14" height="4" rx="2" fill="#fff" opacity=".85"/></svg></span></div></div><div class="banner" id="banner" hidden></div><section class="hero"><h2 id="tag"></h2><div class="promo" id="promo" hidden></div><div class="kw" id="kw"><span>Cookware &amp; Kitchenware</span></div><div class="kws" id="kws"><b id="kwn">100</b>% best experience when you use.</div><div class="sbar"><button class="btn addbtn" type="button" data-act="addnew">+ Add product</button></div></section><div class="inst" id="inst" hidden></div><div class="pcount" id="pcount" hidden></div><div class="chips" id="chips"></div><div class="grid" id="grid"></div><div class="vsec" id="vsec" hidden></div><div class="foot" id="foot"></div></main><div id="fab"></div><nav class="bnav" id="bnav" aria-label="Main menu"></nav><div id="modal"></div><div id="toast" role="status" aria-live="polite" hidden></div>'+
     '<script type="application/json" id="data">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
 }
 function ghGet(){var c={};try{c=JSON.parse(localStorage.getItem('zc-gh')||'{}')}catch(e){}return c}
@@ -1214,6 +1254,11 @@ document.addEventListener('click',function(e){
   if(a==='cat'){cat=b.dataset.cat;renderChips();renderGrid()}
   else if(a==='addcart'){cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();updateShopBar();toast('Added to cart')}
   else if(a==='shop')openShop();
+  else if(a==='navhome'){if(document.getElementById('modal').innerHTML)closeModal();window.scrollTo({top:0,behavior:'smooth'});setTab('home')}
+  else if(a==='navsearch'){navTab='search';renderNav();openShop('search')}
+  else if(a==='navvideos'){var vs=document.getElementById('vsec');if(!vs||vs.hidden){toast('Videos are coming soon.')}else{setTab('videos');vs.scrollIntoView({behavior:'smooth',block:'start'})}}
+  else if(a==='navacct'){navTab='account';renderNav();if(getUser())openMenu();else openSignin('in')}
+  else if(a==='navcart'){navTab='cart';renderNav();openCart()}
   else if(a==='shopsearch'){var ss=document.getElementById('ssearch');if(ss){ss.hidden=!ss.hidden;if(!ss.hidden){var sqi=document.getElementById('sq');if(sqi)sqi.focus()}}}
   else if(a==='cart')openCart();
   else if(a==='applypromo'){if(promoUsed){promoUsed=false;renderFab();openCart()}else{var v=($('#pcin').value||'').trim().toUpperCase();if(v&&v===state.settings.promoCode.trim().toUpperCase()&&offerAllows()){promoUsed=true;renderFab();openCart();track('select_promotion',{promotion_id:v})}else{var er=$('#pcerr');if(er)er.hidden=false}}}
