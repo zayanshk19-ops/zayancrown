@@ -629,6 +629,12 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 .wabtn .waico{display:grid;place-items:center;border:0;background:none;padding:0;cursor:pointer;color:inherit}
 .wabtn a{color:#fff;text-decoration:none}
 /* robot */
+.contact .wawrap{display:flex!important;flex-direction:row!important;flex:none;flex-wrap:nowrap;align-items:center;gap:8px}
+.wawrap .wabtn{padding:11px 13px;font-size:14px;gap:6px}
+.wawrap .wabtn svg{width:22px;height:22px}
+@media (min-width:900px){.wawrap .wabtn{padding:14px 26px;font-size:18px}}
+.botbtn{width:44px;height:44px;flex:none;border-radius:50%;border:0;background:var(--brand);display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 6px 16px rgba(209,18,43,.35)}
+.botbtn svg{width:30px;height:30px}
 .ovl.botpg .panel{overflow:hidden}
 .ovl.botpg .panel{grid-template-columns:minmax(0,1fr)}
 .bot-wrap{width:100%;min-width:0;height:100%;display:flex;flex-direction:column;min-height:0}
@@ -872,7 +878,7 @@ function socialHtml(st){
 }
 function renderFoot(){
   var st=state.settings;
-  var c='<div class="blkline"></div><div class="contact"><div><b>Contact us on WhatsApp</b><span>All Pakistan delivery</span></div><div class="btn wabtn"><button type="button" class="waico" data-act="bot" aria-label="Chat with our assistant"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-8l-5 4v-4H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z" fill="#fff"/><path d="M8.2 7.2c.5-.5 1.2-.4 1.5.2l.8 1.5c.2.4.1.8-.2 1.1l-.5.5c.6 1.2 1.6 2.2 2.8 2.8l.5-.5c.3-.3.7-.4 1.1-.2l1.5.8c.6.3.7 1 .2 1.5-.9.9-2.1 1.1-3.3.6-2.6-1-4.7-3.1-5.7-5.7-.5-1.2-.3-2.4.6-3.3z" fill="#12A150"/></svg></button><a target="_blank" rel="noopener" href="https://wa.me/'+waNum(st.whatsapp)+'"><span>'+esc(st.whatsapp)+'</span></a></div>';
+  var c='<div class="blkline"></div><div class="contact"><div><b>Contact us on WhatsApp</b><span>All Pakistan delivery</span></div><div class="wawrap"><a class="btn wabtn" target="_blank" rel="noopener" href="https://wa.me/'+waNum(st.whatsapp)+'" aria-label="Message us on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3h-8l-5 4v-4H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3z" fill="#fff"/><path d="M8.2 7.2c.5-.5 1.2-.4 1.5.2l.8 1.5c.2.4.1.8-.2 1.1l-.5.5c.6 1.2 1.6 2.2 2.8 2.8l.5-.5c.3-.3.7-.4 1.1-.2l1.5.8c.6.3.7 1 .2 1.5-.9.9-2.1 1.1-3.3.6-2.6-1-4.7-3.1-5.7-5.7-.5-1.2-.3-2.4.6-3.3z" fill="#12A150"/></svg><span>WhatsApp</span></a><button type="button" class="botbtn" data-act="bot" aria-label="Chat with our assistant">'+BOTSVG+'</button></div></div>';
   c+=socialHtml(st);
   $('#foot').innerHTML=c+(owner?'<p>Owner mode. Your changes are saved on this phone. Tap Publish changes to show them to customers. <a href="#" data-act="exit">Exit owner mode</a></p>':'<p>'+esc('© '+st.name)+'</p>');
 }
