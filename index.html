@@ -662,6 +662,17 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 .bform button{width:46px;height:46px;border-radius:50%;border:0;background:var(--brand);color:#fff;font-size:18px;cursor:pointer}
 body.nokb .bnav{display:none}
 .vcard video:fullscreen{object-fit:contain}.vcard video:-webkit-full-screen{object-fit:contain}
+
+/* product page bar above the bottom menu + share icon */
+.ovl .dbar{bottom:calc(62px + env(safe-area-inset-bottom,0px))}
+.ovl .dbar{gap:6px}
+.dbar .btn.buy{flex:1 1 auto;min-width:0;padding:10px 11px;font-size:14px;gap:6px}
+.dbar .btn.buy span{white-space:nowrap}
+.dbar .qs{flex:0 0 auto}
+.dbar .shr{flex:0 0 auto;width:48px;padding:0;display:grid;place-items:center;border:1.5px solid #111;background:#fff;color:#111}
+.dbar .shr svg{width:22px;height:22px;fill:none;stroke:#111;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.dbar .shr circle{fill:#111;stroke:none}
+@media (min-width:900px){.ovl.full .dbar{bottom:auto}}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -803,6 +814,7 @@ function dbarHtml(p){
   if(p.soldOut)h='<button class="btn" type="button" disabled>Sold out</button>';
   else if(q)h='<button class="btn buy" type="button" data-act="cart"><span>Buy now ('+count()+')</span><span>'+money(total())+'</span></button><div class="qs"><button type="button" data-act="qminus" data-id="'+esc(p.id)+'" aria-label="Remove one">&minus;</button><span>'+q+'</span><button type="button" data-act="addcart-d" data-id="'+esc(p.id)+'" aria-label="Add one more">+</button></div>';
   else h='<button class="btn" type="button" data-act="addcart-d" data-id="'+esc(p.id)+'">Add to cart</button>';
+  h+='<button class="btn ghost shr" type="button" data-act="share" data-id="'+esc(p.id)+'" aria-label="Share this product"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5.5" r="2.7"/><circle cx="6" cy="12" r="2.7"/><circle cx="18" cy="18.5" r="2.7"/><path d="m8.4 10.7 7.2-4M8.4 13.3l7.2 4"/></svg></button>';
   return h+(owner?'<button class="btn ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'');
 }
 function openDetail(id){
@@ -1430,6 +1442,9 @@ document.addEventListener('click',function(e){
   else if(a==='shop')openShop();
   else if(a==='navhome'){if(document.getElementById('modal').innerHTML)closeModal();window.scrollTo({top:0,behavior:'smooth'});setTab('home')}
   else if(a==='navsearch'){navTab='search';renderNav();openShop('search')}
+  else if(a==='share'){var sp=prod(id);if(sp){var su=location.href.split('#')[0],stx=sp.name+' - '+money(sp.price)+' | '+state.settings.name;
+    if(navigator.share){navigator.share({title:sp.name,text:stx,url:su}).catch(function(){})}
+    else{try{navigator.clipboard.writeText(stx+' '+su).then(function(){toast('Link copied')},function(){toast(su)})}catch(x){toast(su)}}}}
   else if(a==='bot')openBot();
   else if(a==='botq')botAsk(b.dataset.q);
   else if(a==='navvideos'){var vs=document.getElementById('vsec');if(!vs||vs.hidden){toast('Videos are coming soon.')}else{var mo=document.getElementById('modal').innerHTML;if(mo)closeModal();setTab('videos');setTimeout(function(){var y=vs.getBoundingClientRect().top+window.pageYOffset-84;window.scrollTo({top:Math.max(0,y),behavior:'smooth'})},mo?250:0)}}
