@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
 <title>Zayan Crown</title><meta name="theme-color" content="#D1122B"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crown Bazaar">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&family=Mrs+Saint+Delafield&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&family=Mrs+Saint+Delafield&family=Amiri:wght@700&display=swap">
 <style id="sheet">
 /* Layout: sticky brand bar, compact search band, 2-col product grid on phones; owner tools live in a bar above the grid. */
 :root{
@@ -711,9 +711,9 @@ body.nokb .bnav{display:none}
 @media (max-width:639px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
 /* category rows */
 .csec{margin-top:6px}
-.crow{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 2px 8px}
+.crow{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px 2px 8px}
 .crow::-webkit-scrollbar{display:none}
-.crow .card{flex:0 0 150px;scroll-snap-align:start}
+.crow .card{flex:0 0 150px}
 @media (min-width:900px){.crow .card{flex-basis:210px}}
 #catrows{margin-bottom:6px}
 #grid{padding-bottom:18px!important}
@@ -744,6 +744,9 @@ body.nokb .bnav{display:none}
 .ovl.full .dbar{position:fixed;left:0;right:0;bottom:calc(62px + env(safe-area-inset-bottom,0px));z-index:6;margin:0;padding:10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
 .ovl.full .panel{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 }
+
+/* verse above the offer line */
+.oayat{display:block;text-align:center;font:700 clamp(17px,4.8vw,24px)/1.6 "Amiri","Noto Naskh Arabic","Traditional Arabic","Geeza Pro",serif;color:#111;text-shadow:0 1px 2px rgba(0,0,0,.2);margin:0 0 2px}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -780,7 +783,7 @@ setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();
 <script type="application/json" id="data">{"settings":{"name":"Zayan Crown","tagline":"Quality products, delivered to your door.","whatsapp":"","currency":"Rs","logo":""},"products":[]}</script>
 <script id="app">
 (function(){
-var HEAD='<title>Zayan Crown</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&family=Mrs+Saint+Delafield&display=swap">';
+var HEAD='<title>Zayan Crown</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&family=Mrs+Saint+Delafield&family=Amiri:wght@700&display=swap">';
 var $=function(s){return document.querySelector(s)};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
@@ -825,7 +828,8 @@ function renderOffer(force){
   var code=esc((st.promoCode||'').trim().toUpperCase()),pct=(+st.promoPct),sig=x.st+'|'+code+'|'+pct;
   if(!force&&sig===offSig&&!el.hidden)return;
   offSig=sig;el.hidden=false;
-  var r1='<div class="orow"><span class="otx">'+pct+'% OFF</span><span class="otx2">&middot; Special discount for you</span></div>';
+  var ay='<div class="oayat" lang="ar" dir="rtl">أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</div>';
+  var r1=ay+'<div class="orow"><span class="otx">'+pct+'% OFF</span><span class="otx2">&middot; Special discount for you</span></div>';
   if(x.st==='claimed')el.innerHTML='<div class="oin">'+r1+'<div class="orow"><span class="osub">Code copied:</span><b class="ocode">'+code+'</b><span class="ook">&#10003; Now apply it in your cart</span></div></div>';
   else el.innerHTML='<div class="oin">'+r1+'<div class="orow"><span class="osub">Use Code:</span><b class="ocode">'+code+'</b><button type="button" class="ocopy" data-act="offcopy">Copy</button><span class="osep">|</span><span class="osub">Ends in <i class="otime" id="otime">'+fmtLeft(x.left)+'</i></span></div></div>';
   if(offTick){clearInterval(offTick);offTick=0}
@@ -1067,16 +1071,21 @@ function renderCats(){
     ['touchstart','pointerdown','wheel'].forEach(function(ev){r.addEventListener(ev,function(){r.dataset.p=Date.now()+6000},{passive:true})});
     r.addEventListener('mouseenter',function(){r.dataset.p=Date.now()+60000});r.addEventListener('mouseleave',function(){r.dataset.p=0});
   });
-  if(!catTick)catTick=setInterval(function(){
-    if(document.hidden||document.getElementById('modal').innerHTML)return;
-    Array.prototype.forEach.call(document.querySelectorAll('.crow'),function(r){
-      if(+r.dataset.p>Date.now()||r.scrollWidth<=r.clientWidth+4)return;
-      var b=r.getBoundingClientRect();if(b.bottom<0||b.top>window.innerHeight)return;
-      var c=r.children[0],st=c?c.offsetWidth+12:150;
-      if(r.scrollLeft+r.clientWidth>=r.scrollWidth-6)r.scrollTo({left:0,behavior:'smooth'});else r.scrollBy({left:st,behavior:'smooth'});
-    });
-  },2800);
+  catMove();
 }
+function catMove(){
+  var vh=window.innerHeight;
+  Array.prototype.forEach.call(document.querySelectorAll('.crow'),function(r){
+    if(+r.dataset.p>Date.now())return;
+    var mx=r.scrollWidth-r.clientWidth;if(mx<=4)return;
+    var b=r.getBoundingClientRect();if(b.bottom<-40||b.top>vh+40)return;
+    var k=(vh-b.top)/(vh+b.height);k=Math.max(0,Math.min(1,k));
+    r.scrollLeft=k*mx;
+  });
+}
+var catRaf=0;
+window.addEventListener('scroll',function(){if(!catRaf)catRaf=requestAnimationFrame(function(){catRaf=0;catMove()})},{passive:true});
+window.addEventListener('resize',function(){catMove()});
 
 /* in-page full screen for videos (no browser instruction bar) */
 var vfsOn=false;
