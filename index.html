@@ -1158,9 +1158,8 @@ function openSettings(){
   '<p class="hint">Use wide pictures (like 16:9). They are made smaller automatically. Up to 8 banners. With more than one, they change by themselves. Tap Publish after saving.</p>'+
   '<h3 style="font-size:17px;margin-top:6px">Product videos</h3>'+
   '<div id="vlist">'+vAdminHtml()+'</div>'+
-  '<label for="vfile">Add video from your phone<input id="vfile" type="file" accept="video/*"></label>'+
-  '<div class="row"><label for="vyt">Or paste a YouTube link<input id="vyt" inputmode="url" placeholder="https://youtu.be/..." autocomplete="off" autocapitalize="none"></label><button class="btn sm ghost" type="button" data-act="vadd" style="align-self:end">Add</button></div>'+
-  '<p class="hint">Add one video at a time, tap Publish, and add the next one later (up to 5 in total). Earlier videos stay. Phone videos should be under 25 MB (for longer ones use a YouTube link). Tap Publish after saving.</p>'+
+  '<label for="vfile">Choose video from your phone<input id="vfile" type="file" accept="video/*"></label>'+
+  '<p class="hint">Choose a video file, then tap Publish. Add one video at a time, the next one later (up to 5 in total). Earlier videos stay. Each video should be under 25 MB.</p>'+
   '<label for="sname">Store name<input id="sname" value="'+esc(s.name)+'" maxlength="40"></label>'+
   '<label for="stag">Tagline<input id="stag" value="'+esc(s.tagline)+'" maxlength="90"></label>'+
   '<label for="swl">Welcome message (shown when visitors arrive)<input id="swl" value="'+esc(s.welcome)+'" maxlength="60"></label>'+
@@ -1382,7 +1381,7 @@ document.addEventListener('change',function(e){
   if(t.id==='vfile'&&t.files.length){
     var vf=t.files[0];
     if((editing.videos||[]).length>=5){toast('You can add up to 5 videos.');t.value='';return}
-    if(vf.size>25*1048576){toast('That video is bigger than 25 MB. Use a YouTube link instead.');t.value='';return}
+    if(vf.size>25*1048576){toast('That video is bigger than 25 MB. Please choose a smaller video.');t.value='';return}
     var pid='p'+Date.now();pendV[pid]={file:vf,url:URL.createObjectURL(vf)};editing.videos.push({t:'f',src:'',pend:pid});vRefresh();t.value='';return}
   if(t.id==='bnimg'&&t.files.length){
     var room2=Math.max(8-(editing.banners||[]).length,0),fl2=Array.prototype.slice.call(t.files,0,room2);
