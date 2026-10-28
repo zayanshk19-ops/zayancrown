@@ -677,6 +677,8 @@ body.nokb .bnav{display:none}
 /* product page: show all details, smaller photo */
 .ovl.full .panel>*{flex-shrink:0}
 .ovl.full .panel{overflow-y:auto;padding-bottom:0}
+@media (max-width:899px){.ovl.full .dbar{margin-bottom:calc(66px + env(safe-area-inset-bottom,0px))}}
+@media (min-width:900px){.ovl.full .panel{padding-bottom:20px}body:has(.ovl.full) .bnav{display:none}}
 .slide{aspect-ratio:1/1;max-height:46vh}
 .pic{aspect-ratio:1/1}
 @media (min-width:900px){.slide{max-height:none}.ovl.full .panel>*{flex-shrink:1}}
@@ -728,6 +730,20 @@ body.nokb .bnav{display:none}
 .more button{position:relative;width:46px;height:46px;border-radius:50%;border:2px solid #111;background:#fff;display:grid;place-items:center;cursor:pointer;padding:0;box-shadow:0 4px 12px rgba(0,0,0,.18)}
 .more button svg{width:24px;height:24px;fill:none;stroke:#111;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .more button:active{background:#111}.more button:active svg{stroke:#fff}
+
+/* product details box */
+.dtl{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:9px;color:#111}
+.dtl h4{margin:0;font:800 17px/1.2 var(--display);color:#111}
+.dtl p{margin:0;font-size:16px;line-height:1.55;color:#111;overflow-wrap:anywhere}
+.dtl .dl{display:grid;grid-template-columns:minmax(90px,38%) 1fr;gap:10px;font-size:15.5px;line-height:1.45;padding-top:9px;border-top:1px solid var(--line)}
+.dtl .dl b{color:#111;font-weight:800}.dtl .dl span{color:#222;overflow-wrap:anywhere}
+.dbody .specs{font-size:15px;color:#111}
+
+/* product page: bar fixed above the bottom menu, details always clear of it */
+@media (max-width:899px){
+.ovl.full .dbar{position:fixed;left:0;right:0;bottom:calc(62px + env(safe-area-inset-bottom,0px));z-index:6;margin:0;padding:10px max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-top:1px solid var(--line)}
+.ovl.full .panel{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -873,6 +889,12 @@ function dbarHtml(p){
   h+='<button class="btn ghost shr" type="button" data-act="share" data-id="'+esc(p.id)+'" aria-label="Share this product"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5.5" r="2.7"/><circle cx="6" cy="12" r="2.7"/><circle cx="18" cy="18.5" r="2.7"/><path d="m8.4 10.7 7.2-4M8.4 13.3l7.2 4"/></svg></button>';
   return h+(owner?'<button class="btn ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'');
 }
+function descHtml(d){
+  var rows=String(d).split(/\n+/).map(function(x){return x.trim()}).filter(Boolean).map(function(x){
+    var m=x.match(/^([^:]{2,30}):\s*(.+)$/);
+    return m?'<div class="dl"><b>'+esc(m[1])+'</b><span>'+esc(m[2])+'</span></div>':'<p>'+esc(x)+'</p>'}).join('');
+  return '<div class="dtl"><h4>Product details</h4>'+rows+'</div>';
+}
 function openDetail(id){
   var p=prod(id);if(!p)return;
   track('view_item',{currency:'PKR',value:p.price,items:[gaItem(p)]});
@@ -883,7 +905,7 @@ function openDetail(id){
   '<div class="dpic"><div class="car" id="car">'+slides+'</div>'+(im.length>1?'<span class="cnt" id="cnt">1 / '+im.length+'</span><span class="flash" id="flash"></span>':'')+(p.soldOut?'<span class="badge so">Sold out</span>':(off?'<span class="badge">-'+off+'%</span>':''))+'</div>'+strip+
   '<div class="dbody">'+(p.category?'<span class="cat">'+esc(p.category)+'</span>':'')+'<h3>'+esc(p.name)+'</h3>'+
   '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+specs(p)+
-  (p.desc?'<p class="desc full">'+esc(p.desc)+'</p>':'')+'</div>'+
+  (p.desc?descHtml(p.desc):'')+'</div>'+
   '<div class="dbar" id="dbar">'+dbarHtml(p)+'</div>','full');
   var car=document.getElementById('car');
   var lastI=0;
@@ -1339,7 +1361,14 @@ function kwCount(){
   requestAnimationFrame(step);
 }
 function onWelcomeGone(fn){if(!document.getElementById('welcome')){fn();return}var w=setInterval(function(){if(!document.getElementById('welcome')){clearInterval(w);fn()}},120)}
-function renderAll(){renderNav();renderBanner();renderVideos();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot()}
+var deepDone=false;
+function tryDeep(){
+  if(deepDone||loading)return;deepDone=true;
+  var m=location.search.match(/[?&]p=([^&#]+)/);if(!m)return;
+  var id=decodeURIComponent(m[1]);if(!prod(id))return;
+  onWelcomeGone(function(){setTimeout(function(){if(!document.getElementById('modal').innerHTML)openDetail(id)},200)});
+}
+function renderAll(){renderNav();renderBanner();renderVideos();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot();try{tryDeep()}catch(e){}}
 
 /* ---------- modal ---------- */
 function modal(html,cls){$('#modal').innerHTML='<div class="ovl'+(cls?' '+cls:'')+'" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';document.body.style.overflow='hidden';if(!detailOpen){try{history.pushState({zc:1},'',location.href.split('#')[0]+'#view');detailOpen=true}catch(e){}}}
@@ -1371,7 +1400,7 @@ function openProduct(id){
   '<label for="pold">Old price (optional)<input id="pold" inputmode="decimal" value="'+esc(p.oldPrice||'')+'"></label></div>'+
   '<div class="row"><label for="ph">Height<span class="pair"><input id="ph" inputmode="decimal" value="'+esc(p.height||'')+'"><select id="phu" aria-label="Height unit">'+opts(['cm','in','m'],p.heightUnit||'cm')+'</select></span></label>'+
   '<label for="pw">Weight<span class="pair"><input id="pw" inputmode="decimal" value="'+esc(p.weight||'')+'"><select id="pwu" aria-label="Weight unit">'+opts(['g','kg','lb'],p.weightUnit||'g')+'</select></span></label></div>'+
-  '<label for="pdesc">Description (optional)<textarea id="pdesc" maxlength="300">'+esc(p.desc||'')+'</textarea></label>'+
+  '<label for="pdesc">Description (optional)<textarea id="pdesc" rows="6" maxlength="2000" placeholder="One point per line. You can write like: Material: Stainless steel">'+esc(p.desc||'')+'</textarea></label>'+
   '<label style="display:flex;gap:8px;align-items:center;grid-template-columns:none"><input id="pso" type="checkbox" style="width:auto"'+(p.soldOut?' checked':'')+'> Mark as sold out</label>'+
   '<p class="err" id="perr"></p>'+
   '<div class="btns"><button class="btn" type="submit">Save product</button><button class="btn ghost" type="button" data-act="close">Cancel</button>'+(id?'<button class="btn warn" type="button" data-act="del" data-id="'+esc(id)+'">Delete</button>':'')+'</div></form>');
@@ -1546,7 +1575,7 @@ document.addEventListener('click',function(e){
   else if(a==='shop')openShop();
   else if(a==='navhome'){if(document.getElementById('modal').innerHTML)closeModal();window.scrollTo({top:0,behavior:'smooth'});setTab('home')}
   else if(a==='navsearch'){navTab='search';renderNav();openShop('search')}
-  else if(a==='share'){var sp=prod(id);if(sp){var su=location.href.split('#')[0],stx=sp.name+' - '+money(sp.price)+' | '+state.settings.name;
+  else if(a==='share'){var sp=prod(id);if(sp){var su=location.origin+location.pathname+'?p='+encodeURIComponent(sp.id),stx=sp.name+' - '+money(sp.price)+' | '+state.settings.name;
     if(navigator.share){navigator.share({title:sp.name,text:stx,url:su}).catch(function(){})}
     else{try{navigator.clipboard.writeText(stx+' '+su).then(function(){toast('Link copied')},function(){toast(su)})}catch(x){toast(su)}}}}
   else if(a==='vexit'){vFsClose(true)}
