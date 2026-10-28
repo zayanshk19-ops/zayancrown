@@ -1302,7 +1302,7 @@ document.addEventListener('click',function(e){
   else if(a==='shop')openShop();
   else if(a==='navhome'){if(document.getElementById('modal').innerHTML)closeModal();window.scrollTo({top:0,behavior:'smooth'});setTab('home')}
   else if(a==='navsearch'){navTab='search';renderNav();openShop('search')}
-  else if(a==='navvideos'){var vs=document.getElementById('vsec');if(!vs||vs.hidden){toast('Videos are coming soon.')}else{setTab('videos');vs.scrollIntoView({behavior:'smooth',block:'start'})}}
+  else if(a==='navvideos'){var vs=document.getElementById('vsec');if(!vs||vs.hidden){toast('Videos are coming soon.')}else{var mo=document.getElementById('modal').innerHTML;if(mo)closeModal();setTab('videos');setTimeout(function(){var y=vs.getBoundingClientRect().top+window.pageYOffset-84;window.scrollTo({top:Math.max(0,y),behavior:'smooth'})},mo?250:0)}}
   else if(a==='navacct'){navTab='account';renderNav();if(getUser())openMenu();else openSignin('in')}
   else if(a==='navcart'){navTab='cart';renderNav();openCart()}
   else if(a==='shopsearch'){var ss=document.getElementById('ssearch');if(ss){ss.hidden=!ss.hidden;if(!ss.hidden){var sqi=document.getElementById('sq');if(sqi)sqi.focus()}}}
