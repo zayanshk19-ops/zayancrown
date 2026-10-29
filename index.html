@@ -1191,14 +1191,20 @@ function renderVideos(){
     l.map(function(v){
       if(v.t==='y')return '<div class="vcard vy" data-act="vfull"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(v.id)+'?enablejsapi=1&mute=1&controls=0&playsinline=1&loop=1&rel=0&playlist='+esc(v.id)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Product video"></iframe>'+SP+FSX+'</div>';
       var src=v.src||(pendV[v.pend]&&pendV[v.pend].url)||'';
-      return '<div class="vcard vf" data-act="vfull"><video src="'+esc(src)+'" muted loop playsinline preload="metadata"></video>'+SP+FSX+'</div>';
+      return '<div class="vcard vf" data-act="vfull"><video src="'+esc(src)+'" muted'+(l.length>1?'':' loop')+' playsinline preload="metadata"></video>'+SP+FSX+'</div>';
     }).join('')+'</div><div class="vnav"><button type="button" class="varr" data-act="vscroll" data-d="-1" aria-label="Previous video">&lsaquo;</button><button type="button" class="varr" data-act="vscroll" data-d="1" aria-label="Next video">&rsaquo;</button></div>';
   var row=document.getElementById('vrow');
   row.addEventListener('scroll',function(){if(!vRaf)vRaf=requestAnimationFrame(function(){vRaf=0;vUpdate()})},{passive:true});
   Array.prototype.forEach.call(row.querySelectorAll('iframe'),function(f){f.addEventListener('load',function(){vUpdate(true)})});
+  row.addEventListener('ended',function(e){
+    var c=e.target&&e.target.closest&&e.target.closest('.vcard');if(!c)return;
+    var i=Array.prototype.indexOf.call(row.children,c);
+    if(vfsOn){try{e.target.currentTime=0;e.target.play()}catch(x){}return}
+    if(i===vCur)vGo((vCur+1)%row.children.length);
+  },true);
   vLayout();vCur=-1;vUpdate(true);
 }
-var vRaf=0,vCur=-1,vSeen=false;
+var vRaf=0,vCur=-1,vSeen=false,vYt=0;
 function vCmd(c,fn,arg){var f=c.querySelector('iframe');if(f&&f.contentWindow)try{f.contentWindow.postMessage(JSON.stringify({event:'command',func:fn,args:arg||[]}),'*')}catch(e){}}
 function vSound(c,on){
   var m=c.querySelector('.vmute'),v=c.querySelector('video');
@@ -1223,6 +1229,8 @@ function vUpdate(force){
   if(best===vCur&&!force)return;
   vCur=best;
   for(i=0;i<cs.length;i++){var on=i===best;cs[i].classList.toggle('on',on);vPlay(cs[i],on&&vSeen)}
+  clearTimeout(vYt);
+  if(cs.length>1&&cs[best].querySelector('iframe'))vYt=setTimeout(function(){if(!vfsOn&&vCur===best)vGo((best+1)%cs.length)},15000);
 }
 function vGo(i){
   var r=document.getElementById('vrow');if(!r)return;i=Math.max(0,Math.min(r.children.length-1,i));
