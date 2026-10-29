@@ -1202,12 +1202,7 @@ function renderCats(){
   if(sig===catSig)return;catSig=sig;
   host.innerHTML=groups.map(function(g){return '<section class="csec"><div class="blkline"></div><h2 class="vh">'+esc(g.name)+'</h2><div class="crow">'+g.list.map(card).join('')+'</div></section>'}).join('');
   Array.prototype.forEach.call(host.querySelectorAll('.crow'),function(r){
-    var n=r.children.length;
-    if(n>1&&r.scrollWidth>r.clientWidth+4){
-      var f=r.children[0];
-      for(var i=0;i<n;i++){var c=r.children[i].cloneNode(true);c.classList.add('cl');c.setAttribute('aria-hidden','true');c.setAttribute('tabindex','-1');r.appendChild(c)}
-      r.dataset.lw=r.children[n].offsetLeft-f.offsetLeft;r._x=0;
-    }
+    r._x=0;r._d=1;r._w=0;
     r.addEventListener('touchstart',function(){r.dataset.p=Date.now()+60000},{passive:true});
     r.addEventListener('touchend',function(){r.dataset.p=Date.now()+3000},{passive:true});
     r.addEventListener('touchcancel',function(){r.dataset.p=Date.now()+3000},{passive:true});
@@ -1224,11 +1219,12 @@ function catFrame(t){
   if(!document.hidden&&!(document.getElementById('modal')||{}).innerHTML&&!vfsOn){
     var vh=window.innerHeight;
     Array.prototype.forEach.call(document.querySelectorAll('.crow'),function(r){
-      var lw=+r.dataset.lw;if(!lw)return;
+      var mx=r.scrollWidth-r.clientWidth;if(mx<8)return;
       var b=r.getBoundingClientRect();if(b.bottom<-60||b.top>vh+60)return;
       if(+r.dataset.p>Date.now()){r._x=r.scrollLeft;return}
-      var x=(r._x==null?r.scrollLeft:r._x)+26*dt+dy*0.7;
-      x=x%lw;if(x<0)x+=lw;
+      if(r._w>Date.now())return;
+      var x=(r._x==null?r.scrollLeft:r._x)+r._d*20*dt;
+      if(x>=mx){x=mx;r._d=-1;r._w=Date.now()+1500}else if(x<=0){x=0;r._d=1;r._w=Date.now()+1500}
       r._x=x;r.scrollLeft=x;
     });
   }
