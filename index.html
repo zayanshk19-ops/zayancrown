@@ -888,7 +888,8 @@ function shipRate(){var r=parseFloat(state.settings.shipPerKg);return isFinite(r
 function shipBase(){return Math.round(cartItems().reduce(function(a,i){return a+i.qty*weightKg(i.p)},0)*shipRate())}
 function shipFee(){return promoUsed&&promoOk()?0:shipBase()}
 function discount(){return 0}
-function total(){return subtotal()+shipFee()}
+function shipCut(){return promoUsed&&promoOk()?Math.min(shipBase(),subtotal()):0}
+function total(){return subtotal()-shipCut()}
 function offerMins(){return Math.min(Math.max(parseInt(state.settings.promoMins,10)||5,1),120)}
 function offerKey(){var st=state.settings;return (st.promoCode||'').trim().toUpperCase()+'|'+(+st.promoPct)+'|'+offerMins()}
 function offerRec(){var o=null;try{o=JSON.parse(localStorage.getItem('zc-offer')||'null')}catch(e){}return o&&o.key===offerKey()?o:null}
@@ -996,7 +997,7 @@ function orderForm(p){
     '<label for="ca">Delivery address<textarea id="ca" autocomplete="street-address">'+esc(cust.addr)+'</textarea></label>'+
     '<div class="pm"><div class="pml">Payment method</div>'+payOpts().map(function(o){return '<label class="pmo'+(o.id===curPay().id?' on':'')+'"><input type="radio" name="pm" value="'+o.id+'"'+(o.id===curPay().id?' checked':'')+'><span>'+esc(o.label)+'</span></label>'}).join('')+'</div>'+payBox()+
     '<div class="bsum">'+items.map(function(i){return '<div class="tot sub"><span>'+esc(i.p.name)+' &times; '+i.qty+'</span><span>'+money(i.p.price*i.qty)+'</span></div>'}).join('')+
-    (sb>0?'<div class="tot sub"><span>Shipping</span><span>'+(promoUsed&&promoOk()?'<s>'+money(sb)+'</s> <b class="free">FREE</b>':money(sb))+'</span></div>':'')+
+    (shipCut()>0?'<div class="tot sub"><span>Free shipping code</span><span><b class="free">- '+money(shipCut())+'</b></span></div>':'')+
     '<div class="tot"><span>Total</span><span>'+money(total())+'</span></div></div>'+
     (promoOk()&&offerAllows()?'<button type="button" class="bcode'+(promoUsed?' on':'')+'" data-act="bfcode">'+(promoUsed?'&#10003; Discount code applied &ndash; shipping is free':'Discount code')+'</button>'+((codeOpen&&!promoUsed)||promoUsed?'<div class="pcode"><input id="pcin" placeholder="Type your discount code" autocomplete="off" autocapitalize="characters"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div><p class="err" id="pcerr" hidden>That code is not correct.</p>':''):'')+
     '<button class="btn sub" type="submit">Submit</button></form>';
@@ -1733,7 +1734,7 @@ function waLink(){
   if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='92'+n.slice(1);
   if(!n)return '';
   var lines=cartItems().map(function(i){return '- '+i.p.name+' x '+i.qty+' = '+money(i.p.price*i.qty)});
-  var sf=shipBase(),shl=sf>0?'\nSubtotal: '+money(subtotal())+'\nShipping: '+(promoUsed&&promoOk()?'FREE (code '+state.settings.promoCode.trim().toUpperCase()+')':money(sf)):'';
+  var sf=shipBase(),shl=shipCut()>0?'\nSubtotal: '+money(subtotal())+'\nFree shipping code '+state.settings.promoCode.trim().toUpperCase()+': - '+money(shipCut()):'';
   var msg='Hello '+s.name+', I would like to order:\n'+lines.join('\n')+shl+'\nTotal: '+money(total())+'\nPayment: '+payLine()+'\n\nName: '+(cust.name||'-')+'\nPhone: '+(cust.phone||'-')+(cust.email?'\nEmail: '+cust.email:'')+'\nAddress: '+(cust.addr||'-');
   return 'https://wa.me/'+n+'?text='+encodeURIComponent(msg);
 }
@@ -1747,8 +1748,8 @@ function openCart(){
   if(!items.length){openShop();return}
   var hasWa=!!waLink();
   modal('<h3>Your cart</h3><div>'+items.map(function(i){return '<div class="line"><span class="n">'+esc(i.p.name)+'</span><div class="qty"><button data-act="dec" data-id="'+esc(i.p.id)+'" aria-label="Fewer">-</button><span>'+i.qty+'</span><button data-act="inc" data-id="'+esc(i.p.id)+'" aria-label="More">+</button></div><span class="s">'+money(i.p.price)+' each = '+money(i.p.price*i.qty)+'</span></div>'}).join('')+'</div>'+
-  (promoOk()&&offerAllows()?'<div class="pcode"><input id="pcin" placeholder="Discount code" autocomplete="off" autocapitalize="characters"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div>'+(promoUsed?'<p class="ok">Code applied. Your shipping is free.</p>':'')+'<p class="err" id="pcerr" hidden>That code is not correct.</p>':'')+
-  (shipBase()>0?'<div class="tot sub"><span>Subtotal</span><span>'+money(subtotal())+'</span></div><div class="tot sub"><span>Shipping</span><span>'+(promoUsed&&promoOk()?'<s>'+money(shipBase())+'</s> <b class="free">FREE</b>':money(shipBase()))+'</span></div>':'')+
+  (promoOk()&&offerAllows()?'<div class="pcode"><input id="pcin" placeholder="Discount code" autocomplete="off" autocapitalize="characters"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div>'+(promoUsed?'<p class="ok">Code applied. Shipping amount has been deducted.</p>':'')+'<p class="err" id="pcerr" hidden>That code is not correct.</p>':'')+
+  (shipCut()>0?'<div class="tot sub"><span>Subtotal</span><span>'+money(subtotal())+'</span></div><div class="tot sub"><span>Free shipping code</span><span><b class="free">- '+money(shipCut())+'</b></span></div>':'')+
   '<div class="tot"><span>Total</span><span>'+money(total())+'</span></div>'+
   '<label for="cn">Your name<input id="cn" value="'+esc(cust.name)+'" autocomplete="name"></label>'+
   '<label for="cp">Phone number<input id="cp" inputmode="tel" value="'+esc(cust.phone)+'" autocomplete="tel"></label>'+
