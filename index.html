@@ -1638,10 +1638,14 @@ function tryDeep(){
 function renderAll(){renderNav();renderBanner();renderVideos();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot();try{renderRevs();renderFootBlue()}catch(e){}try{tryDeep()}catch(e){}}
 
 /* ---------- modal ---------- */
-function modal(html,cls){$('#modal').innerHTML='<div class="ovl'+(cls?' '+cls:'')+'" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';document.body.style.overflow='hidden';if(!detailOpen){try{history.pushState({zc:1},'',location.href.split('#')[0]+'#view');detailOpen=true}catch(e){}}}
+function modal2el(){var m=document.getElementById('modal2');if(!m){m=document.createElement('div');m.id='modal2';var b=document.getElementById('modal');b.parentNode.insertBefore(m,b.nextSibling)}return m}
+function modal(html,cls){
+  if(cls==='drawer'&&$('#modal').innerHTML&&detailOpen){modal2el().innerHTML='<div class="ovl drawer" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';return}
+  var m2=document.getElementById('modal2');if(m2)m2.innerHTML='';
+  $('#modal').innerHTML='<div class="ovl'+(cls?' '+cls:'')+'" id="ovl"><div class="panel" role="dialog" aria-modal="true">'+html+'</div></div>';document.body.style.overflow='hidden';if(!detailOpen){try{history.pushState({zc:1},'',location.href.split('#')[0]+'#view');detailOpen=true}catch(e){}}}
 var detailOpen=false;
-function closeModalRaw(){try{setTab('home')}catch(e){}var z=document.getElementById('zoom');if(z)z.remove();$('#modal').innerHTML='';document.body.style.overflow='';editing=null}
-function closeModal(){if(detailOpen){detailOpen=false;try{history.back()}catch(e){}}closeModalRaw()}
+function closeModalRaw(){try{setTab('home')}catch(e){}var m2=document.getElementById('modal2');if(m2)m2.innerHTML='';var z=document.getElementById('zoom');if(z)z.remove();$('#modal').innerHTML='';document.body.style.overflow='';editing=null}
+function closeModal(){var m2=document.getElementById('modal2');if(m2&&m2.innerHTML){m2.innerHTML='';return}if(detailOpen){detailOpen=false;try{history.back()}catch(e){}}closeModalRaw()}
 window.addEventListener('popstate',function(){if(detailOpen){detailOpen=false;closeModalRaw()}});
 function opts(list,sel){return list.map(function(u){return '<option'+(u===sel?' selected':'')+'>'+u+'</option>'}).join('')}
 
