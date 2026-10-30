@@ -842,6 +842,7 @@ body{padding-bottom:0}
 .ovl.wishpg .panel,.ovl.full .panel{grid-template-columns:minmax(0,1fr)}
 .ovl.wishpg .panel:has(>.dhdr){padding-top:0}
 .sbpic{aspect-ratio:4/3}
+.drel{padding:0 0 10px}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1044,6 +1045,12 @@ function descHtml(d){
 function strip2(im){return im.length>1?'<div class="strip">'+im.map(function(u,i){return '<button type="button" data-act="pic" data-i="'+i+'" aria-label="Photo '+(i+1)+'"'+(i===0?' aria-current="true"':'')+'><img src="'+esc(u)+'" alt=""></button>'}).join('')+'</div>':''}
 function pageTailHtml(){try{return tailHtml()}catch(e){return ''}}
 function dhdrHtml(){return '<div class="dhdr"><button class="hbtn" type="button" data-act="menu" aria-label="Menu">'+MENUSVG+'</button><div class="brand brandc">'+logoHtml()+'</div><button class="cartbtn" type="button" data-act="cart" aria-label="Open cart">Cart <b>'+count()+'</b></button></div>'}
+function relHtml(p){
+  var all=(state.products||[]).filter(function(x){return x.id!==p.id}),c=(p.category||'').toLowerCase();
+  var rel=all.filter(function(x){return c&&(x.category||'').toLowerCase()===c});
+  all.forEach(function(x){if(rel.indexOf(x)<0)rel.push(x)});
+  return rel.length?'<div class="drel"><h4 class="srel">More like this</h4><div class="sgrid sgin">'+rel.map(shopCard).join('')+'</div></div>':'';
+}
 function openDetail(id){
   var p=prod(id);if(!p)return;
   track('view_item',{currency:'PKR',value:p.price,items:[gaItem(p)]});
@@ -1059,7 +1066,7 @@ function openDetail(id){
   '<div class="dbody">'+(p.category?'<span class="cat">'+esc(p.category)+'</span>':'')+'<h3>'+esc(p.name)+'</h3>'+
   '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+specs(p)+
   '<div class="dbar" id="dbar">'+dbarHtml(p)+'</div>'+
-  (p.desc?descHtml(p.desc):'')+'</div>'+pageTailHtml(),'full');
+  (p.desc?descHtml(p.desc):'')+'</div>'+relHtml(p)+pageTailHtml(),'full');
   fillOfferSlots();fitOp();
   var car=document.getElementById('car');
   var lastI=0;
