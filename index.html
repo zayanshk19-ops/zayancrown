@@ -847,6 +847,11 @@ body{padding-bottom:0}
 .vhrow .vh{margin:0;min-width:0}
 .vall{flex:none;border:0;background:none;color:#D0112B;font:800 14px/1 var(--body);padding:8px 2px;cursor:pointer;white-space:nowrap}
 .drel .csec:first-child .blkline{margin-top:6px}
+.more{gap:14px;align-items:center}
+.more::before{height:1px;background:#e6d9dc}
+.more button{width:42px;height:42px;border:1.5px solid #d9c9cd;background:#fff;box-shadow:0 3px 10px rgba(60,20,30,.1)}
+.more button svg{width:20px;height:20px;stroke:#5b4a4e;stroke-width:2.2}
+.more button:active{background:#f5eaec}.more button:active svg{stroke:#D0112B}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1109,7 +1114,8 @@ function renderGrid(){
   g.innerHTML=list.length?shown.map(card).join(''):'<div class="empty"><h3>No matches</h3><p>Try a different word or choose another category.</p></div>';
   var mo=document.getElementById('gmore');
   if(!mo){mo=document.createElement('div');mo.id='gmore';g.parentNode.insertBefore(mo,g.nextSibling)}
-  mo.innerHTML=list.length>gridShow?'<div class="more"><button type="button" data-act="gmore" aria-label="Show more products"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>':'';
+  var mDown=list.length>gridShow,mUp=gridShow>GRID_STEP&&list.length>GRID_STEP;
+  mo.innerHTML=(mDown||mUp)?'<div class="more">'+(mUp?'<button type="button" data-act="gless" aria-label="Show fewer products"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg></button>':'')+(mDown?'<button type="button" data-act="gmore" aria-label="Show more products"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>':'')+'</div>':'';
 }
 function renderFab(){
   var n=count();
@@ -1880,6 +1886,7 @@ document.addEventListener('click',function(e){
     else{try{navigator.clipboard.writeText(stx+' '+su).then(function(){toast('Link copied')},function(){toast(su)})}catch(x){toast(su)}}}}
   else if(a==='vexit'){vFsClose(true)}
   else if(a==='gmore'){gridShow+=GRID_STEP;renderGrid()}
+  else if(a==='gless'){gridShow=GRID_STEP;renderGrid();var gg=document.getElementById('grid');if(gg)gg.scrollIntoView({behavior:'smooth',block:'start'})}
   else if(a==='bot')openBot();
   else if(a==='shopby')shopBy(b.dataset.q);
   else if(a==='info')openInfo(b.dataset.k);
