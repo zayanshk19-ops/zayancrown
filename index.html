@@ -972,19 +972,18 @@ html[data-theme=dark] :is(.cmpt td,.cmpt b){color:var(--ink)}
 html[data-theme=dark] .gbtn{background:#2b1a1d;color:var(--ink);border-color:var(--line)}
 html[data-theme=dark] .gbtn.on{background:#f4e6e6;color:#111;border-color:#f4e6e6}
 html[data-theme=dark] .gbtn small{color:#ff6b7d}
-/* purple fluid welcome */
+/* purple fluid welcome (light on the phone: only transform animates, no blur) */
 .wl{background:radial-gradient(120% 90% at 20% 0%,#7a3be0 0%,#4b1c9e 45%,#25094f 100%);isolation:isolate}
-.wl::before,.wl::after{content:"";position:fixed;z-index:-1;pointer-events:none;filter:blur(38px);opacity:.9}
-.wl::before{width:78vmax;height:78vmax;left:-30vmax;top:-26vmax;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.34),rgba(255,255,255,.08) 55%,transparent 70%);border-radius:42% 58% 63% 37%/45% 38% 62% 55%;animation:flA 15s ease-in-out infinite alternate}
-.wl::after{width:70vmax;height:70vmax;right:-28vmax;bottom:-30vmax;background:radial-gradient(circle at 60% 40%,rgba(255,255,255,.28),rgba(255,255,255,.06) 55%,transparent 70%);border-radius:58% 42% 37% 63%/55% 62% 38% 45%;animation:flB 19s ease-in-out infinite alternate}
+.wl::before,.wl::after{content:"";position:fixed;z-index:-1;pointer-events:none;border-radius:50%;will-change:transform;backface-visibility:hidden}
+.wl::before{width:90vmax;height:90vmax;left:-38vmax;top:-34vmax;background:radial-gradient(circle,rgba(255,255,255,.30) 0%,rgba(255,255,255,.10) 38%,rgba(255,255,255,0) 68%);animation:flA 16s ease-in-out infinite alternate}
+.wl::after{width:80vmax;height:80vmax;right:-34vmax;bottom:-36vmax;background:radial-gradient(circle,rgba(255,255,255,.24) 0%,rgba(255,255,255,.08) 38%,rgba(255,255,255,0) 68%);animation:flB 21s ease-in-out infinite alternate}
 .wlbox{position:relative;z-index:1}
-.wlbox::before{content:"";position:absolute;left:50%;top:50%;width:120%;height:140%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(255,255,255,.16),transparent);border-radius:50%;z-index:-1;animation:flC 9s ease-in-out infinite alternate;pointer-events:none}
 .wl .wlbox .btn{background:#fff;color:#4b1c9e;box-shadow:0 10px 30px rgba(20,0,60,.35);font-weight:800}
 .wl .eyebrow{color:#e3d4ff}
-@keyframes flA{0%{transform:translate(0,0) rotate(0) scale(1);border-radius:42% 58% 63% 37%/45% 38% 62% 55%}50%{transform:translate(14vmax,10vmax) rotate(40deg) scale(1.1);border-radius:60% 40% 35% 65%/58% 62% 38% 42%}100%{transform:translate(4vmax,22vmax) rotate(85deg) scale(.95);border-radius:38% 62% 55% 45%/42% 50% 50% 58%}}
-@keyframes flB{0%{transform:translate(0,0) rotate(0) scale(1)}50%{transform:translate(-16vmax,-10vmax) rotate(-45deg) scale(1.12);border-radius:40% 60% 62% 38%/60% 40% 60% 40%}100%{transform:translate(-5vmax,-22vmax) rotate(-90deg) scale(.96)}}
-@keyframes flC{0%{transform:translate(-50%,-50%) scale(.9);opacity:.6}100%{transform:translate(-50%,-50%) scale(1.15);opacity:1}}
-@media (prefers-reduced-motion:reduce){.wl::before,.wl::after,.wlbox::before{animation:none}}
+@keyframes flA{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(18vmax,22vmax,0) scale(1.18)}}
+@keyframes flB{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(-20vmax,-18vmax,0) scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.wl::before,.wl::after{animation:none}}
+html.lowfx .wl::before,html.lowfx .wl::after{animation:none}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1027,6 +1026,7 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var CROWN='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';
 var state;
 try{state=JSON.parse($('#data').textContent)}catch(e){state={}}
+try{if((navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=3))document.documentElement.classList.add('lowfx')}catch(e){}
 function curTheme(){try{return localStorage.getItem('zc-theme')==='dark'?'dark':'light'}catch(e){return 'light'}}
 function setTheme(t){try{localStorage.setItem('zc-theme',t)}catch(e){}document.documentElement.setAttribute('data-theme',t)}
 function curLang(){try{return localStorage.getItem('zc-lang')==='ur'?'ur':'en'}catch(e){return 'en'}}
