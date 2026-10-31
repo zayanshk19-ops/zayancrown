@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
-<title>Zayan Crown</title><meta name="theme-color" content="#D1122B"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crown Bazaar">
+<title>Zayan Crown</title><meta name="theme-color" content="#4b1c9e"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crown Bazaar">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&family=Mrs+Saint+Delafield&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&display=block"><style id="sheet">
 /* Layout: sticky brand bar, compact search band, 2-col product grid on phones; owner tools live in a bar above the grid. */
@@ -1010,6 +1010,12 @@ html[data-theme=dark] .cityres{color:#7fe0a8}
 .thxno{background:var(--tint);border:2px dashed var(--brand);border-radius:14px;padding:10px 22px;display:grid;gap:2px}.thxno b{font:800 28px/1.1 var(--display);letter-spacing:.08em;color:var(--brand)}
 .thx .btn{width:100%;justify-content:center}
 .thx .btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+/* purple header like welcome */
+:root{--hdrbg:#4b1c9e}
+#hdr,.dhdr{background:var(--hdrbg)}
+body::before{background:var(--hdrbg)}
+#hdr .cartbtn,.dhdr .cartbtn{color:var(--hdrbg)}
+#hdr .cartbtn b,.dhdr .cartbtn b{background:var(--hdrbg)}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1317,8 +1323,8 @@ function submitOrder(){
 var FEST={eid:{c:'#0B6B3A',t:'\u{1F319} Eid Mubarak! Eid special offers inside \u2728'},ramzan:{c:'#3B2A7A',t:'\u{1F319} Ramzan Mubarak! Blessed offers for you'},aug14:{c:'#01411C',t:'\u{1F1F5}\u{1F1F0} Happy Independence Day! Special prices today'},sale:{c:'#111111',t:'\u{1F525} Mega Sale is live! Grab your favourites'}};
 function applyFest(){
   var f=FEST[state.settings.festival],root=document.documentElement,old=document.getElementById('festbar');
-  if(!f||owner){root.style.removeProperty('--brand');if(old)old.remove();var tm0=document.querySelector('meta[name=theme-color]');if(tm0)tm0.setAttribute('content','#D1122B');return}
-  root.style.setProperty('--brand',f.c);
+  if(!f||owner){root.style.removeProperty('--brand');root.style.removeProperty('--hdrbg');if(old)old.remove();var tm0=document.querySelector('meta[name=theme-color]');if(tm0)tm0.setAttribute('content','#4b1c9e');return}
+  root.style.setProperty('--brand',f.c);root.style.setProperty('--hdrbg',f.c);
   var tm=document.querySelector('meta[name=theme-color]');if(tm)tm.setAttribute('content',f.c);
   var h=document.getElementById('hdr');if(!h)return;
   if(!old){old=document.createElement('div');old.id='festbar';old.className='festbar';h.appendChild(old)}
