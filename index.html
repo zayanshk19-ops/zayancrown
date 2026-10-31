@@ -1051,6 +1051,7 @@ function rvPush(id){try{var l=rvIds().filter(function(x){return x!==id});l.unshi
 var sortMode='feat',maxPrice=0,stockOnly=false;
 function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
+var loadSlow=false;setTimeout(function(){loadSlow=true;if(loading)try{renderGrid()}catch(e){}},5000);
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:'',email:''},cart={};
 try{cart=JSON.parse(localStorage.getItem('zc-cart')||'{}')}catch(e){cart={}}
 function saleActive(){var st=state.settings;if(!st.saleOn||!(+st.salePct>0))return false;if(st.saleEnd){var t=new Date(st.saleEnd).getTime();if(isFinite(t)&&Date.now()>=t)return false}return true}
@@ -1389,7 +1390,7 @@ function renderGrid(){
     return true});
   if(sortMode==='lo')list.sort(function(a,b){return a.price-b.price});else if(sortMode==='hi')list.sort(function(a,b){return b.price-a.price});else if(sortMode==='new')list.reverse();else list.sort(function(a,b){return (b.pinned?1:0)-(a.pinned?1:0)});
   var g=$('#grid');
-  if(loading){g.innerHTML='<div class="empty"><p>Loading products...</p></div>';return}
+  if(loading){g.innerHTML='<div class="empty"><p>Loading products...'+(loadSlow?'<br><small>The internet is slow. Please wait a little.</small>':'')+'</p></div>';return}
   if(!state.products.length){
     g.innerHTML=owner?
       '<div class="empty">'+CROWN+'<h3>Your store is ready for its first product</h3><p>Tap Add product, then enter the name, price, height, weight and a photo. When you are done, tap Publish changes so customers can see it.</p><button class="btn" data-act="add">Add your first product</button></div>':
@@ -2241,6 +2242,17 @@ async function publish(btn){
           await ghWrite(repo,c.token,vp,vb);delete pendV[ve.pend];ve.src=vp;delete ve.pend}}
     }
     saleStrip();
+    var pl=state.products||[],np=0,nt=0;
+    pl.forEach(function(p){(p.imgs||[]).forEach(function(u){if(/^data:image\//.test(u))nt++});if(p.img&&/^data:image\//.test(p.img))nt++});
+    for(var pi=0;pi<pl.length;pi++){
+      var pp=pl[pi];
+      if(Array.isArray(pp.imgs)){for(var ik=0;ik<pp.imgs.length;ik++){
+        var iu=pp.imgs[ik],im2=/^data:image\/(jpeg|png|webp);base64,/.exec(iu);
+        if(im2){var ex=im2[1]==='jpeg'?'jpg':im2[1],ipath='images/i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+'.'+ex;btn.textContent='Uploading photo '+(++np)+' of '+nt+'...';await ghWrite(repo,c.token,ipath,iu.split(',')[1]);pp.imgs[ik]=ipath;persist()}
+      }}
+      if(pp.img&&/^data:image\//.test(pp.img)){var i3=/^data:image\/(jpeg|png|webp);base64,/.exec(pp.img);if(i3){var ip3='images/i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+'.'+(i3[1]==='jpeg'?'jpg':i3[1]);btn.textContent='Uploading photo '+(++np)+' of '+nt+'...';await ghWrite(repo,c.token,ip3,pp.img.split(',')[1]);pp.img=ip3;persist()}}
+    }
+    btn.textContent='Publishing...';
     await ghWrite(repo,c.token,'store.json',b64(JSON.stringify(state)),sj&&sj.sha);
     var lg=state.settings.logo,pend=false;try{pend=localStorage.getItem('zc-logo-pending')==='1'}catch(e){}
     if(lg&&/^data:image\/png;base64,/.test(lg)){if(pend||!lp){await ghWrite(repo,c.token,'logo.png',lg.split(',')[1],lp&&lp.sha);try{localStorage.removeItem('zc-logo-pending')}catch(e){}}}
@@ -2429,11 +2441,11 @@ function remote(){
   function once(){
     return new Promise(function(res){
       var done=false,ac=window.AbortController?new AbortController():null;
-      var tm=setTimeout(function(){if(!done){done=true;try{ac&&ac.abort()}catch(e){}res(null)}},10000);
-      fetch('store.json?t='+Date.now(),{cache:'no-store',signal:ac?ac.signal:undefined}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}).then(function(j){if(done)return;done=true;clearTimeout(tm);res(j)});
+      var tm=setTimeout(function(){if(!done){done=true;try{ac&&ac.abort()}catch(e){}res(null)}},45000);
+      fetch('store.json',{cache:'no-cache',signal:ac?ac.signal:undefined}).then(function(r){return r.ok?r.json():null}).catch(function(){return null}).then(function(j){if(done)return;done=true;clearTimeout(tm);res(j)});
     });
   }
-  function go(){return once().then(function(j){if(j&&Array.isArray(j.products))return j;if(++tries>=5)return null;return new Promise(function(r){setTimeout(r,1200)}).then(go)})}
+  function go(){return once().then(function(j){if(j&&Array.isArray(j.products))return j;if(++tries>=3)return null;return new Promise(function(r){setTimeout(r,1500)}).then(go)})}
   return go();
 }
 var draft=null;if(ownerFlag){try{draft=JSON.parse(localStorage.getItem('zc-draft')||'null')}catch(e){}}
@@ -2446,7 +2458,7 @@ else{
   remote().then(function(r){
     if(r&&Array.isArray(r.products)){
       var raw=JSON.stringify(r);
-      if(raw!==cachedRaw){state=r;norm();loading=false;renderAll();updateWelcome();try{localStorage.setItem('zc-cache',raw)}catch(e){}}
+      if(raw!==cachedRaw){state=r;norm();loading=false;renderAll();updateWelcome();try{localStorage.setItem('zc-cache',raw)}catch(e){try{localStorage.removeItem('zc-cache')}catch(e2){}}}
       initAnalytics();
     }else if(loading){loading=false;renderAll();updateWelcome()}
   })
