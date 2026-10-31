@@ -961,6 +961,17 @@ html[data-theme=dark] :is(.cmpt td,.cmpt b){color:var(--ink)}
 .micb.on{background:var(--brand)}.micb.on svg{stroke:#fff}
 .totop{position:fixed;left:14px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:55;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);box-shadow:0 6px 18px rgba(0,0,0,.22);display:grid;place-items:center;cursor:pointer;padding:0}
 .totop svg{width:22px;height:22px;fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.gstrip{margin:10px 0 2px;padding:10px;border-radius:16px;background:var(--surface);border:1.5px solid var(--line)}
+.gtit{font:800 13px/1.2 var(--body);color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.05em}
+.gbtns{display:flex;gap:8px;flex-wrap:wrap}
+.gbtn{display:grid;gap:2px;min-width:78px;padding:8px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:#111;cursor:pointer;text-align:center;font-family:var(--body)}
+.gbtn b{font:800 14px/1.2 var(--body)}
+.gbtn small{font:700 11px/1.2 var(--body);color:var(--brand)}
+.gbtn.on{background:#111;border-color:#111;color:#fff}.gbtn.on small{color:#F2B705}
+.gbtn.out{opacity:.5}
+html[data-theme=dark] .gbtn{background:#2b1a1d;color:var(--ink);border-color:var(--line)}
+html[data-theme=dark] .gbtn.on{background:#f4e6e6;color:#111;border-color:#f4e6e6}
+html[data-theme=dark] .gbtn small{color:#ff6b7d}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1057,6 +1068,13 @@ setInterval(function(){
 function persist(){saleStrip();try{localStorage.setItem('zc-draft',JSON.stringify({state:state,dirty:dirty}))}catch(e){toast('Phone storage is full. Tap Publish now so your products are saved online.')}}
 var cartOpts={};try{cartOpts=JSON.parse(localStorage.getItem('zc-copts')||'{}')||{}}catch(e){cartOpts={}}
 function saveOpts(){try{localStorage.setItem('zc-copts',JSON.stringify(cartOpts))}catch(e){}}
+function groupNames(){var o=[];(state.products||[]).forEach(function(p){var g=(p.group||'').trim();if(g&&o.indexOf(g)<0)o.push(g)});return o}
+function groupHtml(p){
+  var g=(p.group||'').trim().toLowerCase();if(!g)return '';
+  var l=(state.products||[]).filter(function(x){return (x.group||'').trim().toLowerCase()===g&&(x.glabel||'').trim()}).sort(function(a,b){return String(a.id)<String(b.id)?-1:1});
+  if(l.length<2||!(p.glabel||'').trim())return '';
+  return '<div class="gstrip"><div class="gtit">'+esc(p.group)+' - choose</div><div class="gbtns">'+l.map(function(x){return '<button type="button" class="gbtn'+(x.id===p.id?' on':'')+(x.soldOut?' out':'')+'" data-act="open" data-id="'+esc(x.id)+'"><b>'+esc(x.glabel)+'</b><small>'+money(x.price)+'</small></button>'}).join('')+'</div></div>';
+}
 function cmpBtn(p){var l=cmpIds(),on=l.indexOf(p.id)>-1;return '<div class="cmpb"><button type="button" class="linkb" data-act="cmp" data-id="'+esc(p.id)+'">'+(on?'Remove from compare':'+ Add to compare')+'</button>'+(l.length>1?' <button type="button" class="linkb" data-act="cmpopen">Compare now ('+l.length+')</button>':'')+'</div>'}
 function optGroups(p){return String(p.options||'').split(/\n+/).map(function(l){var m=l.match(/^([^:]{1,24}):\s*(.+)$/);return m?{name:m[1].trim(),vals:m[2].split(/[,\u060C]/).map(function(x){return x.trim()}).filter(Boolean)}:null}).filter(function(g){return g&&g.vals.length})}
 function optLabel(id){return cartOpts[id]||''}
@@ -1325,7 +1343,7 @@ function openDetail(id){
   modal(dhdrHtml()+
   '<div class="dtop"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><span class="dtitle">'+esc(state.settings.name)+'</span></div>'+strip+
   '<div class="dpic"><div class="car" id="car">'+slides+'</div>'+(im.length>1?'<span class="cnt" id="cnt">1 / '+im.length+'</span>':'')+(p.soldOut?'<span class="badge so">Sold out</span>':(off?'<span class="badge">-'+off+'%</span>':''))+'</div>'+
-  '<div class="offer offslot" hidden></div>'+strip2(im)+
+  '<div class="offer offslot" hidden></div>'+strip2(im)+groupHtml(p)+
   '<div class="dbody">'+(p.category?'<span class="cat">'+esc(p.category)+'</span>':'')+'<h3>'+esc(p.name)+'</h3>'+ratingHtml(p)+stockNote(p)+saleChip(p)+
   '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+specs(p)+
   optHtml(p)+(state.settings.deliveryNote?'<div class="dlv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7zM7 19a2 2 0 1 0 0-.01M17 19a2 2 0 1 0 0-.01"/></svg><span>'+esc(state.settings.deliveryNote)+'</span></div>':'')+
@@ -2034,6 +2052,7 @@ function openProduct(id){
   '<label for="pold">Old price (optional)<input id="pold" inputmode="decimal" value="'+esc(p.oldPrice||'')+'"></label></div>'+
   '<div class="row"><label for="ph">Height<span class="pair"><input id="ph" inputmode="decimal" value="'+esc(p.height||'')+'"><select id="phu" aria-label="Height unit">'+opts(['cm','in','m'],p.heightUnit||'cm')+'</select></span></label>'+
   '<label for="pw">Weight<span class="pair"><input id="pw" inputmode="decimal" value="'+esc(p.weight||'')+'"><select id="pwu" aria-label="Weight unit">'+opts(['g','kg','lb'],p.weightUnit||'g')+'</select></span></label></div>'+
+  '<div class="row"><label for="pgroup">Set name (same for all products of one set, e.g. Pressure cooker)<input id="pgroup" list="pgl" maxlength="40" value="'+esc(p.group||'')+'" autocomplete="off"><datalist id="pgl">'+groupNames().map(function(x){return '<option value="'+esc(x)+'">'}).join('')+'</datalist></label><label for="pglabel">Button name (e.g. 7 Litre or Handi set)<input id="pglabel" maxlength="24" value="'+esc(p.glabel||'')+'" autocomplete="off"></label></div>'+
   '<div class="row"><label for="pbadge">Label on photo<select id="pbadge">'+['','New','Best seller','Limited','Hot'].map(function(x){return '<option value="'+x+'"'+((p.badge||'')===x?' selected':'')+'>'+(x||'None')+'</option>'}).join('')+'</select></label><label style="display:flex;gap:8px;align-items:center;grid-template-columns:none"><input id="ppin" type="checkbox" style="width:auto"'+(p.pinned?' checked':'')+'> Show first</label></div>'+
   '<label for="popts">Options for customers (optional). One per line, like  Size: 20cm, 24cm, 28cm<textarea id="popts" rows="2" placeholder="Size: 20cm, 24cm\nColour: Black, Red">'+esc(p.options||'')+'</textarea></label>'+
   '<label for="pstock">Stock count (optional - leave empty if unlimited)<input id="pstock" inputmode="numeric" value="'+esc(p.stock==null?'':p.stock)+'" placeholder="e.g. 12"></label>'+
@@ -2051,7 +2070,7 @@ function saveProduct(){
   var old=num($('#pold').value),h=num($('#ph').value),w=num($('#pw').value);
   var p={id:editing.id||('p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),name:name,category:$('#pcat').value.trim(),
     price:price,oldPrice:old>0?old:0,height:h>0?h:0,heightUnit:$('#phu').value,weight:w>0?w:0,weightUnit:$('#pwu').value,
-    desc:$('#pdesc').value.trim(),imgs:editing.imgs,soldOut:$('#pso').checked,reviews:((editing.id&&prod(editing.id))||{}).reviews||[],options:($('#popts').value||'').trim(),badge:$('#pbadge').value,pinned:$('#ppin').checked};
+    desc:$('#pdesc').value.trim(),imgs:editing.imgs,soldOut:$('#pso').checked,reviews:((editing.id&&prod(editing.id))||{}).reviews||[],options:($('#popts').value||'').trim(),badge:$('#pbadge').value,pinned:$('#ppin').checked,group:($('#pgroup').value||'').trim(),glabel:($('#pglabel').value||'').trim()};
   var stv=($('#pstock').value||'').trim();p.stock=stv===''?'':Math.max(0,parseInt(stv,10)||0);if(p.stock!==''&&p.stock<=0)p.soldOut=true;
   var i=state.products.findIndex(function(x){return x.id===p.id});
   if(i>=0)state.products[i]=p;else state.products.unshift(p);
