@@ -1000,6 +1000,16 @@ html.lowfx .wl::before,html.lowfx .wl::after{animation:none}
 html[data-theme=dark] :is(.faq,.citybox select){background:var(--surface);color:var(--ink);border-color:var(--line)}
 html[data-theme=dark] .faq summary{color:var(--ink)}
 html[data-theme=dark] .cityres{color:#7fe0a8}
+.festbar{background:rgba(0,0,0,.28);color:#fff;text-align:center;font:700 13px/1.3 var(--body);padding:6px 12px;background-image:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);background-size:220% 100%;animation:festsh 4s linear infinite}
+@keyframes festsh{from{background-position:120% 0}to{background-position:-120% 0}}
+@media (prefers-reduced-motion:reduce){.festbar{animation:none}}
+.thx{display:grid;gap:12px;justify-items:center;text-align:center;padding:26px 18px}
+.thx h3{margin:0;font:800 24px/1.2 var(--display)}.thx p{margin:0}
+.thxok{width:64px;height:64px;border-radius:50%;background:#0B6B3A;color:#fff;font-size:34px;display:grid;place-items:center;animation:thxpop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes thxpop{from{transform:scale(.2);opacity:0}to{transform:scale(1);opacity:1}}
+.thxno{background:var(--tint);border:2px dashed var(--brand);border-radius:14px;padding:10px 22px;display:grid;gap:2px}.thxno b{font:800 28px/1.1 var(--display);letter-spacing:.08em;color:var(--brand)}
+.thx .btn{width:100%;justify-content:center}
+.thx .btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1065,7 +1075,7 @@ if(curLang()==='ur'){
 function rvIds(){try{return JSON.parse(localStorage.getItem('zc-rv')||'[]')||[]}catch(e){return[]}}
 function rvPush(id){try{var l=rvIds().filter(function(x){return x!==id});l.unshift(id);localStorage.setItem('zc-rv',JSON.stringify(l.slice(0,12)))}catch(e){}}
 var sortMode='feat',maxPrice=0,stockOnly=false;
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',festival:'',festText:'',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loadSlow=false;setTimeout(function(){loadSlow=true;if(loading)try{renderGrid()}catch(e){}},5000);
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:'',email:''},cart={};
@@ -1301,7 +1311,21 @@ function submitOrder(){
   try{var mo=myOrders();mo.unshift(curOrderNo());localStorage.setItem('zc-myorders',JSON.stringify(mo.slice(0,10)))}catch(e){}
   var w=null;try{w=window.open(link,'_blank')}catch(x){}
   if(!w)location.href=link;
-  var doneNo=curOrderNo();ordNo='';toast('Thank you! Your order number is '+doneNo+'. Press Send on WhatsApp to confirm.');
+  var doneNo=curOrderNo(),dn=cartItems().reduce(function(a,i){return a+i.qty},0),dt=total();ordNo='';thanksShow(doneNo,dn,dt);
+}
+/* ---------- festival theme ---------- */
+var FEST={eid:{c:'#0B6B3A',t:'\u{1F319} Eid Mubarak! Eid special offers inside \u2728'},ramzan:{c:'#3B2A7A',t:'\u{1F319} Ramzan Mubarak! Blessed offers for you'},aug14:{c:'#01411C',t:'\u{1F1F5}\u{1F1F0} Happy Independence Day! Special prices today'},sale:{c:'#111111',t:'\u{1F525} Mega Sale is live! Grab your favourites'}};
+function applyFest(){
+  var f=FEST[state.settings.festival],root=document.documentElement,old=document.getElementById('festbar');
+  if(!f||owner){root.style.removeProperty('--brand');if(old)old.remove();var tm0=document.querySelector('meta[name=theme-color]');if(tm0)tm0.setAttribute('content','#D1122B');return}
+  root.style.setProperty('--brand',f.c);
+  var tm=document.querySelector('meta[name=theme-color]');if(tm)tm.setAttribute('content',f.c);
+  var h=document.getElementById('hdr');if(!h)return;
+  if(!old){old=document.createElement('div');old.id='festbar';old.className='festbar';h.appendChild(old)}
+  old.textContent=state.settings.festText||f.t;
+}
+function thanksShow(no,n,tot){
+  modal('<div class="thx"><div class="thxok" aria-hidden="true">&#10003;</div><h3>Thank you!</h3><p>Your order is ready. Press <b>Send</b> in WhatsApp to confirm it.</p><div class="thxno"><small>Order number</small><b id="thxno">'+esc(no)+'</b></div><p class="hint">'+n+' item'+(n===1?'':'s')+' &middot; Total '+esc(money(tot))+'</p><button class="btn" type="button" data-act="thxcopy">Copy order number</button><button class="btn ghost" type="button" data-act="track">Track my order</button><button class="btn ghost" type="button" data-act="close">Continue shopping</button></div>','thxw');
 }
 function descHtml(d){
   var rows=String(d).split(/\n+/).map(function(x){return x.trim()}).filter(Boolean).map(function(x){
@@ -2126,7 +2150,7 @@ function tryDeep(){
   var id=decodeURIComponent(m[1]);if(!prod(id))return;
   onWelcomeGone(function(){setTimeout(function(){if(!document.getElementById('modal').innerHTML)openDetail(id)},200)});
 }
-function renderAll(){renderNav();renderBanner();renderVideos();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot();try{renderRevs();renderFootBlue()}catch(e){}try{renderAnn()}catch(e){}try{renderSale()}catch(e){}try{tryDeep()}catch(e){}}
+function renderAll(){renderNav();renderBanner();renderVideos();renderBar();renderOwner();renderChips();renderGrid();renderCount();renderFab();renderFoot();try{renderRevs();renderFootBlue()}catch(e){}try{renderAnn()}catch(e){}try{applyFest()}catch(e){}try{renderSale()}catch(e){}try{tryDeep()}catch(e){}}
 
 /* ---------- modal ---------- */
 function modal2el(){var m=document.getElementById('modal2');if(!m){m=document.createElement('div');m.id='modal2';var b=document.getElementById('modal');b.parentNode.insertBefore(m,b.nextSibling)}return m}
@@ -2224,6 +2248,8 @@ function openSettings(){
   '<label for="scity">Delivery days for each city. One per line like  Lahore | 2 to 3 days<textarea id="scity" rows="4" placeholder="Lahore | 2 to 3 days\nKarachi | 3 to 4 days\nOther cities | 4 to 6 days">'+esc(s.cityDays||'')+'</textarea></label>'+
   '<label for="sfaq">Questions and answers (FAQ). One per line like  Question? | Answer<textarea id="sfaq" rows="5" placeholder="How long does delivery take? | 3 to 5 working days\nCan I pay on delivery? | Yes, cash on delivery is available">'+esc(s.faq||'')+'</textarea></label>'+
   '<label for="sdlv">Delivery time shown on product pages<input id="sdlv" maxlength="80" value="'+esc(s.deliveryNote||'')+'" placeholder="e.g. Delivery in 3 to 5 working days"></label>'+
+  '<label for="sfest">Festival theme (changes the colours and shows a greeting bar)<select id="sfest"><option value=""'+(!s.festival?' selected':'')+'>None</option><option value="eid"'+(s.festival==='eid'?' selected':'')+'>Eid</option><option value="ramzan"'+(s.festival==='ramzan'?' selected':'')+'>Ramzan</option><option value="aug14"'+(s.festival==='aug14'?' selected':'')+'>14 August</option><option value="sale"'+(s.festival==='sale'?' selected':'')+'>Mega Sale</option></select></label>'+
+  '<label for="sfestt">Greeting text (optional. Leave empty to use the default)<input id="sfestt" maxlength="60" value="'+esc(s.festText||'')+'"></label>'+
   '<label for="sann">Offer banner message (customers see it once as a small banner. Leave empty to turn it off)<textarea id="sann" rows="2" maxlength="160" placeholder="e.g. Eid sale! Use code EID25 for free shipping">'+esc(s.annText||'')+'</textarea></label>'+
   '<label for="scodes">Extra discount codes (free shipping). One per line. You can add an end date: CODE 2026-12-31<textarea id="scodes" rows="3" placeholder="EID25\nWINTER 2026-12-31">'+esc(s.codes||'')+'</textarea></label>'+
   '<div class="ordadm"><div class="pml">Order tracking</div><p class="hint">After you confirm an order on WhatsApp, add its order number and status here. Customers see it in Track Order.</p><div id="ordlist">'+ordAdminHtml()+'</div><div class="ordadd"><input id="onum" placeholder="Order no. e.g. CB12345" autocapitalize="characters"><select id="ost">'+ORD_STEPS.concat(['Cancelled']).map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><input id="oamt" inputmode="decimal" placeholder="Order amount (optional)"><input id="onote" placeholder="Note (optional)" maxlength="160"><button type="button" class="btn sm" data-act="orderadd">Save order status</button></div></div>'+
@@ -2256,7 +2282,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.codes=($('#scodes')||{value:''}).value;s.annText=(($('#sann')||{value:''}).value||'').trim();s.deliveryNote=(($('#sdlv')||{value:''}).value||'').trim();s.saleOn=!!($('#ssaleon')||{}).checked;s.salePct=Math.min(90,Math.max(0,parseInt(($('#ssalep')||{value:''}).value,10)||0));s.saleCat=(($('#ssalec')||{value:''}).value||'').trim();s.saleEnd=(($('#ssalee')||{value:''}).value||'');s.saleStart=(($('#ssales')||{value:''}).value||'');s.faq=(($('#sfaq')||{value:''}).value||'').trim();s.cityDays=(($('#scity')||{value:''}).value||'').trim();state.orders=(editing.orders||[]).slice(0,300);
+  s.codes=($('#scodes')||{value:''}).value;s.annText=(($('#sann')||{value:''}).value||'').trim();s.deliveryNote=(($('#sdlv')||{value:''}).value||'').trim();s.festival=($('#sfest')||{value:''}).value;s.festText=(($('#sfestt')||{value:''}).value||'').trim();s.saleOn=!!($('#ssaleon')||{}).checked;s.salePct=Math.min(90,Math.max(0,parseInt(($('#ssalep')||{value:''}).value,10)||0));s.saleCat=(($('#ssalec')||{value:''}).value||'').trim();s.saleEnd=(($('#ssalee')||{value:''}).value||'');s.saleStart=(($('#ssales')||{value:''}).value||'');s.faq=(($('#sfaq')||{value:''}).value||'').trim();s.cityDays=(($('#scity')||{value:''}).value||'').trim();state.orders=(editing.orders||[]).slice(0,300);
   s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.shipPerKg=($('#sps').value.trim()===''?300:Math.max(0,parseFloat($('#sps').value)||0));s.promoOn=$('#spo').checked;s.promoMins=Math.min(Math.max(parseInt($('#spm').value,10)||5,1),120);offSig='';s.payJc=$('#sjc').value.trim();s.payJcT=$('#sjct').value.trim();s.payEp=$('#sep').value.trim();s.payEpT=$('#sept').value.trim();s.payBkN=$('#sbn').value.trim();s.payBk=$('#sbk').value.trim();s.payBkT=$('#sbkt').value.trim();promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';s.banners=(editing.banners||[]).slice(0,8);s.reviews=(editing.reviews||[]).slice(0,30);s.reviewNote=$('#rvnote').value.trim();s.address=$('#sadr').value.trim();s.videos=(editing.videos||[]).slice();vSig='';s.bannerSecs=Math.min(Math.max(parseInt($('#bnsec').value,10)||2,1),15);bnSig='';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
@@ -2430,6 +2456,7 @@ document.addEventListener('click',function(e){
   else if(a==='inc'||a==='dec'){cart[id]=Math.max(0,capQty(id,(cart[id]||0)+(a==='inc'?1:-1)));if(!cart[id])delete cart[id];saveCart();renderBar();renderFab();openCart()}
   else if(a==='copypay'){var v=b.dataset.v||'';var done=function(){toast('Copied: '+v)};try{navigator.clipboard.writeText(v).then(done,function(){toast(v)})}catch(x){toast(v)}}
   else if(a==='close')closeModal();
+  else if(a==='thxcopy'){var tn=document.getElementById('thxno');if(tn){try{navigator.clipboard.writeText(tn.textContent).catch(function(){})}catch(x){}toast('Order number copied')}}
   else if(a==='add')openProduct();
   else if(a==='exit'){e.preventDefault();owner=false;try{localStorage.removeItem('zc-owner')}catch(x){}renderAll()}
   else if(a==='addnew'){owner=true;try{location.hash='#admin'}catch(x){}renderAll();openProduct()}
