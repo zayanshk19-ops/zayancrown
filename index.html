@@ -953,6 +953,14 @@ html[data-theme=dark] .opts select{background:#2b1a1d;color:var(--ink)}
 .cp{color:var(--brand)}
 .adimg{width:100%;max-height:60vh;object-fit:contain;border-radius:14px;margin:10px 0}
 html[data-theme=dark] :is(.cmpt td,.cmpt b){color:var(--ink)}
+.bdgtag{position:absolute;left:8px;bottom:8px;background:#111;color:#F2B705;font:800 11px/1 var(--body);letter-spacing:.04em;text-transform:uppercase;padding:5px 8px;border-radius:99px;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.ssearch{position:relative}
+.ssearch input{padding-right:48px}
+.micb{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;border:0;background:var(--tint);display:grid;place-items:center;cursor:pointer;padding:0}
+.micb svg{width:20px;height:20px;fill:none;stroke:var(--brand);stroke-width:2;stroke-linecap:round}
+.micb.on{background:var(--brand)}.micb.on svg{stroke:#fff}
+.totop{position:fixed;left:14px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:55;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);box-shadow:0 6px 18px rgba(0,0,0,.22);display:grid;place-items:center;cursor:pointer;padding:0}
+.totop svg{width:22px;height:22px;fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1194,7 +1202,7 @@ function reviewsSecHtml(p){
 function card(p){
   var im=imgsOf(p);
   var img=im.length?'<img src="'+esc(im[0])+'" alt="" loading="lazy">':'<div class="ph">'+CROWN+'</div>';
-  var badge=p.soldOut?'<span class="badge so">Sold out</span>':'';
+  var badge=(p.soldOut?'<span class="badge so">Sold out</span>':'')+(p.badge&&!p.soldOut?'<span class="bdgtag">'+esc(p.badge)+'</span>':'');
   return '<article class="card'+(p.soldOut?' out':'')+'" data-act="open" data-id="'+esc(p.id)+'" tabindex="0" role="button" aria-label="'+esc(p.name)+'"><div class="pic">'+img+badge+heartHtml(p.id)+'</div><div class="cbody"><div class="pname">'+esc(p.name)+'</div>'+ratingHtml(p)+'<div class="price">'+money(p.price)+'</div>'+(p.oldPrice&&p.oldPrice>p.price?'<div class="oldp"><s>'+money(p.oldPrice)+'</s><em>'+offPct(p)+'% OFF</em></div>':'')+stockNote(p)+(owner?'<button class="btn sm ghost" type="button" data-act="edit" data-id="'+esc(p.id)+'">Edit</button>':'')+'</div></article>';
 }
 var buyOpen=false,codeOpen=false,detailId='';
@@ -1348,7 +1356,7 @@ function renderGrid(){
     if(q){var t=(p.name+' '+(p.category||'')+' '+(p.desc||'')).toLowerCase();if(t.indexOf(q.toLowerCase())<0)return false}
     if(maxPrice&&p.price>maxPrice)return false;if(stockOnly&&p.soldOut)return false;
     return true});
-  if(sortMode==='lo')list.sort(function(a,b){return a.price-b.price});else if(sortMode==='hi')list.sort(function(a,b){return b.price-a.price});else if(sortMode==='new')list.reverse();
+  if(sortMode==='lo')list.sort(function(a,b){return a.price-b.price});else if(sortMode==='hi')list.sort(function(a,b){return b.price-a.price});else if(sortMode==='new')list.reverse();else list.sort(function(a,b){return (b.pinned?1:0)-(a.pinned?1:0)});
   var g=$('#grid');
   if(loading){g.innerHTML='<div class="empty"><p>Loading products...</p></div>';return}
   if(!state.products.length){
@@ -1495,6 +1503,7 @@ function recentHtml(){
 function catGroups(first){
   var groups=[],map={};
   (state.products||[]).forEach(function(p){var c=(p.category||'').trim();if(!c)return;var k=c.toLowerCase();if(!map[k]){map[k]={name:c,list:[]};groups.push(map[k])}map[k].list.push(p)});
+  groups.forEach(function(g){g.list.sort(function(a,b){return (b.pinned?1:0)-(a.pinned?1:0)})});
   if(first){var fk=first.trim().toLowerCase();groups.sort(function(a,b){return (b.name.toLowerCase()===fk)-(a.name.toLowerCase()===fk)})}
   return groups;
 }
@@ -1600,6 +1609,15 @@ function downloadOrdersCsv(){
   var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\n');
   try{var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='crown-orders.csv';document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},500)}catch(e){toast('Could not download the file.')}
 }
+(function(){
+  var b=null;
+  function upd(){
+    var show=window.pageYOffset>900&&!(document.getElementById('modal')||{}).innerHTML;
+    if(show&&!b){b=document.createElement('button');b.type='button';b.id='totop';b.className='totop';b.setAttribute('data-act','totop');b.setAttribute('aria-label','Back to top');b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>';document.body.appendChild(b)}
+    else if(!show&&b){b.remove();b=null}
+  }
+  window.addEventListener('scroll',upd,{passive:true});setInterval(upd,1500);
+})();
 var deferredInstall=null;
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredInstall=e});
 function isInstalled(){try{return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}}
@@ -1874,6 +1892,15 @@ function shopCard(p){
   var im=imgsOf(p),img=im.length?'<img src="'+esc(im[0])+'" alt="" loading="lazy">':'<div class="ph">'+CROWN+'</div>';
   return '<article class="card'+(p.soldOut?' out':'')+'" data-act="open" data-id="'+esc(p.id)+'" tabindex="0" role="button" aria-label="'+esc(p.name)+'"><div class="pic">'+img+(p.soldOut?'<span class="badge so">Sold out</span>':'')+heartHtml(p.id)+'</div><div class="cbody"><div class="pname">'+esc(p.name)+'</div><div class="price">'+money(p.price)+'</div>'+(p.oldPrice&&p.oldPrice>p.price?'<div class="oldp"><s>'+money(p.oldPrice)+'</s><em>'+offPct(p)+'% OFF</em></div>':'')+(p.soldOut?'':'<button class="btn sm sadd" type="button" data-act="addcart" data-id="'+esc(p.id)+'">Add to cart</button>')+'</div></article>';
 }
+function startVoice(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('Voice search is not supported on this phone.');return}
+  try{var r=new SR();r.lang=curLang()==='ur'?'ur-PK':'en-PK';r.interimResults=false;r.maxAlternatives=1;
+    var mb=document.querySelector('.micb');if(mb)mb.classList.add('on');
+    r.onresult=function(e){var t=(e.results[0]&&e.results[0][0]&&e.results[0][0].transcript)||'';var si=document.getElementById('sq');if(si&&t){si.value=t;shopTerm=t;var sg=document.getElementById('sgrid');if(sg){sg.className=(shopSearch&&t.trim())?'':'sgrid';sg.innerHTML=shopGridHtml()}try{var sh=shHist().filter(function(x){return x.toLowerCase()!==t.toLowerCase()});sh.unshift(t);localStorage.setItem('zc-sh',JSON.stringify(sh.slice(0,6)))}catch(x){}}};
+    r.onend=function(){var m=document.querySelector('.micb');if(m)m.classList.remove('on')};
+    r.onerror=function(){var m=document.querySelector('.micb');if(m)m.classList.remove('on');toast('Could not hear you. Please try again.')};
+    r.start()}catch(e){toast('Voice search could not start.')}
+}
 function shHist(){try{return JSON.parse(localStorage.getItem('zc-sh')||'[]')||[]}catch(e){return[]}}
 function shopGridHtml(){
   var t=shopTerm.trim().toLowerCase(),all=state.products||[];
@@ -1895,7 +1922,7 @@ function updateShopBar(){var b=document.getElementById('sbuy');if(b)b.innerHTML=
 function openShop(mode,term){
   shopCat=mode==='cat'?(term||''):'';shopTerm=mode==='cat'?'':(term||'');var srch=mode==='search';shopSearch=srch;
   modal(dhdrHtml()+'<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>'+(srch?'Search':(shopCat?esc(shopCat):'Products'))+'</h3><button class="sico" type="button" data-act="shopsearch" aria-label="Search products"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>'+
-    '<div class="ssearch" id="ssearch"'+(srch?'':' hidden')+'><input id="sq" type="search" placeholder="Search products" autocomplete="off" value="'+esc(shopTerm)+'"></div>'+
+    '<div class="ssearch" id="ssearch"'+(srch?'':' hidden')+'><input id="sq" type="search" placeholder="Search products" autocomplete="off" value="'+esc(shopTerm)+'">'+((window.SpeechRecognition||window.webkitSpeechRecognition)?'<button type="button" class="micb" data-act="mic" aria-label="Search by voice"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>':'')+'</div>'+
     '<div id="sgrid" class="'+(srch?'':'sgrid')+'">'+shopGridHtml()+'</div><div class="sbuy" id="sbuy">'+shopBarHtml()+'</div>'+pageTailHtml(),'wishpg');
   fitOp();
   if(srch){var si=document.getElementById('sq');if(si)setTimeout(function(){si.focus()},80)}
@@ -2007,12 +2034,13 @@ function openProduct(id){
   '<label for="pold">Old price (optional)<input id="pold" inputmode="decimal" value="'+esc(p.oldPrice||'')+'"></label></div>'+
   '<div class="row"><label for="ph">Height<span class="pair"><input id="ph" inputmode="decimal" value="'+esc(p.height||'')+'"><select id="phu" aria-label="Height unit">'+opts(['cm','in','m'],p.heightUnit||'cm')+'</select></span></label>'+
   '<label for="pw">Weight<span class="pair"><input id="pw" inputmode="decimal" value="'+esc(p.weight||'')+'"><select id="pwu" aria-label="Weight unit">'+opts(['g','kg','lb'],p.weightUnit||'g')+'</select></span></label></div>'+
+  '<div class="row"><label for="pbadge">Label on photo<select id="pbadge">'+['','New','Best seller','Limited','Hot'].map(function(x){return '<option value="'+x+'"'+((p.badge||'')===x?' selected':'')+'>'+(x||'None')+'</option>'}).join('')+'</select></label><label style="display:flex;gap:8px;align-items:center;grid-template-columns:none"><input id="ppin" type="checkbox" style="width:auto"'+(p.pinned?' checked':'')+'> Show first</label></div>'+
   '<label for="popts">Options for customers (optional). One per line, like  Size: 20cm, 24cm, 28cm<textarea id="popts" rows="2" placeholder="Size: 20cm, 24cm\nColour: Black, Red">'+esc(p.options||'')+'</textarea></label>'+
   '<label for="pstock">Stock count (optional - leave empty if unlimited)<input id="pstock" inputmode="numeric" value="'+esc(p.stock==null?'':p.stock)+'" placeholder="e.g. 12"></label>'+
   '<label for="pdesc">Description (optional)<textarea id="pdesc" rows="6" maxlength="2000" placeholder="One point per line. You can write like: Material: Stainless steel">'+esc(p.desc||'')+'</textarea></label>'+
   '<label style="display:flex;gap:8px;align-items:center;grid-template-columns:none"><input id="pso" type="checkbox" style="width:auto"'+(p.soldOut?' checked':'')+'> Mark as sold out</label>'+
   '<p class="err" id="perr"></p>'+
-  '<div class="btns"><button class="btn" type="submit">Save product</button><button class="btn ghost" type="button" data-act="close">Cancel</button>'+(id?'<button class="btn warn" type="button" data-act="del" data-id="'+esc(id)+'">Delete</button>':'')+'</div></form>');
+  '<div class="btns"><button class="btn" type="submit">Save product</button><button class="btn ghost" type="button" data-act="close">Cancel</button>'+(id?'<button class="btn ghost" type="button" data-act="dup" data-id="'+esc(id)+'">Duplicate</button><button class="btn warn" type="button" data-act="del" data-id="'+esc(id)+'">Delete</button>':'')+'</div></form>');
   refreshGal();
 }
 function num(v){var n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)?n:NaN}
@@ -2023,7 +2051,7 @@ function saveProduct(){
   var old=num($('#pold').value),h=num($('#ph').value),w=num($('#pw').value);
   var p={id:editing.id||('p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),name:name,category:$('#pcat').value.trim(),
     price:price,oldPrice:old>0?old:0,height:h>0?h:0,heightUnit:$('#phu').value,weight:w>0?w:0,weightUnit:$('#pwu').value,
-    desc:$('#pdesc').value.trim(),imgs:editing.imgs,soldOut:$('#pso').checked,reviews:((editing.id&&prod(editing.id))||{}).reviews||[],options:($('#popts').value||'').trim()};
+    desc:$('#pdesc').value.trim(),imgs:editing.imgs,soldOut:$('#pso').checked,reviews:((editing.id&&prod(editing.id))||{}).reviews||[],options:($('#popts').value||'').trim(),badge:$('#pbadge').value,pinned:$('#ppin').checked};
   var stv=($('#pstock').value||'').trim();p.stock=stv===''?'':Math.max(0,parseInt(stv,10)||0);if(p.stock!==''&&p.stock<=0)p.soldOut=true;
   var i=state.products.findIndex(function(x){return x.id===p.id});
   if(i>=0)state.products[i]=p;else state.products.unshift(p);
@@ -2061,6 +2089,7 @@ function openSettings(){
   '<p class="hint">Customers type this code themselves in their cart to get FREE shipping. Shipping is charged by product weight (set the weight on each product). Leave the code empty to hide the offer.</p>'+
   '<h3 style="font-size:17px;margin-top:6px">Customer appreciation</h3>'+
   '<div class="ordadm"><div class="pml">Flash sale</div><label style="display:flex;gap:8px;align-items:center;grid-template-columns:none"><input id="ssaleon" type="checkbox" style="width:auto"'+(s.saleOn?' checked':'')+'> Sale is ON</label><label for="ssalep">Discount %<input id="ssalep" inputmode="numeric" maxlength="2" value="'+esc(s.salePct||'')+'" placeholder="e.g. 20"></label><label for="ssalec">Only this category (leave empty for all products)<input id="ssalec" value="'+esc(s.saleCat||'')+'" placeholder="e.g. Baby sets"></label><label for="ssalee">Sale ends on (optional)<input id="ssalee" type="datetime-local" value="'+esc(s.saleEnd||'')+'"></label><p class="hint">Customers see the lower price and a countdown. Your real prices are not changed.</p></div>'+
+  '<div class="ordadm"><div class="pml">Backup</div><p class="hint">Download a copy of all your products and settings. If something goes wrong, restore it from the file.</p><button type="button" class="btn sm" data-act="bkdl">Download backup</button><label for="bkfile">Restore from a backup file<input id="bkfile" type="file" accept="application/json,.json"></label></div>'+
   '<label for="sdlv">Delivery time shown on product pages<input id="sdlv" maxlength="80" value="'+esc(s.deliveryNote||'')+'" placeholder="e.g. Delivery in 3 to 5 working days"></label>'+
   '<label for="sann">Offer banner message (customers see it once as a small banner. Leave empty to turn it off)<textarea id="sann" rows="2" maxlength="160" placeholder="e.g. Eid sale! Use code EID25 for free shipping">'+esc(s.annText||'')+'</textarea></label>'+
   '<label for="scodes">Extra discount codes (free shipping). One per line. You can add an end date: CODE 2026-12-31<textarea id="scodes" rows="3" placeholder="EID25\nWINTER 2026-12-31">'+esc(s.codes||'')+'</textarea></label>'+
@@ -2213,6 +2242,10 @@ document.addEventListener('click',function(e){
   else if(a==='shopby')shopBy(b.dataset.q);
   else if(a==='info'){if(b.dataset.k==='track')openTrack();else openInfo(b.dataset.k)}
   else if(a==='track')openTrack();
+  else if(a==='dup'){var dp=prod(id);if(dp){var cp=JSON.parse(JSON.stringify(dp));delete cp._o;cp.id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);cp.name=dp.name+' (copy)';cp.reviews=[];state.products.unshift(cp);dirty++;persist();renderAll();openProduct(cp.id);toast('Copy made. Change the details and tap Save product.')}}
+  else if(a==='bkdl'){saleStrip();try{var ba=document.createElement('a');ba.href=URL.createObjectURL(new Blob([JSON.stringify(state)],{type:'application/json'}));ba.download='crown-bazaar-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(ba);ba.click();setTimeout(function(){ba.remove()},600)}catch(x){toast('Could not make the backup.')}}
+  else if(a==='mic'){startVoice()}
+  else if(a==='totop'){window.scrollTo({top:0,behavior:'smooth'})}
   else if(a==='adcard')openAdCard(id);
   else if(a==='adgo'){var adp=prod(id),adv=document.getElementById('adprev');if(adp&&adv){adv.innerHTML='<p class="hint">Making the photo...</p>';adRender(adp,b.dataset.f).then(function(u){adv.innerHTML=u?'<img class="adimg" src="'+u+'" alt="Ad photo"><a class="btn block" download="'+esc((adp.name||'product').replace(/[^a-z0-9]+/gi,'-'))+'-'+b.dataset.f+'.png" href="'+u+'">Download photo</a>':'<p class="err" style="display:block">Could not make the photo.</p>'})}}
   else if(a==='cmp'){var cl=cmpIds(),ci=cl.indexOf(id);if(ci>-1)cl.splice(ci,1);else{if(cl.length>=3){toast('You can compare up to 3 products.');return}cl.push(id)}cmpSave(cl);var cb=document.querySelector('.cmpb');if(cb){cb.outerHTML=cmpBtn(prod(id))}}
@@ -2316,6 +2349,7 @@ document.addEventListener('input',function(e){
 });
 document.addEventListener('change',function(e){
   var t=e.target,f=t.files&&t.files[0];
+  if(t.id==='bkfile'&&f){var fr=new FileReader();fr.onload=function(){try{var o=JSON.parse(fr.result);if(!o||!Array.isArray(o.products))throw 0;if(!confirm('Replace everything on this phone with this backup? Then tap Publish to put it online.'))return;state=o;norm();dirty++;persist();closeModal();renderAll();toast('Backup restored on this phone. Tap Publish to put it online.')}catch(x){toast('This is not a valid backup file.')}};fr.readAsText(f);return}
   if(t.dataset&&t.dataset.opt!=null&&t.dataset.id){var op=prod(t.dataset.id);if(op)readOpts(op);return}
   if(t.id==='sq'){var sv=(t.value||'').trim();if(sv.length>1){try{var sh=shHist().filter(function(x){return x.toLowerCase()!==sv.toLowerCase()});sh.unshift(sv);localStorage.setItem('zc-sh',JSON.stringify(sh.slice(0,6)))}catch(x){}}return}
   if(t.id==='sortsel'){sortMode=t.value;renderGrid();return}
