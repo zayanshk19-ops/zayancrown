@@ -1016,6 +1016,32 @@ html[data-theme=dark] .cityres{color:#7fe0a8}
 body::before{background:var(--hdrbg)}
 #hdr .cartbtn,.dhdr .cartbtn{color:var(--hdrbg)}
 #hdr .cartbtn b,.dhdr .cartbtn b{background:var(--hdrbg)}
+.fsb{display:grid;gap:6px;background:#EAF7EF;color:#0B6B3A;border:1.5px solid #0B6B3A;border-radius:12px;padding:9px 12px;font:600 13px/1.3 var(--body)}
+.fsb.ok{text-align:center;font-size:14px}
+.fsb i{display:block;height:8px;border-radius:99px;background:#cfe9d9;overflow:hidden}
+.fsb u{display:block;height:100%;background:#0B6B3A;border-radius:99px;transition:width .4s}
+.bdl{border:2px dashed var(--brand);border-radius:16px;padding:12px;margin:12px 0;display:grid;gap:10px;background:var(--tint);color:#111}
+.bdlh b{font:800 15px/1.2 var(--display);color:var(--brand)}
+.bdlr{display:flex;align-items:center;gap:8px}
+.bdlp{flex:1;min-width:0;display:grid;gap:4px;justify-items:center;text-align:center}
+.bdlp img,.bdlp .ph{width:72px;height:72px;object-fit:cover;border-radius:12px;background:#fff;display:grid;place-items:center}
+.bdlp small{font:600 12px/1.2 var(--body);overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.bdlpl{font:800 22px/1 var(--display);color:var(--brand)}
+.bdlf{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.bdlf b{font:800 17px/1 var(--display);color:var(--brand)}.bdlf s{color:#777;font-size:13px}
+.rvimg{width:96px;height:96px;object-fit:cover;border-radius:12px;margin-top:6px;cursor:zoom-in;border:1px solid var(--line)}
+.wab{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+.ordrow.ordwa{flex-wrap:wrap}
+.rbars{display:flex;align-items:flex-end;gap:4px;height:130px;padding:6px 2px 0;border-bottom:1.5px solid var(--line)}
+.rb{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px}
+.rb i{display:block;width:100%;background:var(--brand);border-radius:5px 5px 0 0;min-height:2px}
+.rb small{font:600 9px/1 var(--body);color:var(--muted)}
+.rtop{display:grid;gap:8px}
+.rt{display:grid;grid-template-columns:minmax(0,1fr) 90px 28px;gap:8px;align-items:center;font:600 13px/1.2 var(--body)}
+.rt span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rt i{display:block;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.rt u{display:block;height:100%;background:var(--brand);border-radius:99px}
+.rt b{text-align:right}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1081,7 +1107,7 @@ if(curLang()==='ur'){
 function rvIds(){try{return JSON.parse(localStorage.getItem('zc-rv')||'[]')||[]}catch(e){return[]}}
 function rvPush(id){try{var l=rvIds().filter(function(x){return x!==id});l.unshift(id);localStorage.setItem('zc-rv',JSON.stringify(l.slice(0,12)))}catch(e){}}
 var sortMode='feat',maxPrice=0,stockOnly=false;
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',festival:'',festText:'',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',festival:'',festText:'',freeShipMin:0,msgConfirm:'Assalam o Alaikum {name}, aap ka order {order} confirm ho gaya hai. Total: {total}. Shukriya! - {shop}',msgShip:'{name}, aap ka order {order} dispatch ho gaya hai. Inshallah 3 se 5 din mein pohanch jayega. - {shop}',msgDone:'{name}, aap ka order {order} deliver ho gaya hai. Hamein apna review dein, shukriya! - {shop}',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loadSlow=false;setTimeout(function(){loadSlow=true;if(loading)try{renderGrid()}catch(e){}},5000);
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:'',email:''},cart={};
@@ -1151,10 +1177,17 @@ function codeInputOk(){return (promoOk()&&offerAllows())||extraCodes().some(func
 function codeAllowed(v){v=(v||'').trim().toUpperCase();if(!v)return false;var st=state.settings;if(promoOk()&&v===(st.promoCode||'').trim().toUpperCase()&&offerAllows())return true;return extraCodes().some(function(c){return c.code===v&&!codeExpired(c)})}
 var usedCodeName='';
 function usedCode(){return usedCodeName||(state.settings.promoCode||'').trim().toUpperCase()}
-function shipFee(){return promoUsed&&codesOk()?0:shipBase()}
+function freeMin(){var v=parseFloat(state.settings.freeShipMin);return isFinite(v)&&v>0?v:0}
+function bundleCut(){var items=cartItems(),by={},seen={},cut=0;items.forEach(function(i){by[i.p.id]=i});
+  items.forEach(function(i){var p=i.p,b=p.bundleWith&&by[p.bundleWith],pc=+p.bundlePct||0;if(!b||pc<=0)return;var k=[p.id,b.p.id].sort().join('|');if(seen[k])return;seen[k]=1;
+    cut+=Math.round(Math.min(i.qty,b.qty)*(p.price+b.p.price)*pc/100)});return cut}
+function shipAuto(){var m=freeMin();return m>0&&shipBase()>0&&subtotal()-bundleCut()>=m}
+function codeShip(){return promoUsed&&codesOk()}
+function shipFee(){return codeShip()||shipAuto()?0:shipBase()}
 function discount(){return 0}
-function shipCut(){return promoUsed&&codesOk()?Math.min(shipBase(),subtotal()):0}
-function total(){return subtotal()-shipCut()}
+function shipCut(){return codeShip()||shipAuto()?Math.min(shipBase(),subtotal()):0}
+function shipLbl(){return codeShip()?'Free shipping code':'Free shipping'}
+function total(){return subtotal()-bundleCut()-shipCut()}
 function offerMins(){return Math.min(Math.max(parseInt(state.settings.promoMins,10)||5,1),120)}
 function offerKey(){var st=state.settings;return (st.promoCode||'').trim().toUpperCase()+'|'+(+st.promoPct)+'|'+offerMins()}
 function offerRec(){var o=null;try{o=JSON.parse(localStorage.getItem('zc-offer')||'null')}catch(e){}return o&&o.key===offerKey()?o:null}
@@ -1224,7 +1257,7 @@ function renderOwner(){
   '<span class="tag">Owner mode</span>'+
   '<button class="btn sm" data-act="add">Add product</button>'+
   '<button class="btn sm ghost" data-act="settings">Store settings</button>'+
-  '<button class="btn sm ghost" data-act="ordsum">Orders</button>'+
+  '<button class="btn sm ghost" data-act="ordsum">Orders</button>'+'<button class="btn sm ghost" data-act="salesrep">Report</button>'+
   '<button class="btn sm" data-act="publish">'+(dirty?'Publish changes ('+dirty+')':'Publish')+'</button>'+
   '</div></div>';
 }
@@ -1261,11 +1294,12 @@ function revList(p){return Array.isArray(p.reviews)?p.reviews:[]}
 function revAvg(p){var l=revList(p);if(!l.length)return 0;return l.reduce(function(a,r){return a+(+r.s||0)},0)/l.length}
 function starRow(v){var h='';for(var i=1;i<=5;i++)h+='<i class="'+(v>=i-0.25?'on':'')+'">&#9733;</i>';return '<span class="strow" aria-label="'+v.toFixed(1)+' out of 5">'+h+'</span>'}
 function ratingHtml(p){var l=revList(p);return l.length?'<div class="rating">'+starRow(revAvg(p))+' <b>'+revAvg(p).toFixed(1)+'</b> <small>('+l.length+')</small></div>':''}
+var rvPend='';
 function reviewsSecHtml(p){
   var l=revList(p),own=owner;
-  var list=l.length?l.map(function(r,i){return '<div class="rv1"><div class="rvh"><b>'+esc(r.n||'Customer')+'</b>'+starRow(+r.s||0)+(own?'<button type="button" class="btn sm ghost" data-act="revrm" data-id="'+esc(p.id)+'" data-i="'+i+'">Remove</button>':'')+'</div><p>'+esc(r.t||'')+'</p></div>'}).join(''):'<p class="hint">No reviews yet. Be the first to review this product.</p>';
-  var form=own?'<div class="rvform"><div class="pml">Add a customer review (owner)</div><input id="rfn" placeholder="Customer name" maxlength="40"><select id="rfs"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select><textarea id="rft" rows="2" maxlength="300" placeholder="Review text"></textarea><button type="button" class="btn sm" data-act="revadd" data-id="'+esc(p.id)+'">Add review</button></div>'
-   :'<div class="rvform"><div class="pml">Write a review</div><input id="rfn" placeholder="Your name" maxlength="40"><select id="rfs" aria-label="Stars"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select><textarea id="rft" rows="2" maxlength="300" placeholder="Your review"></textarea><button type="button" class="btn sm" data-act="revsend" data-id="'+esc(p.id)+'">Send review</button><p class="hint">Your review is sent to us on WhatsApp. It appears here after we approve it.</p></div>';
+  var list=l.length?l.map(function(r,i){return '<div class="rv1"><div class="rvh"><b>'+esc(r.n||'Customer')+'</b>'+starRow(+r.s||0)+(own?'<button type="button" class="btn sm ghost" data-act="revrm" data-id="'+esc(p.id)+'" data-i="'+i+'">Remove</button>':'')+'</div><p>'+esc(r.t||'')+'</p>'+(r.img?'<img class="rvimg" src="'+esc(r.img)+'" alt="Photo from '+esc(r.n||'customer')+'" loading="lazy" data-act="rvzoom" data-src="'+esc(r.img)+'">':'')+'</div>'}).join(''):'<p class="hint">No reviews yet. Be the first to review this product.</p>';
+  var form=own?'<div class="rvform"><div class="pml">Add a customer review (owner)</div><input id="rfn" placeholder="Customer name" maxlength="40"><select id="rfs"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select><textarea id="rft" rows="2" maxlength="300" placeholder="Review text"></textarea><label for="rfp">Customer photo (optional)<input id="rfp" type="file" accept="image/*"></label><p class="hint" id="rfph"></p><button type="button" class="btn sm" data-act="revadd" data-id="'+esc(p.id)+'">Add review</button></div>'
+   :'<div class="rvform"><div class="pml">Write a review</div><input id="rfn" placeholder="Your name" maxlength="40"><select id="rfs" aria-label="Stars"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select><textarea id="rft" rows="2" maxlength="300" placeholder="Your review"></textarea><button type="button" class="btn sm" data-act="revsend" data-id="'+esc(p.id)+'">Send review</button><p class="hint">Your review is sent to us on WhatsApp. You can also send a photo of the product there. It appears here after we approve it.</p></div>';
   return '<div class="rvsec"><h4>Customer reviews '+(l.length?starRow(revAvg(p))+' <small>'+revAvg(p).toFixed(1)+' ('+l.length+')</small>':'')+'</h4>'+list+form+'</div>';
 }
 function card(p){
@@ -1290,7 +1324,7 @@ function orderForm(p){
     '<label for="ca">Delivery address<textarea id="ca" autocomplete="street-address">'+esc(cust.addr)+'</textarea></label>'+
     '<div class="pm"><div class="pml">Payment method</div>'+payOpts().map(function(o){return '<label class="pmo'+(o.id===curPay().id?' on':'')+'"><input type="radio" name="pm" value="'+o.id+'"'+(o.id===curPay().id?' checked':'')+'><span>'+esc(o.label)+'</span></label>'}).join('')+'</div>'+payBox()+
     '<div class="bsum">'+items.map(function(i){return '<div class="tot sub"><span>'+esc(i.p.name)+(optLabel(i.p.id)?' <small>('+esc(optLabel(i.p.id))+')</small>':'')+' &times; '+i.qty+'</span><span>'+money(i.p.price*i.qty)+'</span></div>'}).join('')+
-    (shipCut()>0?'<div class="tot sub"><span>Free shipping code</span><span><b class="free">- '+money(shipCut())+'</b></span></div>':'')+
+    cutRows()+
     '<div class="tot"><span>Total</span><span>'+money(total())+'</span></div></div>'+
     (codeInputOk()?'<button type="button" class="bcode'+(promoUsed?' on':'')+'" data-act="bfcode">'+(promoUsed?'&#10003; Discount code applied &ndash; shipping is free':'Discount code')+'</button>'+((codeOpen&&!promoUsed)||promoUsed?'<div class="pcode"><input id="pcin" placeholder="Type your discount code" autocomplete="off" autocapitalize="characters"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div><p class="err" id="pcerr" hidden>That code is not correct.</p>':''):'')+
     '<button class="btn sub" type="submit">Submit</button></form>';
@@ -1399,6 +1433,15 @@ function openCompare(){
    row('',function(p){return '<button type="button" class="btn sm" data-act="cmprm" data-id="'+esc(p.id)+'">Remove</button>'})+
   '</tbody></table></div>':'')+pageTailHtml(),'wishpg');
 }
+function bundleOf(p){
+  if(p.bundleWith&&(+p.bundlePct||0)>0){var q=prod(p.bundleWith);if(q&&!q.soldOut&&!p.soldOut)return {a:p,b:q,pct:+p.bundlePct}}
+  var r=(state.products||[]).filter(function(x){return x.bundleWith===p.id&&(+x.bundlePct||0)>0&&!x.soldOut&&!p.soldOut})[0];
+  return r?{a:r,b:p,pct:+r.bundlePct}:null}
+function bundleHtml(p){
+  var d=bundleOf(p);if(!d)return '';var a=d.a,b=d.b,t=a.price+b.price,n=Math.round(t*(1-d.pct/100));
+  var im=function(x){var u=imgsOf(x)[0];return u?'<img src="'+esc(u)+'" alt="">':'<span class="ph">'+CROWN+'</span>'};
+  return '<div class="bdl"><div class="bdlh"><b>Buy together &amp; save '+d.pct+'%</b></div><div class="bdlr"><div class="bdlp">'+im(a)+'<small>'+esc(a.name)+'</small></div><span class="bdlpl">+</span><div class="bdlp">'+im(b)+'<small>'+esc(b.name)+'</small></div></div><div class="bdlf"><span><s>'+money(t)+'</s> <b>'+money(n)+'</b></span><button type="button" class="btn sm" data-act="addbundle" data-id="'+esc(a.id)+'">Add both to cart</button></div></div>';
+}
 function openDetail(id){
   var p=prod(id);if(!p)return;
   track('view_item',{currency:'PKR',value:p.price,items:[gaItem(p)]});
@@ -1415,7 +1458,7 @@ function openDetail(id){
   '<div class="prices"><span class="price">'+money(p.price)+'</span>'+(off?'<span class="old">'+money(p.oldPrice)+'</span>':'')+'</div>'+specs(p)+
   optHtml(p)+cityHtml()+(state.settings.deliveryNote?'<div class="dlv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7zM7 19a2 2 0 1 0 0-.01M17 19a2 2 0 1 0 0-.01"/></svg><span>'+esc(state.settings.deliveryNote)+'</span></div>':'')+
   '<div class="dbar" id="dbar">'+dbarHtml(p)+'</div>'+(waNum(state.settings.whatsapp)?'<a class="ask" target="_blank" rel="noopener" href="https://wa.me/'+waNum(state.settings.whatsapp)+'?text='+encodeURIComponent('Hello, I have a question about: '+p.name+'\n'+location.href.split('#')[0].split('?')[0]+'?p='+p.id)+'">Ask about this product on WhatsApp</a>':'')+cmpBtn(p)+
-  (p.desc?descHtml(p.desc):'')+reviewsSecHtml(p)+'</div>'+relHtml(p)+pageTailHtml(),'full');
+  bundleHtml(p)+(p.desc?descHtml(p.desc):'')+reviewsSecHtml(p)+'</div>'+relHtml(p)+pageTailHtml(),'full');
   fillOfferSlots();fitOp();
   var car=document.getElementById('car');
   var lastI=0;
@@ -1425,6 +1468,7 @@ function openDetail(id){
     document.querySelectorAll('.panel .strip button').forEach(function(x,k){if(k===i)x.setAttribute('aria-current','true');else x.removeAttribute('aria-current')});
   },{passive:true});
 }
+document.addEventListener('change',function(e){var t=e.target;if(t&&t.id==='rfp'&&t.files&&t.files[0]){var h=document.getElementById('rfph');if(h)h.textContent='Preparing photo...';shrink(t.files[0],900,'image/jpeg',.8).then(function(u){rvPend=u;if(h)h.textContent='Photo ready. Tap Add review.'}).catch(function(){rvPend='';if(h)h.textContent='Could not read that photo.'})}});
 function openZoom(id,i){
   var p=prod(id);if(!p)return;var im=imgsOf(p);if(!im.length)return;
   var z=document.createElement('div');z.id='zoom';
@@ -1691,11 +1735,32 @@ function openOrderSummary(){
   modal('<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>Order summary</h3></div>'+
   '<div class="osg"><div><b>'+l.length+'</b><span>Total orders</span></div><div><b>'+money(sum(live))+'</b><span>Total sales (without cancelled)</span></div><div><b>'+money(sum(del))+'</b><span>Delivered sales</span></div><div><b>'+can.length+'</b><span>Cancelled</span></div></div>'+
   '<p class="hint">'+ORD_STEPS.map(function(x){return x+': '+cnt[x]}).join(' &middot; ')+'</p>'+
-  (l.length?'<div class="ost">'+l.map(function(o){return '<div class="ordrow"><b>'+esc(o.no)+'</b><span>'+esc(o.date||'')+' - '+esc(o.status)+(o.amt?' - '+money(o.amt):'')+(o.note?' - '+esc(o.note):'')+'</span></div>'}).join('')+'</div>':'<p class="hint">No orders added yet. Add orders in Store settings, Order tracking.</p>')+
-  '<div class="btns"><button class="btn" type="button" data-act="ordcsv">Download list (CSV)</button><button class="btn ghost" type="button" data-act="close">Close</button></div>','wishpg');
+  (l.length?'<div class="ost">'+l.map(function(o){return '<div class="ordrow ordwa"><b>'+esc(o.no)+'</b><span>'+esc(o.date||'')+' - '+esc(o.status)+(o.cn?' - '+esc(o.cn):'')+(o.amt?' - '+money(o.amt):'')+(o.note?' - '+esc(o.note):'')+'</span>'+(waNum(o.ph)?'<div class="wab"><button type="button" class="btn sm ghost" data-act="ordwa" data-no="'+esc(o.no)+'" data-t="c">Confirm</button><button type="button" class="btn sm ghost" data-act="ordwa" data-no="'+esc(o.no)+'" data-t="s">Shipped</button><button type="button" class="btn sm ghost" data-act="ordwa" data-no="'+esc(o.no)+'" data-t="d">Delivered</button></div>':'')+'</div>'}).join('')+'</div>':'<p class="hint">No orders added yet. Add orders in Store settings, Order tracking.</p>')+
+  '<div class="btns"><button class="btn" type="button" data-act="salesrep">Sales report</button><button class="btn ghost" type="button" data-act="ordcsv">Download list (CSV)</button><button class="btn ghost" type="button" data-act="close">Close</button></div>','wishpg');
+}
+function openSalesReport(){
+  var all=(state.orders||[]).filter(function(o){return o.status!=='Cancelled'});
+  var iso=function(d){var z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10)};
+  var now=new Date(),today=iso(now);
+  var back=function(n){var d=new Date(now);d.setDate(d.getDate()-n);return iso(d)};
+  var per=function(from){var l=all.filter(function(o){return String(o.date||'')>=from});return {n:l.length,t:l.reduce(function(a,o){return a+(+o.amt||0)},0)}};
+  var t0=per(today),w=per(back(6)),m=per(back(29)),al=per('');
+  var days=[],mx=1;for(var i=13;i>=0;i--){var dk=back(i),l=all.filter(function(o){return o.date===dk}),v=l.reduce(function(a,o){return a+(+o.amt||0)},0);days.push({d:dk,v:v,n:l.length});if(v>mx)mx=v}
+  var cnt={};all.forEach(function(o){String(o.items||'').split(/[,\n]+/).forEach(function(x){x=x.trim();if(!x)return;var q=1,mm=x.match(/^(.*?)\s*[x\u00d7]\s*(\d+)$/i);if(mm){x=mm[1].trim();q=+mm[2]||1}var k=x.toLowerCase();cnt[k]=cnt[k]||{n:x,q:0};cnt[k].q+=q})});
+  var top=Object.keys(cnt).map(function(k){return cnt[k]}).sort(function(a,b){return b.q-a.q}).slice(0,6),tm=top.length?top[0].q:1;
+  var avg=al.n?Math.round(al.t/al.n):0;
+  var sts={};(state.orders||[]).forEach(function(o){sts[o.status]=(sts[o.status]||0)+1});
+  var box=function(h,a){return '<div><b>'+a+'</b><span>'+h+'</span></div>'};
+  modal('<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>Sales report</h3></div>'+
+  '<div class="osg">'+box('Today ('+t0.n+' orders)',money(t0.t))+box('Last 7 days ('+w.n+' orders)',money(w.t))+box('Last 30 days ('+m.n+' orders)',money(m.t))+box('All time ('+al.n+' orders)',money(al.t))+'</div>'+
+  '<p class="hint">Average order: <b>'+money(avg)+'</b> &middot; Cancelled orders are not counted.</p>'+
+  '<div class="pml">Last 14 days</div><div class="rbars">'+days.map(function(x){return '<div class="rb" title="'+esc(x.d)+': '+money(x.v)+'"><i style="height:'+(x.v?Math.max(6,Math.round(x.v/mx*100)):2)+'%"></i><small>'+x.d.slice(8)+'</small></div>'}).join('')+'</div>'+
+  '<div class="pml">Best selling products</div>'+(top.length?'<div class="rtop">'+top.map(function(x){return '<div class="rt"><span>'+esc(x.n)+'</span><i><u style="width:'+Math.round(x.q/tm*100)+'%"></u></i><b>'+x.q+'</b></div>'}).join('')+'</div>':'<p class="hint">No products yet. When you add an order in Store settings, Order tracking, fill in the Products box (for example: Pressure cooker 7L x2, Pan set).</p>')+
+  '<div class="pml">Orders by status</div><p class="hint">'+(Object.keys(sts).map(function(k){return esc(k)+': '+sts[k]}).join(' &middot; ')||'No orders yet.')+'</p>'+
+  '<div class="btns"><button class="btn ghost" type="button" data-act="close">Close</button></div>','wishpg');
 }
 function downloadOrdersCsv(){
-  var rows=[['Order no','Date','Status','Amount','Note']].concat((state.orders||[]).map(function(o){return [o.no,o.date||'',o.status,o.amt||0,o.note||'']}));
+  var rows=[['Order no','Date','Status','Amount','Customer','Phone','Products','Note']].concat((state.orders||[]).map(function(o){return [o.no,o.date||'',o.status,o.amt||0,o.cn||'',o.ph||'',o.items||'',o.note||'']}));
   var csv=rows.map(function(r){return r.map(function(c){return '"'+String(c).replace(/"/g,'""')+'"'}).join(',')}).join('\n');
   try{var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='crown-orders.csv';document.body.appendChild(a);a.click();setTimeout(function(){a.remove()},500)}catch(e){toast('Could not download the file.')}
 }
@@ -2015,7 +2080,7 @@ function rvAdminHtml(){
   if(!l.length)return '<p class="hint">No screenshots yet.</p>';
   return l.map(function(u,i){return '<div class="bnrow"><img src="'+esc(u)+'" alt=""><div class="bnb"><button type="button" class="btn sm ghost" data-act="rvup" data-i="'+i+'"'+(i?'':' disabled')+' aria-label="Move up">&uarr;</button><button type="button" class="btn sm ghost" data-act="rvdn" data-i="'+i+'"'+(i<l.length-1?'':' disabled')+' aria-label="Move down">&darr;</button><button type="button" class="btn sm ghost" data-act="rvrm" data-i="'+i+'">Remove</button></div></div>'}).join('');
 }
-function ordAdminHtml(){var l=editing.orders||[];return l.length?l.slice(0,60).map(function(o,i){return '<div class="ordrow"><b>'+esc(o.no)+'</b><span>'+esc(o.status)+(o.amt?' - '+money(o.amt):'')+(o.note?' - '+esc(o.note):'')+'</span><button type="button" class="btn sm ghost" data-act="orderrm" data-i="'+i+'">Remove</button></div>'}).join(''):'<p class="hint">No orders added yet.</p>'}
+function ordAdminHtml(){var l=editing.orders||[];return l.length?l.slice(0,60).map(function(o,i){return '<div class="ordrow"><b>'+esc(o.no)+'</b><span>'+esc(o.status)+(o.cn?' - '+esc(o.cn):'')+(o.amt?' - '+money(o.amt):'')+(o.note?' - '+esc(o.note):'')+'</span><button type="button" class="btn sm ghost" data-act="orderrm" data-i="'+i+'">Remove</button></div>'}).join(''):'<p class="hint">No orders added yet.</p>'}
 function ordRefresh(){var b=document.getElementById('ordlist');if(b)b.innerHTML=ordAdminHtml()}
 function rvRefresh(){var b=document.getElementById('rvlist');if(b)b.innerHTML=rvAdminHtml()}
 function bnRefresh(){var b=document.getElementById('bnlist');if(b)b.innerHTML=bnAdminHtml()}
@@ -2195,6 +2260,7 @@ function openProduct(id){
   '<div class="row"><label for="pgroup">Set name (same for all products of one set, e.g. Pressure cooker)<input id="pgroup" list="pgl" maxlength="40" value="'+esc(p.group||'')+'" autocomplete="off"><datalist id="pgl">'+groupNames().map(function(x){return '<option value="'+esc(x)+'">'}).join('')+'</datalist></label><label for="pglabel">Button name (e.g. 7 Litre or Handi set)<input id="pglabel" maxlength="24" value="'+esc(p.glabel||'')+'" autocomplete="off"></label></div>'+
   '<div class="row"><label for="pbadge">Label on photo<select id="pbadge">'+['','New','Best seller','Limited','Hot'].map(function(x){return '<option value="'+x+'"'+((p.badge||'')===x?' selected':'')+'>'+(x||'None')+'</option>'}).join('')+'</select></label><label style="display:flex;gap:8px;align-items:center;grid-template-columns:none"><input id="ppin" type="checkbox" style="width:auto"'+(p.pinned?' checked':'')+'> Show first</label></div>'+
   '<label for="popts">Options for customers (optional). One per line, like  Size: 20cm, 24cm, 28cm<textarea id="popts" rows="2" placeholder="Size: 20cm, 24cm\nColour: Black, Red">'+esc(p.options||'')+'</textarea></label>'+
+  '<div class="row"><label for="pbw">Buy together with (optional)<select id="pbw"><option value="">None</option>'+(state.products||[]).filter(function(x){return x.id!==p.id}).map(function(x){return '<option value="'+esc(x.id)+'"'+(p.bundleWith===x.id?' selected':'')+'>'+esc(x.name)+'</option>'}).join('')+'</select></label><label for="pbp">Bundle discount %<input id="pbp" inputmode="numeric" maxlength="2" value="'+esc(p.bundlePct||'')+'" placeholder="e.g. 10"></label></div>'+
   '<label for="pstock">Stock count (optional - leave empty if unlimited)<input id="pstock" inputmode="numeric" value="'+esc(p.stock==null?'':p.stock)+'" placeholder="e.g. 12"></label>'+
   '<div class="ordadm"><div class="pml">Product video (optional)</div><p class="hint" id="pvlab"></p><label for="pvfile">Choose a video file (up to 25 MB)<input id="pvfile" type="file" accept="video/mp4,video/webm,video/*"></label><button type="button" class="btn sm ghost" data-act="pvrm">Remove video</button></div>'+
   '<label for="pdesc">Description (optional)<textarea id="pdesc" rows="6" maxlength="2000" placeholder="One point per line. You can write like: Material: Stainless steel">'+esc(p.desc||'')+'</textarea></label>'+
@@ -2212,7 +2278,7 @@ function saveProduct(){
   var old=num($('#pold').value),h=num($('#ph').value),w=num($('#pw').value);
   var p={id:editing.id||('p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)),name:name,category:$('#pcat').value.trim(),
     price:price,oldPrice:old>0?old:0,height:h>0?h:0,heightUnit:$('#phu').value,weight:w>0?w:0,weightUnit:$('#pwu').value,
-    desc:$('#pdesc').value.trim(),imgs:editing.imgs,soldOut:$('#pso').checked,reviews:((editing.id&&prod(editing.id))||{}).reviews||[],options:($('#popts').value||'').trim(),badge:$('#pbadge').value,pinned:$('#ppin').checked,video:editing.video||'',group:($('#pgroup').value||'').trim(),glabel:($('#pglabel').value||'').trim()};
+    desc:$('#pdesc').value.trim(),imgs:editing.imgs,soldOut:$('#pso').checked,reviews:((editing.id&&prod(editing.id))||{}).reviews||[],options:($('#popts').value||'').trim(),badge:$('#pbadge').value,pinned:$('#ppin').checked,video:editing.video||'',group:($('#pgroup').value||'').trim(),glabel:($('#pglabel').value||'').trim(),bundleWith:($('#pbw')||{value:''}).value,bundlePct:Math.min(90,Math.max(0,parseInt(($('#pbp')||{value:''}).value,10)||0))};
   var stv=($('#pstock').value||'').trim();p.stock=stv===''?'':Math.max(0,parseInt(stv,10)||0);if(p.stock!==''&&p.stock<=0)p.soldOut=true;
   var i=state.products.findIndex(function(x){return x.id===p.id});
   if(i>=0)state.products[i]=p;else state.products.unshift(p);
@@ -2254,11 +2320,13 @@ function openSettings(){
   '<label for="scity">Delivery days for each city. One per line like  Lahore | 2 to 3 days<textarea id="scity" rows="4" placeholder="Lahore | 2 to 3 days\nKarachi | 3 to 4 days\nOther cities | 4 to 6 days">'+esc(s.cityDays||'')+'</textarea></label>'+
   '<label for="sfaq">Questions and answers (FAQ). One per line like  Question? | Answer<textarea id="sfaq" rows="5" placeholder="How long does delivery take? | 3 to 5 working days\nCan I pay on delivery? | Yes, cash on delivery is available">'+esc(s.faq||'')+'</textarea></label>'+
   '<label for="sdlv">Delivery time shown on product pages<input id="sdlv" maxlength="80" value="'+esc(s.deliveryNote||'')+'" placeholder="e.g. Delivery in 3 to 5 working days"></label>'+
+  '<label for="sfsm">Free shipping above this amount (0 = off). Customers see a progress bar in the cart<input id="sfsm" inputmode="numeric" value="'+esc(s.freeShipMin||0)+'"></label>'+
+  '<div class="ordadm"><div class="pml">WhatsApp messages to customers</div><p class="hint">Use {name} {order} {total} {shop}. Buttons appear in Orders when you add the customer phone.</p><label for="smc">Order confirmed<textarea id="smc" rows="2" maxlength="300">'+esc(s.msgConfirm||'')+'</textarea></label><label for="sms">Order shipped<textarea id="sms" rows="2" maxlength="300">'+esc(s.msgShip||'')+'</textarea></label><label for="smd">Order delivered<textarea id="smd" rows="2" maxlength="300">'+esc(s.msgDone||'')+'</textarea></label></div>'+
   '<label for="sfest">Festival theme (changes the colours and shows a greeting bar)<select id="sfest"><option value=""'+(!s.festival?' selected':'')+'>None</option><option value="eid"'+(s.festival==='eid'?' selected':'')+'>Eid</option><option value="ramzan"'+(s.festival==='ramzan'?' selected':'')+'>Ramzan</option><option value="aug14"'+(s.festival==='aug14'?' selected':'')+'>14 August</option><option value="sale"'+(s.festival==='sale'?' selected':'')+'>Mega Sale</option></select></label>'+
   '<label for="sfestt">Greeting text (optional. Leave empty to use the default)<input id="sfestt" maxlength="60" value="'+esc(s.festText||'')+'"></label>'+
   '<label for="sann">Offer banner message (customers see it once as a small banner. Leave empty to turn it off)<textarea id="sann" rows="2" maxlength="160" placeholder="e.g. Eid sale! Use code EID25 for free shipping">'+esc(s.annText||'')+'</textarea></label>'+
   '<label for="scodes">Extra discount codes (free shipping). One per line. You can add an end date: CODE 2026-12-31<textarea id="scodes" rows="3" placeholder="EID25\nWINTER 2026-12-31">'+esc(s.codes||'')+'</textarea></label>'+
-  '<div class="ordadm"><div class="pml">Order tracking</div><p class="hint">After you confirm an order on WhatsApp, add its order number and status here. Customers see it in Track Order.</p><div id="ordlist">'+ordAdminHtml()+'</div><div class="ordadd"><input id="onum" placeholder="Order no. e.g. CB12345" autocapitalize="characters"><select id="ost">'+ORD_STEPS.concat(['Cancelled']).map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><input id="oamt" inputmode="decimal" placeholder="Order amount (optional)"><input id="onote" placeholder="Note (optional)" maxlength="160"><button type="button" class="btn sm" data-act="orderadd">Save order status</button></div></div>'+
+  '<div class="ordadm"><div class="pml">Order tracking</div><p class="hint">After you confirm an order on WhatsApp, add its order number and status here. Customers see it in Track Order.</p><div id="ordlist">'+ordAdminHtml()+'</div><div class="ordadd"><input id="onum" placeholder="Order no. e.g. CB12345" autocapitalize="characters"><select id="ost">'+ORD_STEPS.concat(['Cancelled']).map(function(x){return '<option>'+x+'</option>'}).join('')+'</select><input id="oamt" inputmode="decimal" placeholder="Order amount (optional)"><input id="ocn" placeholder="Customer name (optional)" maxlength="40"><input id="oph" inputmode="tel" placeholder="Customer phone (optional, for WhatsApp messages)" maxlength="20"><input id="oit" placeholder="Products, separated by commas (optional, for the sales report)" maxlength="200"><input id="onote" placeholder="Note (optional)" maxlength="160"><button type="button" class="btn sm" data-act="orderadd">Save order status</button></div></div>'+
   '<div id="rvlist">'+rvAdminHtml()+'</div>'+
   '<label for="rvimg">Add screenshots of customers appreciating you<input id="rvimg" type="file" accept="image/*" multiple></label>'+
   '<label for="rvnote">Message under the screenshots<textarea id="rvnote" rows="3" maxlength="300" placeholder="e.g. Our customers love us. You will have the best experience too!">'+esc(s.reviewNote||'')+'</textarea></label>'+
@@ -2288,7 +2356,7 @@ function saveSettings(){
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
   s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
-  s.codes=($('#scodes')||{value:''}).value;s.annText=(($('#sann')||{value:''}).value||'').trim();s.deliveryNote=(($('#sdlv')||{value:''}).value||'').trim();s.festival=($('#sfest')||{value:''}).value;s.festText=(($('#sfestt')||{value:''}).value||'').trim();s.saleOn=!!($('#ssaleon')||{}).checked;s.salePct=Math.min(90,Math.max(0,parseInt(($('#ssalep')||{value:''}).value,10)||0));s.saleCat=(($('#ssalec')||{value:''}).value||'').trim();s.saleEnd=(($('#ssalee')||{value:''}).value||'');s.saleStart=(($('#ssales')||{value:''}).value||'');s.faq=(($('#sfaq')||{value:''}).value||'').trim();s.cityDays=(($('#scity')||{value:''}).value||'').trim();state.orders=(editing.orders||[]).slice(0,300);
+  s.codes=($('#scodes')||{value:''}).value;s.annText=(($('#sann')||{value:''}).value||'').trim();s.deliveryNote=(($('#sdlv')||{value:''}).value||'').trim();s.festival=($('#sfest')||{value:''}).value;s.freeShipMin=Math.max(0,parseFloat(($('#sfsm')||{value:'0'}).value)||0);s.msgConfirm=(($('#smc')||{value:''}).value||'').trim();s.msgShip=(($('#sms')||{value:''}).value||'').trim();s.msgDone=(($('#smd')||{value:''}).value||'').trim();s.festText=(($('#sfestt')||{value:''}).value||'').trim();s.saleOn=!!($('#ssaleon')||{}).checked;s.salePct=Math.min(90,Math.max(0,parseInt(($('#ssalep')||{value:''}).value,10)||0));s.saleCat=(($('#ssalec')||{value:''}).value||'').trim();s.saleEnd=(($('#ssalee')||{value:''}).value||'');s.saleStart=(($('#ssales')||{value:''}).value||'');s.faq=(($('#sfaq')||{value:''}).value||'').trim();s.cityDays=(($('#scity')||{value:''}).value||'').trim();state.orders=(editing.orders||[]).slice(0,300);
   s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.shipPerKg=($('#sps').value.trim()===''?300:Math.max(0,parseFloat($('#sps').value)||0));s.promoOn=$('#spo').checked;s.promoMins=Math.min(Math.max(parseInt($('#spm').value,10)||5,1),120);offSig='';s.payJc=$('#sjc').value.trim();s.payJcT=$('#sjct').value.trim();s.payEp=$('#sep').value.trim();s.payEpT=$('#sept').value.trim();s.payBkN=$('#sbn').value.trim();s.payBk=$('#sbk').value.trim();s.payBkT=$('#sbkt').value.trim();promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';s.banners=(editing.banners||[]).slice(0,8);s.reviews=(editing.reviews||[]).slice(0,30);s.reviewNote=$('#rvnote').value.trim();s.address=$('#sadr').value.trim();s.videos=(editing.videos||[]).slice();vSig='';s.bannerSecs=Math.min(Math.max(parseInt($('#bnsec').value,10)||2,1),15);bnSig='';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
 }
@@ -2309,22 +2377,29 @@ function waLink(){
   if(n.indexOf('00')===0)n=n.slice(2);else if(n.charAt(0)==='0')n='92'+n.slice(1);
   if(!n)return '';
   var lines=cartItems().map(function(i){return '- '+i.p.name+(optLabel(i.p.id)?' ('+optLabel(i.p.id)+')':'')+' x '+i.qty+' = '+money(i.p.price*i.qty)});
-  var sf=shipBase(),shl=shipCut()>0?'\nSubtotal: '+money(subtotal())+'\nFree shipping code '+usedCode()+': - '+money(shipCut()):'';
+  var sf=shipBase(),shl=(shipCut()>0||bundleCut()>0)?'\nSubtotal: '+money(subtotal())+(bundleCut()>0?'\nBundle deal: - '+money(bundleCut()):'')+(shipCut()>0?'\n'+(codeShip()?'Free shipping code '+usedCode():'Free shipping')+': - '+money(shipCut()):''):'';
   var msg='Hello '+s.name+', I would like to order:\nOrder No: '+curOrderNo()+'\n'+lines.join('\n')+shl+'\nTotal: '+money(total())+'\nPayment: '+payLine()+'\n\nName: '+(cust.name||'-')+'\nPhone: '+(cust.phone||'-')+(cust.email?'\nEmail: '+cust.email:'')+'\nAddress: '+(cust.addr||'-');
   return 'https://wa.me/'+n+'?text='+encodeURIComponent(msg);
 }
 function notifyOrder(){
   var k=state.settings.orderKey;if(!k)return;
   var lines=cartItems().map(function(i){return i.p.name+(optLabel(i.p.id)?' ('+optLabel(i.p.id)+')':'')+' x '+i.qty+' = '+money(i.p.price*i.qty)});
-  try{fetch('https://api.web3forms.com/submit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:k,subject:'New order - '+state.settings.name,from_name:cust.name,name:cust.name,phone:cust.phone,address:cust.addr,order:lines.join('\n'),promo:(promoUsed&&codesOk())?usedCode()+' (free shipping)':'none',shipping:shipBase()>0?(promoUsed&&codesOk()?'FREE':money(shipBase())):'-',payment:payLine(),total:money(total())})}).catch(function(){})}catch(x){}
+  try{fetch('https://api.web3forms.com/submit',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:k,subject:'New order - '+state.settings.name,from_name:cust.name,name:cust.name,phone:cust.phone,address:cust.addr,order:lines.join('\n'),promo:codeShip()?usedCode()+' (free shipping)':(shipAuto()?'free shipping (order above '+freeMin()+')':'none'),shipping:shipBase()>0?(shipCut()>0?'FREE':money(shipBase())):'-',payment:payLine(),total:money(total())})}).catch(function(){})}catch(x){}
 }
+function shipBarHtml(){
+  var m=freeMin();if(!m||shipBase()<=0||codeShip())return '';
+  var cur=subtotal()-bundleCut(),left=m-cur;
+  if(left<=0)return '<div class="fsb ok"><b>&#127881; Free shipping unlocked!</b></div>';
+  return '<div class="fsb"><span>Add <b>'+money(Math.ceil(left))+'</b> more for <b>free shipping</b></span><i><u style="width:'+Math.max(4,Math.min(100,Math.round(cur/m*100)))+'%"></u></i></div>';
+}
+function cutRows(){return (bundleCut()>0?'<div class="tot sub"><span>Bundle deal</span><span><b class="free">- '+money(bundleCut())+'</b></span></div>':'')+(shipCut()>0?'<div class="tot sub"><span>'+shipLbl()+'</span><span><b class="free">- '+money(shipCut())+'</b></span></div>':'')}
 function openCart(){
   var items=cartItems();
   if(!items.length){openShop();return}
   var hasWa=!!waLink();
   modal(dhdrHtml()+'<h3>Your cart</h3><div>'+items.map(function(i){return '<div class="line"><span class="n">'+esc(i.p.name)+(optLabel(i.p.id)?'<br><small>'+esc(optLabel(i.p.id))+'</small>':'')+'</span><div class="qty"><button data-act="dec" data-id="'+esc(i.p.id)+'" aria-label="Fewer">-</button><span>'+i.qty+'</span><button data-act="inc" data-id="'+esc(i.p.id)+'" aria-label="More">+</button></div><span class="s">'+money(i.p.price)+' each = '+money(i.p.price*i.qty)+'</span></div>'}).join('')+'</div>'+
   (codeInputOk()?'<div class="pcode"><input id="pcin" placeholder="Discount code" autocomplete="off" autocapitalize="characters"><button class="btn ghost" type="button" data-act="applypromo">'+(promoUsed?'Remove':'Apply')+'</button></div>'+(promoUsed?'<p class="ok">Code applied. Shipping amount has been deducted.</p>':'')+'<p class="err" id="pcerr" hidden>That code is not correct.</p>':'')+
-  (shipCut()>0?'<div class="tot sub"><span>Subtotal</span><span>'+money(subtotal())+'</span></div><div class="tot sub"><span>Free shipping code</span><span><b class="free">- '+money(shipCut())+'</b></span></div>':'')+
+  shipBarHtml()+(shipCut()>0||bundleCut()>0?'<div class="tot sub"><span>Subtotal</span><span>'+money(subtotal())+'</span></div>'+cutRows():'')+
   '<div class="tot"><span>Total</span><span>'+money(total())+'</span></div>'+
   '<label for="cn">Your name<input id="cn" value="'+esc(cust.name)+'" autocomplete="name"></label>'+
   '<label for="cp">Phone number<input id="cp" inputmode="tel" value="'+esc(cust.phone)+'" autocomplete="tel"></label>'+
@@ -2386,6 +2461,7 @@ async function publish(btn){
         var iu=pp.imgs[ik],im2=/^data:image\/(jpeg|png|webp);base64,/.exec(iu);
         if(im2){var ex=im2[1]==='jpeg'?'jpg':im2[1],ipath='images/i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+'.'+ex;btn.textContent='Uploading photo '+(++np)+' of '+nt+'...';await ghWrite(repo,c.token,ipath,iu.split(',')[1]);pp.imgs[ik]=ipath;persist()}
       }}
+      if(Array.isArray(pp.reviews)){for(var rk=0;rk<pp.reviews.length;rk++){var rr=pp.reviews[rk];if(rr&&rr.img&&/^data:image\/jpeg;base64,/.test(rr.img)){var rpath='images/r'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+'.jpg';btn.textContent='Uploading review photo...';await ghWrite(repo,c.token,rpath,rr.img.split(',')[1]);rr.img=rpath;persist()}}}
       if(pp.img&&/^data:image\//.test(pp.img)){var i3=/^data:image\/(jpeg|png|webp);base64,/.exec(pp.img);if(i3){var ip3='images/i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+'.'+(i3[1]==='jpeg'?'jpg':i3[1]);btn.textContent='Uploading photo '+(++np)+' of '+nt+'...';await ghWrite(repo,c.token,ip3,pp.img.split(',')[1]);pp.img=ip3;persist()}}
     }
     btn.textContent='Publishing...';
@@ -2439,9 +2515,11 @@ document.addEventListener('click',function(e){
     var wn=waNum(state.settings.whatsapp);if(!wn){toast('The store has not set up its WhatsApp number yet.');return}
     var rm='New review for: '+rp.name+'\nStars: '+$('#rfs').value+'/5\nName: '+rn+'\nReview: '+rt;
     var rl2='https://wa.me/'+wn+'?text='+encodeURIComponent(rm);var rw=null;try{rw=window.open(rl2,'_blank')}catch(x){}if(!rw)location.href=rl2;toast('Thank you! Press Send on WhatsApp to submit your review.')}
-  else if(a==='revadd'){var ap2=prod(id),at=($('#rft').value||'').trim();if(!ap2||!at){toast('Write the review text first.');return}ap2.reviews=revList(ap2).concat([{n:($('#rfn').value||'').trim()||'Customer',s:+$('#rfs').value||5,t:at}]);dirty++;persist();openDetail(id);renderOwner();toast('Review added. Tap Publish to show it.')}
+  else if(a==='revadd'){var ap2=prod(id),at=($('#rft').value||'').trim();if(!ap2||!at){toast('Write the review text first.');return}var rvo={n:($('#rfn').value||'').trim()||'Customer',s:+$('#rfs').value||5,t:at};if(rvPend)rvo.img=rvPend;rvPend='';ap2.reviews=revList(ap2).concat([rvo]);dirty++;persist();openDetail(id);renderOwner();toast('Review added. Tap Publish to show it.')}
   else if(a==='revrm'){var ap3=prod(id);if(ap3){ap3.reviews=revList(ap3).filter(function(x,i){return i!==+b.dataset.i});dirty++;persist();openDetail(id);renderOwner()}}
   else if(a==='ordsum')openOrderSummary();
+  else if(a==='salesrep')openSalesReport();
+  else if(a==='ordwa'){var wo=(state.orders||[]).filter(function(x){return x.no===b.dataset.no})[0];if(!wo)return;var tp=b.dataset.t,st=state.settings,tpl=tp==='c'?st.msgConfirm:(tp==='s'?st.msgShip:st.msgDone);var wm=String(tpl||'').replace(/\{name\}/g,wo.cn||'').replace(/\{order\}/g,wo.no).replace(/\{total\}/g,wo.amt?money(wo.amt):'').replace(/\{shop\}/g,st.name||'').replace(/\s+,/g,',');if(tp==='s')wo.status='Shipped';else if(tp==='d')wo.status='Delivered';dirty++;persist();var ww=null;try{ww=window.open('https://wa.me/'+waNum(wo.ph)+'?text='+encodeURIComponent(wm),'_blank')}catch(x){}if(!ww)location.href='https://wa.me/'+waNum(wo.ph)+'?text='+encodeURIComponent(wm);toast('Status updated. Tap Publish to show it to customers.');openOrderSummary()}
   else if(a==='ordcsv')downloadOrdersCsv();
   else if(a==='install')doInstall();
   else if(a==='anndismiss'){try{localStorage.setItem('zc-ann',annSig())}catch(x){}var ab2=document.getElementById('annbar');if(ab2)ab2.remove()}
@@ -2449,7 +2527,7 @@ document.addEventListener('click',function(e){
   else if(a==='tkpick'){var ti=document.getElementById('tkn');if(ti)ti.value=b.dataset.n;var tr2=document.getElementById('tkres');if(tr2)tr2.innerHTML=trackResult(b.dataset.n)}
   else if(a==='theme'){setTheme(curTheme()==='dark'?'light':'dark');openMenu()}
   else if(a==='lang'){try{localStorage.setItem('zc-lang',curLang()==='ur'?'en':'ur')}catch(x){}location.reload()}
-  else if(a==='orderadd'){var on=($('#onum').value||'').trim().toUpperCase();if(!on){toast('Enter the order number first.');return}var oi=editing.orders.findIndex(function(x){return String(x.no).toUpperCase()===on});var rec={no:on,status:$('#ost').value,note:($('#onote').value||'').trim().slice(0,160),amt:Math.max(0,parseFloat(($('#oamt').value||'0').replace(/,/g,''))||0),date:(oi>-1&&editing.orders[oi].date)||new Date().toISOString().slice(0,10)};if(oi>-1)editing.orders[oi]=rec;else editing.orders.unshift(rec);$('#onum').value='';$('#onote').value='';$('#oamt').value='';ordRefresh()}
+  else if(a==='orderadd'){var on=($('#onum').value||'').trim().toUpperCase();if(!on){toast('Enter the order number first.');return}var oi=editing.orders.findIndex(function(x){return String(x.no).toUpperCase()===on});var rec={no:on,cn:($('#ocn').value||'').trim(),ph:($('#oph').value||'').trim(),items:($('#oit').value||'').trim(),status:$('#ost').value,note:($('#onote').value||'').trim().slice(0,160),amt:Math.max(0,parseFloat(($('#oamt').value||'0').replace(/,/g,''))||0),date:(oi>-1&&editing.orders[oi].date)||new Date().toISOString().slice(0,10)};if(oi>-1)editing.orders[oi]=rec;else editing.orders.unshift(rec);$('#onum').value='';$('#ocn').value='';$('#oph').value='';$('#oit').value='';$('#onote').value='';$('#oamt').value='';ordRefresh()}
   else if(a==='orderrm'){editing.orders.splice(+b.dataset.i,1);ordRefresh()}
   else if(a==='star'){var sn=+b.dataset.n;try{localStorage.setItem('zc-rate',String(myRate()===sn?sn:sn))}catch(x){}paintStars();toast('Thank you!')}
   else if(a==='botq')botAsk(b.dataset.q);
@@ -2459,6 +2537,7 @@ document.addEventListener('click',function(e){
   else if(a==='shopsearch'){var ss=document.getElementById('ssearch');if(ss){ss.hidden=!ss.hidden;if(!ss.hidden){var sqi=document.getElementById('sq');if(sqi)sqi.focus()}}}
   else if(a==='cart')openCart();
   else if(a==='applypromo'){if(promoUsed){promoUsed=false;renderFab();if(document.getElementById('bf'))refreshDbar();else openCart()}else{var v=($('#pcin').value||'').trim().toUpperCase();if(codeAllowed(v)){promoUsed=true;usedCodeName=v;renderFab();if(document.getElementById('bf'))refreshDbar();else openCart();track('select_promotion',{promotion_id:v})}else{var er=$('#pcerr');if(er)er.hidden=false}}}
+  else if(a==='addbundle'){var bp=prod(id),bq=bp&&prod(bp.bundleWith);if(bp&&bq){[bp,bq].forEach(function(x){cart[x.id]=capQty(x.id,(cart[x.id]||0)+1)});saveCart();renderBar();renderFab();toast('Both added. Bundle discount applied in your cart.');openCart()}}
   else if(a==='inc'||a==='dec'){cart[id]=Math.max(0,capQty(id,(cart[id]||0)+(a==='inc'?1:-1)));if(!cart[id])delete cart[id];saveCart();renderBar();renderFab();openCart()}
   else if(a==='copypay'){var v=b.dataset.v||'';var done=function(){toast('Copied: '+v)};try{navigator.clipboard.writeText(v).then(done,function(){toast(v)})}catch(x){toast(v)}}
   else if(a==='close')closeModal();
@@ -2473,6 +2552,7 @@ document.addEventListener('click',function(e){
   else if(a==='mkmain'){var mi=+b.dataset.i,mx=editing.imgs.splice(mi,1)[0];editing.imgs.unshift(mx);refreshGal()}
   else if(a==='rmimg'){editing.imgs.splice(+b.dataset.i,1);refreshGal()}
   else if(a==='pic'){var cr=document.getElementById('car');if(cr)cr.scrollTo({left:(+b.dataset.i)*cr.clientWidth,behavior:'smooth'})}
+  else if(a==='rvzoom'){var zr=document.createElement('div');zr.id='zoom';zr.innerHTML='<button type="button" class="zx" data-act="zoomclose" aria-label="Close photo">&times;</button><div class="zcar"><div class="zs"><img src="'+esc(b.dataset.src)+'" alt=""></div></div>';document.body.appendChild(zr)}
   else if(a==='zoom')openZoom(id,+b.dataset.i)
   else if(a==='zoomclose'){var zz=document.getElementById('zoom');if(zz)zz.remove()}
   else if(a==='smile'){b.classList.remove('wiggle');void b.offsetWidth;b.classList.add('wiggle');toast('Thank you for visiting!')}
