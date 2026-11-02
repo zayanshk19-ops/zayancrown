@@ -2041,7 +2041,7 @@ function vAdminHtml(){
   }).join('');
 }
 function vRefresh(){var b=document.getElementById('vlist');if(b)b.innerHTML=vAdminHtml()}
-function fileB64(f){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(',')[1])};r.onerror=rej;r.readAsDataURL(f)})}
+function fileB64(f){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){var x=String(r.result);res(x.slice(x.indexOf(',')+1))};r.onerror=rej;r.readAsDataURL(f)})}
 /* ---------- banner slider ---------- */
 var bnTimer=0,bnSig='',bnPause=0,bnHover=false;
 function bannerList(){var b=state.settings.banners;if(!Array.isArray(b))return ['banner.jpg'];return b.filter(Boolean)}
@@ -2264,7 +2264,7 @@ function openProduct(id){
   '<label for="popts">Options for customers (optional). One per line, like  Size: 20cm, 24cm, 28cm<textarea id="popts" rows="2" placeholder="Size: 20cm, 24cm\nColour: Black, Red">'+esc(p.options||'')+'</textarea></label>'+
   '<div class="row"><label for="pbw">Buy together with (optional)<select id="pbw"><option value="">None</option>'+(state.products||[]).filter(function(x){return x.id!==p.id}).map(function(x){return '<option value="'+esc(x.id)+'"'+(p.bundleWith===x.id?' selected':'')+'>'+esc(x.name)+'</option>'}).join('')+'</select></label><label for="pbp">Bundle discount %<input id="pbp" inputmode="numeric" maxlength="2" value="'+esc(p.bundlePct||'')+'" placeholder="e.g. 10"></label></div>'+
   '<label for="pstock">Stock count (optional - leave empty if unlimited)<input id="pstock" inputmode="numeric" value="'+esc(p.stock==null?'':p.stock)+'" placeholder="e.g. 12"></label>'+
-  '<div class="ordadm"><div class="pml">Product video (optional)</div><p class="hint" id="pvlab"></p><label for="pvfile">Choose a video file (up to 25 MB)<input id="pvfile" type="file" accept="video/mp4,video/webm,video/*"></label><button type="button" class="btn sm ghost" data-act="pvrm">Remove video</button></div>'+
+  '<div class="ordadm"><div class="pml">Product video (optional)</div><p class="hint" id="pvlab"></p><label for="pvfile">Choose a video file (up to 100 MB)<input id="pvfile" type="file" accept="video/mp4,video/webm,video/*"></label><button type="button" class="btn sm ghost" data-act="pvrm">Remove video</button></div>'+
   '<label for="pdesc">Description (optional)<textarea id="pdesc" rows="6" maxlength="2000" placeholder="One point per line. You can write like: Material: Stainless steel">'+esc(p.desc||'')+'</textarea></label>'+
   '<label style="display:flex;gap:8px;align-items:center;grid-template-columns:none"><input id="pso" type="checkbox" style="width:auto"'+(p.soldOut?' checked':'')+'> Mark as sold out</label>'+
   '<p class="err" id="perr"></p>'+
@@ -2299,7 +2299,7 @@ function openSettings(){
   '<h3 style="font-size:17px;margin-top:6px">Product videos</h3>'+
   '<div id="vlist">'+vAdminHtml()+'</div>'+
   '<label for="vfile">Choose video from your phone<input id="vfile" type="file" accept="video/*"></label>'+
-  '<p class="hint">Choose a video file, then tap Publish. Add one video at a time, the next one later (as many as you like). Earlier videos stay. Each video should be under 25 MB.</p>'+
+  '<p class="hint">Choose a video file, then tap Publish. Add one video at a time, the next one later (as many as you like). Earlier videos stay. Each video should be under 100 MB.</p>'+
   '<label for="sname">Store name<input id="sname" value="'+esc(s.name)+'" maxlength="40"></label>'+
   '<label for="stag">Tagline<input id="stag" value="'+esc(s.tagline)+'" maxlength="90"></label>'+
   '<label for="swl">Welcome message (shown when visitors arrive)<input id="swl" value="'+esc(s.welcome)+'" maxlength="60"></label>'+
@@ -2627,10 +2627,10 @@ document.addEventListener('change',function(e){
     var room=Math.max(10-editing.imgs.length,0),fl=Array.prototype.slice.call(t.files,0,room);
     $('#perr').textContent=t.files.length>room?'Only 10 photos fit per product. The extra photos were skipped.':'';
     Promise.all(fl.map(function(x){return shrink(x,640,'image/jpeg',.72).catch(function(){return null})})).then(function(r){r.forEach(function(u){if(u)editing.imgs.push(u)});refreshGal();t.value=''})}
-  if(t.id==='pvfile'&&t.files.length){var pf=t.files[0];if(pf.size>25*1048576){toast('That video is bigger than 25 MB. Please choose a smaller video.');t.value='';return}var pk='pv'+Date.now();pendV[pk]={file:pf,url:URL.createObjectURL(pf)};editing.video='pend:'+pk;pvRefresh();t.value='';return}
+  if(t.id==='pvfile'&&t.files.length){var pf=t.files[0];if(pf.size>100*1048576){toast('That video is bigger than 100 MB. Please choose a smaller video.');t.value='';return}var pk='pv'+Date.now();pendV[pk]={file:pf,url:URL.createObjectURL(pf)};editing.video='pend:'+pk;pvRefresh();t.value='';return}
   if(t.id==='vfile'&&t.files.length){
     var vf=t.files[0];
-    if(vf.size>25*1048576){toast('That video is bigger than 25 MB. Please choose a smaller video.');t.value='';return}
+    if(vf.size>100*1048576){toast('That video is bigger than 100 MB. Please choose a smaller video.');t.value='';return}
     var pid='p'+Date.now();pendV[pid]={file:vf,url:URL.createObjectURL(vf)};editing.videos.push({t:'f',src:'',pend:pid});vRefresh();t.value='';return}
   if(t.id==='rvimg'&&t.files.length){
     var room3=Math.max(30-(editing.reviews||[]).length,0),fl3=Array.prototype.slice.call(t.files,0,room3);
