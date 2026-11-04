@@ -557,8 +557,8 @@ i.otime{font-style:normal;background:none;padding:0;color:#FFE680;-webkit-text-s
 .vwrap{position:relative}
 .vrow{position:relative;display:flex;align-items:center;gap:16px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:22px 0 22px}
 .vrow::-webkit-scrollbar{display:none}
-.vcard{position:relative;flex:0 0 auto;scroll-snap-align:center;background:#000;border-radius:18px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.18);transform:scale(.84);opacity:.65;transition:transform .35s ease,opacity .35s ease,box-shadow .35s ease}
-.vcard.on{transform:scale(1.08);opacity:1;box-shadow:0 12px 28px rgba(0,0,0,.32)}
+.vcard{position:relative;flex:0 0 auto;scroll-snap-align:center;background:#000;border-radius:18px;overflow:hidden;opacity:.7;transition:opacity .25s ease;transform:translateZ(0)}
+.vcard.on{opacity:1}
 .vcard.vf{width:172px;aspect-ratio:9/16}
 .vcard.vy{width:290px;aspect-ratio:16/9}
 .vcard video,.vcard iframe{width:100%;height:100%;display:block;border:0;object-fit:cover;background:#000}
@@ -1043,6 +1043,10 @@ body::before{background:var(--hdrbg)}
 .rt u{display:block;height:100%;background:var(--brand);border-radius:99px}
 .rt b{text-align:right}
 .swa{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0;padding:11px 14px;border-radius:12px;background:#25D366;color:#fff;font:700 14px/1 var(--body);text-decoration:none}
+body.vplay .opk,body.vplay .opi,body.vplay .offer::after,body.vplay .wabtn::after,body.vplay .festbar,body.vplay .opm .opt{animation-play-state:paused!important}
+.vcard.buf::after{content:"";position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:4px solid rgba(255,255,255,.35);border-top-color:#fff;animation:vspin .8s linear infinite;pointer-events:none;z-index:3}
+@keyframes vspin{to{transform:rotate(360deg)}}
+.pvid{will-change:auto}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1964,6 +1968,12 @@ document.addEventListener('fullscreenchange',vFsEnd);document.addEventListener('
 var pendV={},vSig='';
 function ytId(u){var m=String(u||'').match(/(?:youtu\.be\/|[?&]v=|shorts\/|embed\/)([A-Za-z0-9_-]{11})/);return m?m[1]:''}
 function videoList(){return (state.settings.videos||[]).filter(function(v){return v&&((v.t==='y'&&v.id)||(v.t==='f'&&(v.src||(v.pend&&pendV[v.pend]))))})}
+function vidCheck(f){
+  try{var v=document.createElement('video'),u=URL.createObjectURL(f);v.preload='metadata';v.muted=true;
+    v.onloadedmetadata=function(){var h=Math.max(v.videoWidth,v.videoHeight),d=v.duration||0,mbps=d?f.size*8/d/1e6:0;URL.revokeObjectURL(u);
+      if(h>1300||mbps>5)toast('This video is heavy ('+(h>1300?'above 720p':mbps.toFixed(1)+' Mbps')+'). It may not play smoothly on phones. Please compress it to 720p first.');};
+    v.onerror=function(){URL.revokeObjectURL(u)};v.src=u}catch(e){}
+}
 function renderVideos(){
   var el=document.getElementById('vsec');if(!el)return;
   var l=videoList();
@@ -1977,10 +1987,13 @@ function renderVideos(){
     l.map(function(v){
       if(v.t==='y')return '<div class="vcard vy" data-act="vfull"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(v.id)+'?enablejsapi=1&mute=1&controls=0&playsinline=1&loop=1&rel=0&playlist='+esc(v.id)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Product video"></iframe>'+SP+FSX+'</div>';
       var src=v.src||(pendV[v.pend]&&pendV[v.pend].url)||'';
-      return '<div class="vcard vf" data-act="vfull"><video src="'+esc(src)+'" muted'+(l.length>1?'':' loop')+' playsinline preload="metadata"></video>'+SP+FSX+'</div>';
+      return '<div class="vcard vf" data-act="vfull"><video src="'+esc(src)+(/^blob:/.test(src)?'':'#t=0.1')+'" muted'+(l.length>1?'':' loop')+' playsinline preload="metadata"></video>'+SP+FSX+'</div>';
     }).join('')+'</div><div class="vnav"><button type="button" class="varr" data-act="vscroll" data-d="-1" aria-label="Previous video">&lsaquo;</button><button type="button" class="varr" data-act="vscroll" data-d="1" aria-label="Next video">&rsaquo;</button></div>';
   var row=document.getElementById('vrow');
   row.addEventListener('scroll',function(){if(!vRaf)vRaf=requestAnimationFrame(function(){vRaf=0;vUpdate()})},{passive:true});
+  var bufSet=function(e,on){var c=e.target&&e.target.closest&&e.target.closest('.vcard');if(c)c.classList.toggle('buf',on)};
+  ['waiting','stalled'].forEach(function(n){row.addEventListener(n,function(e){bufSet(e,true)},true)});
+  ['playing','canplay','pause','ended'].forEach(function(n){row.addEventListener(n,function(e){bufSet(e,false)},true)});
   Array.prototype.forEach.call(row.querySelectorAll('iframe'),function(f){f.addEventListener('load',function(){vUpdate(true)})});
   row.addEventListener('ended',function(e){
     var c=e.target&&e.target.closest&&e.target.closest('.vcard');if(!c)return;
@@ -2015,7 +2028,7 @@ function vUpdate(force){
   for(var i=0;i<cs.length;i++){var d=Math.abs(cs[i].offsetLeft+cs[i].offsetWidth/2-mid);if(d<bd){bd=d;best=i}}
   if(best===vCur&&!force)return;
   vCur=best;
-  for(i=0;i<cs.length;i++){var on=i===best;cs[i].classList.toggle('on',on);vPlay(cs[i],on&&vSeen)}
+  for(i=0;i<cs.length;i++){var on=i===best;cs[i].classList.toggle('on',on);var pv=cs[i].querySelector('video');if(pv&&(on||i===best+1)&&pv.preload!=='auto')pv.preload='auto';vPlay(cs[i],on&&vSeen)}
   clearTimeout(vYt);
   if(cs.length>1&&cs[best].querySelector('iframe'))vYt=setTimeout(function(){if(!vfsOn&&vCur===best)vGo((best+1)%cs.length)},15000);
 }
@@ -2025,7 +2038,7 @@ function vGo(i){
 }
 (function(){
   if(!('IntersectionObserver' in window))return;
-  var io=new IntersectionObserver(function(es){var s=es[0].isIntersecting;if(s!==vSeen){vSeen=s;vUpdate(true)}},{threshold:.4});
+  var io=new IntersectionObserver(function(es){var s=es[0].isIntersecting;document.body.classList.toggle('vplay',s);if(s!==vSeen){vSeen=s;vUpdate(true)}},{threshold:.4});
   var t=setInterval(function(){var e=document.getElementById('vsec');if(e){io.observe(e);clearInterval(t)}},300);
 })();
 window.addEventListener('resize',function(){vLayout()});
@@ -2627,11 +2640,11 @@ document.addEventListener('change',function(e){
     var room=Math.max(10-editing.imgs.length,0),fl=Array.prototype.slice.call(t.files,0,room);
     $('#perr').textContent=t.files.length>room?'Only 10 photos fit per product. The extra photos were skipped.':'';
     Promise.all(fl.map(function(x){return shrink(x,640,'image/jpeg',.72).catch(function(){return null})})).then(function(r){r.forEach(function(u){if(u)editing.imgs.push(u)});refreshGal();t.value=''})}
-  if(t.id==='pvfile'&&t.files.length){var pf=t.files[0];if(pf.size>100*1048576){toast('That video is bigger than 100 MB. Please choose a smaller video.');t.value='';return}var pk='pv'+Date.now();pendV[pk]={file:pf,url:URL.createObjectURL(pf)};editing.video='pend:'+pk;pvRefresh();t.value='';return}
+  if(t.id==='pvfile'&&t.files.length){var pf=t.files[0];if(pf.size>100*1048576){toast('That video is bigger than 100 MB. Please choose a smaller video.');t.value='';return}vidCheck(pf);var pk='pv'+Date.now();pendV[pk]={file:pf,url:URL.createObjectURL(pf)};editing.video='pend:'+pk;pvRefresh();t.value='';return}
   if(t.id==='vfile'&&t.files.length){
     var vf=t.files[0];
     if(vf.size>100*1048576){toast('That video is bigger than 100 MB. Please choose a smaller video.');t.value='';return}
-    var pid='p'+Date.now();pendV[pid]={file:vf,url:URL.createObjectURL(vf)};editing.videos.push({t:'f',src:'',pend:pid});vRefresh();t.value='';return}
+    vidCheck(vf);var pid='p'+Date.now();pendV[pid]={file:vf,url:URL.createObjectURL(vf)};editing.videos.push({t:'f',src:'',pend:pid});vRefresh();t.value='';return}
   if(t.id==='rvimg'&&t.files.length){
     var room3=Math.max(30-(editing.reviews||[]).length,0),fl3=Array.prototype.slice.call(t.files,0,room3);
     if(!fl3.length){toast('You already have 30 screenshots. Remove one first.');return}
