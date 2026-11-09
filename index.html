@@ -1057,11 +1057,15 @@ if(localStorage.getItem('zc-owner')==='1'||location.hash==='#admin'||seen){w.rem
 sessionStorage.setItem('zc-welcome','1');
 }catch(e){}
 document.body.style.overflow='hidden';
-try{var b=JSON.parse(localStorage.getItem('zc-brand')||'null');if(b){
+var say='Welcome to my store',spoke=0;
+function speak(){if(spoke||!say)return;try{var ss=window.speechSynthesis;if(!ss||!window.SpeechSynthesisUtterance)return;spoke=1;var u=new SpeechSynthesisUtterance(say);u.lang='en-US';u.rate=.92;u.pitch=1.05;u.volume=1;u.onerror=function(){spoke=0};ss.cancel();ss.speak(u)}catch(e){spoke=0}}
+try{var b=JSON.parse(localStorage.getItem('zc-brand')||'null');if(b){if(typeof b.say==='string')say=b.say;
 if(b.welcome)document.getElementById('wtext').textContent=b.welcome;
 if(b.tagline){var t=document.getElementById('wtag');t.textContent=b.tagline;t.hidden=false}
 var im=document.getElementById('wli');if(b.logo){if(im){im.src=b.logo;im.style.visibility='visible'}}else{var l=document.getElementById('wlogo');if(l)l.innerHTML=window.__zcCrown}}}catch(e){}
 setTimeout(function(){var x=document.getElementById('welcome');if(x){x.remove();document.body.style.overflow=''}},5500);
+speak();
+['pointerdown','touchstart','keydown','click'].forEach(function(n){document.addEventListener(n,function f(){speak();if(spoke)document.removeEventListener(n,f,true)},true)});
 })();</script>
 <div class="offer" id="offer" hidden></div><div id="hdr"><div class="wrap bar" id="bar"></div></div>
 <div id="own"></div>
@@ -1112,7 +1116,7 @@ if(curLang()==='ur'){
 function rvIds(){try{return JSON.parse(localStorage.getItem('zc-rv')||'[]')||[]}catch(e){return[]}}
 function rvPush(id){try{var l=rvIds().filter(function(x){return x!==id});l.unshift(id);localStorage.setItem('zc-rv',JSON.stringify(l.slice(0,12)))}catch(e){}}
 var sortMode='feat',maxPrice=0,stockOnly=false;
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',festival:'',festText:'',offerText:'Special offer upto 44% discount',freeShipMin:0,msgConfirm:'Assalam o Alaikum {name}, aap ka order {order} confirm ho gaya hai. Total: {total}. Shukriya! - {shop}',msgShip:'{name}, aap ka order {order} dispatch ho gaya hai. Inshallah 3 se 5 din mein pohanch jayega. - {shop}',msgDone:'{name}, aap ka order {order} deliver ho gaya hai. Hamein apna review dein, shukriya! - {shop}',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',festival:'',festText:'',welcomeSay:'Welcome to my store',offerText:'Special offer upto 44% discount',freeShipMin:0,msgConfirm:'Assalam o Alaikum {name}, aap ka order {order} confirm ho gaya hai. Total: {total}. Shukriya! - {shop}',msgShip:'{name}, aap ka order {order} dispatch ho gaya hai. Inshallah 3 se 5 din mein pohanch jayega. - {shop}',msgDone:'{name}, aap ka order {order} deliver ho gaya hai. Hamein apna review dein, shukriya! - {shop}',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loadSlow=false;setTimeout(function(){loadSlow=true;if(loading)try{renderGrid()}catch(e){}},5000);
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:'',email:''},cart={};
@@ -2317,6 +2321,7 @@ function openSettings(){
   '<p class="hint">Choose a video file, then tap Publish. Add one video at a time, the next one later (as many as you like). Earlier videos stay. Each video should be under 100 MB.</p>'+
   '<label for="sname">Store name<input id="sname" value="'+esc(s.name)+'" maxlength="40"></label>'+
   '<label for="stag">Tagline<input id="stag" value="'+esc(s.tagline)+'" maxlength="90"></label>'+
+  '<label for="swsay">Welcome voice (spoken when the welcome screen opens. Leave empty for no sound)<input id="swsay" value="'+esc(s.welcomeSay==null?'':s.welcomeSay)+'" maxlength="80" placeholder="Welcome to my store"></label>'+
   '<label for="swl">Welcome message (shown when visitors arrive)<input id="swl" value="'+esc(s.welcome)+'" maxlength="60"></label>'+
   '<div class="row"><label for="scur">Currency symbol<input id="scur" value="'+esc(s.currency)+'" maxlength="6"></label>'+
   '<label for="swa">WhatsApp number for orders<input id="swa" inputmode="tel" value="'+esc(s.whatsapp)+'" placeholder="03xx xxxxxxx"></label></div>'+
@@ -2371,7 +2376,7 @@ function saveSettings(){
   var gc=ghGet(),tk=$('#gtoken').value.trim(),rp=$('#grepo').value.trim();
   if(tk)gc.token=tk;if(rp)gc.repo=rp;try{localStorage.setItem('zc-gh',JSON.stringify(gc))}catch(e){}
   var s=state.settings;
-  s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';
+  s.name=$('#sname').value.trim()||'Zayan Crown';s.tagline=$('#stag').value.trim();s.welcome=$('#swl').value.trim()||'Welcome to my website';s.welcomeSay=($('#swsay')||{value:''}).value.trim();
   s.annText=(($('#sann')||{value:''}).value||'').trim();s.deliveryNote=(($('#sdlv')||{value:''}).value||'').trim();s.festival=($('#sfest')||{value:''}).value;s.msgConfirm=(($('#smc')||{value:''}).value||'').trim();s.msgShip=(($('#sms')||{value:''}).value||'').trim();s.msgDone=(($('#smd')||{value:''}).value||'').trim();s.festText=(($('#sfestt')||{value:''}).value||'').trim();s.saleOn=!!($('#ssaleon')||{}).checked;s.salePct=Math.min(90,Math.max(0,parseInt(($('#ssalep')||{value:''}).value,10)||0));s.saleCat=(($('#ssalec')||{value:''}).value||'').trim();s.saleEnd=(($('#ssalee')||{value:''}).value||'');s.saleStart=(($('#ssales')||{value:''}).value||'');s.faq=(($('#sfaq')||{value:''}).value||'').trim();s.cityDays=(($('#scity')||{value:''}).value||'').trim();state.orders=(editing.orders||[]).slice(0,300);
   s.currency=$('#scur').value.trim()||'Rs';s.whatsapp=$('#swa').value.trim();s.orderKey=$('#sok').value.trim();s.gaId=gv;s.promoCode=$('#spc').value.trim().replace(/\s+/g,'').toUpperCase();s.promoOn=$('#spo').checked;s.offerText=($('#sot')||{value:''}).value.trim();s.promoMins=Math.min(Math.max(parseInt($('#spm').value,10)||5,1),120);offSig='';s.payJc=$('#sjc').value.trim();s.payJcT=$('#sjct').value.trim();s.payEp=$('#sep').value.trim();s.payEpT=$('#sept').value.trim();s.payBkN=$('#sbn').value.trim();s.payBk=$('#sbk').value.trim();s.payBkT=$('#sbkt').value.trim();promoUsed=false;s.fb=cleanUrl($('#sfb').value);s.ig=cleanUrl($('#sig').value);s.tt=cleanUrl($('#stt').value);s.yt=cleanUrl($('#syt').value);if((editing.logo||'')!==(s.logo||'')){try{localStorage.setItem('zc-logo-pending','1')}catch(x){}}s.logo=editing.logo||'';s.banners=(editing.banners||[]).slice(0,8);s.reviews=(editing.reviews||[]).slice(0,30);s.reviewNote=$('#rvnote').value.trim();s.address=$('#sadr').value.trim();s.videos=(editing.videos||[]).slice();vSig='';s.bannerSecs=Math.min(Math.max(parseInt($('#bnsec').value,10)||2,1),15);bnSig='';
   dirty++;persist();closeModal();renderAll();toast('Saved on this phone. Tap Publish to show it to customers.');
@@ -2668,7 +2673,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.mat
 var ownerFlag=false;try{ownerFlag=localStorage.getItem('zc-owner')==='1'}catch(e){}
 if(location.hash==='#admin'){try{localStorage.setItem('zc-owner','1')}catch(e){}ownerFlag=true}
 function updateWelcome(){
-  try{localStorage.setItem('zc-brand',JSON.stringify({logo:state.settings.logo||'',welcome:state.settings.welcome,tagline:state.settings.tagline||''}))}catch(e){}
+  try{localStorage.setItem('zc-brand',JSON.stringify({logo:state.settings.logo||'',welcome:state.settings.welcome,tagline:state.settings.tagline||'',say:state.settings.welcomeSay==null?'Welcome to my store':state.settings.welcomeSay}))}catch(e){}
   var w=document.getElementById('welcome');if(!w)return;
   document.getElementById('wlogo').innerHTML=logoHtml();
   document.getElementById('wtext').textContent=state.settings.welcome;
