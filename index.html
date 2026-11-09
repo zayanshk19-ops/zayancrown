@@ -1057,8 +1057,10 @@ if(localStorage.getItem('zc-owner')==='1'||location.hash==='#admin'||seen){w.rem
 sessionStorage.setItem('zc-welcome','1');
 }catch(e){}
 document.body.style.overflow='hidden';
-var say='Welcome to my store',spoke=0;
-function speak(){if(spoke||!say)return;try{var ss=window.speechSynthesis;if(!ss||!window.SpeechSynthesisUtterance)return;spoke=1;var u=new SpeechSynthesisUtterance(say);u.lang='en-US';u.rate=.92;u.pitch=1.05;u.volume=1;u.onerror=function(){spoke=0};ss.cancel();ss.speak(u)}catch(e){spoke=0}}
+var say='Welcome to Crown Bazaar',spoke=0;
+function pickVoice(ss){try{var best=null,bs=-1;(ss.getVoices()||[]).forEach(function(v){if(!/^en/i.test(v.lang))return;var n=v.name||'',sc=0;if(/natural|online|neural/i.test(n))sc+=4;if(/google/i.test(n))sc+=3;if(/samantha|zira|aria|jenny|heera|neerja|libby|sonia|female|karen|moira|tessa|serena/i.test(n))sc+=2;if(/en[-_](IN|GB|US)/i.test(v.lang))sc+=1;if(v.localService===false)sc+=1;if(sc>bs){bs=sc;best=v}});return best}catch(e){return null}}
+function speak(){if(spoke||!say)return;try{var ss=window.speechSynthesis;if(!ss||!window.SpeechSynthesisUtterance)return;spoke=1;var u=new SpeechSynthesisUtterance(say);var v=pickVoice(ss);if(v){u.voice=v;u.lang=v.lang}else u.lang='en-US';u.rate=.88;u.pitch=1;u.volume=1;u.onerror=function(){spoke=0};ss.cancel();ss.speak(u)}catch(e){spoke=0}}
+try{if(window.speechSynthesis&&speechSynthesis.getVoices)speechSynthesis.getVoices()}catch(e){}
 try{var b=JSON.parse(localStorage.getItem('zc-brand')||'null');if(b){if(typeof b.say==='string')say=b.say;
 if(b.welcome)document.getElementById('wtext').textContent=b.welcome;
 if(b.tagline){var t=document.getElementById('wtag');t.textContent=b.tagline;t.hidden=false}
@@ -1116,7 +1118,7 @@ if(curLang()==='ur'){
 function rvIds(){try{return JSON.parse(localStorage.getItem('zc-rv')||'[]')||[]}catch(e){return[]}}
 function rvPush(id){try{var l=rvIds().filter(function(x){return x!==id});l.unshift(id);localStorage.setItem('zc-rv',JSON.stringify(l.slice(0,12)))}catch(e){}}
 var sortMode='feat',maxPrice=0,stockOnly=false;
-function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',festival:'',festText:'',welcomeSay:'Welcome to my store',offerText:'Special offer upto 44% discount',freeShipMin:0,msgConfirm:'Assalam o Alaikum {name}, aap ka order {order} confirm ho gaya hai. Total: {total}. Shukriya! - {shop}',msgShip:'{name}, aap ka order {order} dispatch ho gaya hai. Inshallah 3 se 5 din mein pohanch jayega. - {shop}',msgDone:'{name}, aap ka order {order} deliver ho gaya hai. Hamein apna review dein, shukriya! - {shop}',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
+function norm(){state.settings=Object.assign({name:'Zayan Crown',welcome:'Welcome to Crown Zayan',tagline:'',whatsapp:'03156402248',orderKey:'',gaId:'',bannerSecs:2,promoCode:'',promoPct:20,promoMins:5,codes:'',annText:'',faq:'',cityDays:'',saleStart:'',saleOn:false,salePct:0,saleCat:'',saleEnd:'',deliveryNote:'Delivery in 3 to 5 working days all over Pakistan',festival:'',festText:'',welcomeSay:'Welcome to Crown Bazaar',offerText:'Special offer upto 44% discount',freeShipMin:0,msgConfirm:'Assalam o Alaikum {name}, aap ka order {order} confirm ho gaya hai. Total: {total}. Shukriya! - {shop}',msgShip:'{name}, aap ka order {order} dispatch ho gaya hai. Inshallah 3 se 5 din mein pohanch jayega. - {shop}',msgDone:'{name}, aap ka order {order} deliver ho gaya hai. Hamein apna review dein, shukriya! - {shop}',promoOn:true,shipPerKg:300,address:'Pakistan, Punjab, Gujranwala, Bhutta Centre, Gala Bakr Mandi',reviews:[],reviewNote:'',payJc:'03137400200',payJcT:'',payEp:'03126402248',payEpT:'',payBkN:'',payBk:'03137400200',payBkT:'',fb:'',ig:'',tt:'',yt:'',currency:'Rs',logo:''},state.settings||{});if(!state.settings.whatsapp)state.settings.whatsapp='03156402248';if(!Array.isArray(state.orders))state.orders=[];try{saleApply()}catch(e){}(state.products||[]).forEach(function(p){if(p.stock!==''&&p.stock!=null&&!isNaN(+p.stock)&&+p.stock<=0)p.soldOut=true});if(typeof state.settings.codes!=='string')state.settings.codes='';if(!state.settings.welcome||state.settings.welcome==='Welcome to my website')state.settings.welcome='Welcome to Crown Zayan';state.products=state.products||[]}
 norm();
 var loadSlow=false;setTimeout(function(){loadSlow=true;if(loading)try{renderGrid()}catch(e){}},5000);
 var loading=true,owner=false,dirty=0,cat='All',q='',editing=null,cust={name:'',phone:'',addr:'',email:''},cart={};
@@ -2321,7 +2323,7 @@ function openSettings(){
   '<p class="hint">Choose a video file, then tap Publish. Add one video at a time, the next one later (as many as you like). Earlier videos stay. Each video should be under 100 MB.</p>'+
   '<label for="sname">Store name<input id="sname" value="'+esc(s.name)+'" maxlength="40"></label>'+
   '<label for="stag">Tagline<input id="stag" value="'+esc(s.tagline)+'" maxlength="90"></label>'+
-  '<label for="swsay">Welcome voice (spoken when the welcome screen opens. Leave empty for no sound)<input id="swsay" value="'+esc(s.welcomeSay==null?'':s.welcomeSay)+'" maxlength="80" placeholder="Welcome to my store"></label>'+
+  '<label for="swsay">Welcome voice (spoken when the welcome screen opens. Leave empty for no sound)<input id="swsay" value="'+esc(s.welcomeSay==null?'':s.welcomeSay)+'" maxlength="80" placeholder="Welcome to Crown Bazaar"></label>'+
   '<label for="swl">Welcome message (shown when visitors arrive)<input id="swl" value="'+esc(s.welcome)+'" maxlength="60"></label>'+
   '<div class="row"><label for="scur">Currency symbol<input id="scur" value="'+esc(s.currency)+'" maxlength="6"></label>'+
   '<label for="swa">WhatsApp number for orders<input id="swa" inputmode="tel" value="'+esc(s.whatsapp)+'" placeholder="03xx xxxxxxx"></label></div>'+
@@ -2673,7 +2675,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.mat
 var ownerFlag=false;try{ownerFlag=localStorage.getItem('zc-owner')==='1'}catch(e){}
 if(location.hash==='#admin'){try{localStorage.setItem('zc-owner','1')}catch(e){}ownerFlag=true}
 function updateWelcome(){
-  try{localStorage.setItem('zc-brand',JSON.stringify({logo:state.settings.logo||'',welcome:state.settings.welcome,tagline:state.settings.tagline||'',say:state.settings.welcomeSay==null?'Welcome to my store':state.settings.welcomeSay}))}catch(e){}
+  try{localStorage.setItem('zc-brand',JSON.stringify({logo:state.settings.logo||'',welcome:state.settings.welcome,tagline:state.settings.tagline||'',say:state.settings.welcomeSay==null?'Welcome to Crown Bazaar':state.settings.welcomeSay}))}catch(e){}
   var w=document.getElementById('welcome');if(!w)return;
   document.getElementById('wlogo').innerHTML=logoHtml();
   document.getElementById('wtext').textContent=state.settings.welcome;
