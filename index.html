@@ -1099,6 +1099,11 @@ html[data-theme=dark] .csec{background:linear-gradient(115deg,#241418,#150c0e 75
 .hpill{position:relative;overflow:hidden;background:linear-gradient(180deg,#FFE58A,#F2AC00)!important;color:#3a2300!important;box-shadow:0 4px 12px rgba(242,172,0,.45)}
 .hpill::after{content:"";position:absolute;top:0;bottom:0;left:0;width:45%;background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.85) 50%,transparent 75%);transform:translateX(-130%) skewX(-14deg);animation:wapol 2.8s ease-in-out infinite;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.hpill::after{animation:none;display:none}}
+.flowline{position:relative;height:4px;border-radius:4px;margin:20px 2px 8px;background:linear-gradient(90deg,#FFB300,#FFF1A8,#B36B00,#FF9F00,#FFD24A,#FFB300);background-size:300% 100%;animation:flowmv 3.4s linear infinite;box-shadow:0 5px 14px rgba(255,170,0,.40)}
+.flowline::after{content:"";position:absolute;left:4%;right:4%;top:2px;height:16px;border-radius:50%;background:linear-gradient(90deg,#FFB300,#FFF1A8,#B36B00,#FF9F00,#FFD24A,#FFB300);background-size:300% 100%;animation:flowmv 3.4s linear infinite;filter:blur(10px);opacity:.45;pointer-events:none}
+@keyframes flowmv{to{background-position:-300% 0}}
+@media (prefers-reduced-motion:reduce){.flowline,.flowline::after{animation:none}}
+body.vplay .flowline,body.vplay .flowline::after{animation-play-state:paused}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1705,7 +1710,7 @@ function catGroups(first){
   if(first){var fk=first.trim().toLowerCase();groups.sort(function(a,b){return (b.name.toLowerCase()===fk)-(a.name.toLowerCase()===fk)})}
   return groups;
 }
-function catSections(groups){return groups.map(function(g){return '<section class="csec"><div class="shh"><div><span class="shs">&mdash; Showcase by &mdash;</span><h2 class="vh">'+esc(g.name)+'</h2><p class="shsub">'+g.list.length+' product'+(g.list.length===1?'':'s')+' &nbsp;|&nbsp; Quality you can trust</p></div><button type="button" class="vall btnv" data-act="viewcat" data-c="'+esc(g.name)+'">View all &rsaquo;</button></div><div class="crow">'+g.list.map(card).join('')+'</div></section>'}).join('')}
+function catSections(groups){return groups.map(function(g){return '<section class="csec"><div class="shh"><div><span class="shs">&mdash; Showcase by &mdash;</span><h2 class="vh">'+esc(g.name)+'</h2><p class="shsub">'+g.list.length+' product'+(g.list.length===1?'':'s')+' &nbsp;|&nbsp; Quality you can trust</p></div><button type="button" class="vall btnv" data-act="viewcat" data-c="'+esc(g.name)+'">View all &rsaquo;</button></div><div class="crow">'+g.list.map(card).join('')+'</div></section><div class="flowline" aria-hidden="true"></div>'}).join('')}
 function secHead(pill,a,b,sub){return '<div class="hsec"><span class="hpill">'+esc(pill)+'</span><h2>'+esc(a)+' <em>'+esc(b)+'</em></h2><p>'+esc(sub)+'</p></div>'}
 function collectionHtml(groups){
   if(!groups.length)return '';
@@ -1726,7 +1731,7 @@ function tcard(p){
 }
 function trendHtml(){
   var l=trendList(),hasMan=(state.products||[]).some(function(p){return p.trend&&!p.soldOut});if(l.length<(hasMan?1:2))return '';
-  return '<section class="hblk">'+secHead('Featured products','Trending','Now','Top picks. Best quality. Loved by our customers.')+'<div class="tgrid">'+l.map(tcard).join('')+'</div></section>';
+  return '<section class="hblk">'+secHead('Featured products','Trending','Now','Top picks. Best quality. Loved by our customers.')+'<div class="tgrid">'+l.map(tcard).join('')+'</div></section><div class="flowline" aria-hidden="true"></div>';
 }
 function renderTabs(){
   var h=document.getElementById('hdr');if(!h||!h.parentNode)return;
