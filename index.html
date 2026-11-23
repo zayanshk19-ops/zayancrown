@@ -1,17 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}
-.mtop{display:flex;align-items:center;justify-content:space-between;padding:2px 0 14px}
-.mtop h3{margin:0;font:800 26px/1.1 var(--display);color:var(--ink)}
-.mnav{display:grid}
-.mrow{display:flex;align-items:center;justify-content:space-between;width:100%;padding:17px 2px;border:0;border-top:1px solid var(--line);background:none;font:700 15px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);cursor:pointer;text-align:left}
-.mrow:last-child{border-bottom:1px solid var(--line)}
-.mrow:active{color:var(--brand)}
-.mch{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.6}
-.msep{height:5px;background:var(--line);margin:0 -16px 4px;opacity:.7}
-.mic{display:flex;align-items:center;gap:14px;width:100%;padding:15px 2px;border:0;border-bottom:1px solid var(--line);background:none;font:600 15px/1.2 var(--body);color:var(--ink);cursor:pointer;text-align:left}
-.mic svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.mic:active{color:var(--brand)}
-.ovl.drawer .mhi{margin:6px 0;padding:6px 2px}
-</style></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
 <title>Zayan Crown</title><meta name="theme-color" content="#4b1c9e"><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Crown Bazaar">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&family=Oswald:wght@500;600;700&family=Mrs+Saint+Delafield&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&display=block"><style id="sheet">
@@ -1117,6 +1104,49 @@ html[data-theme=dark] .csec{background:linear-gradient(115deg,#241418,#150c0e 75
 @keyframes flowmv{to{background-position:-300% 0}}
 @media (prefers-reduced-motion:reduce){.flowline,.flowline::after{animation:none}}
 body.vplay .flowline,body.vplay .flowline::after{animation-play-state:paused}
+
+.mtop{display:flex;align-items:center;justify-content:space-between;padding:2px 0 14px}
+.mtop h3{margin:0;font:800 26px/1.1 var(--display);color:var(--ink)}
+.mnav{display:grid}
+.mrow{display:flex;align-items:center;justify-content:space-between;width:100%;padding:17px 2px;border:0;border-top:1px solid var(--line);background:none;font:700 15px/1.2 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);cursor:pointer;text-align:left}
+.mrow:last-child{border-bottom:1px solid var(--line)}
+.mrow:active{color:var(--brand)}
+.mch{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.6}
+.msep{height:5px;background:var(--line);margin:0 -16px 4px;opacity:.7}
+.mic{display:flex;align-items:center;gap:14px;width:100%;padding:15px 2px;border:0;border-bottom:1px solid var(--line);background:none;font:600 15px/1.2 var(--body);color:var(--ink);cursor:pointer;text-align:left}
+.mic svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mic:active{color:var(--brand)}
+.ovl.drawer .mhi{margin:6px 0;padding:6px 2px}
+
+#wafloat{border:0;cursor:pointer;padding:0}
+#wapanel{position:fixed;right:14px;bottom:calc(144px + env(safe-area-inset-bottom,0px));z-index:56;width:min(86vw,340px);border-radius:20px;overflow:hidden;background:#EDE6DF;box-shadow:0 14px 40px rgba(0,0,0,.3);animation:wpin .22s ease both}
+#wapanel[hidden]{display:none}
+@keyframes wpin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.wph{display:flex;align-items:center;gap:12px;background:#25D366;color:#fff;padding:14px 14px}
+.wph div{flex:1;min-width:0}.wph b{display:block;font:800 17px/1.2 var(--display)}.wph small{display:block;font-size:13px;opacity:.95;margin-top:2px}
+.wpav{width:44px;height:44px;border-radius:50%;background:#fff;color:#25D366;display:grid;place-items:center;flex:none}.wpav svg{width:26px;height:26px}
+.wpx{border:0;background:none;color:#fff;font-size:30px;line-height:1;cursor:pointer;padding:0 4px}
+.wpb{padding:14px 14px 10px}
+.wpm{background:#fff;border-radius:12px;padding:12px 14px;font-size:15px;line-height:1.45;color:#222;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.wpb small{display:block;margin:8px 4px 0;color:#888;font-size:12px}
+.wpf{display:flex;gap:8px;padding:10px 12px 14px;background:#F2F0EE;align-items:center}
+.wpf input{flex:1;min-width:0;border:1.5px solid #ddd;border-radius:99px;padding:12px 16px;font:500 15px var(--body);background:#fff;color:#222}
+.wpf button{width:44px;height:44px;flex:none;border:0;border-radius:50%;background:#25D366;color:#fff;display:grid;place-items:center;cursor:pointer}.wpf button svg{width:20px;height:20px}
+body:has(.ovl) #wapanel,body.nokb #wapanel{display:none}
+@media (min-width:900px){#wapanel{bottom:160px;right:24px}}
+.vsec .vrow{gap:14px;padding:22px 0 104px}
+.vcard.vf{width:min(64vw,262px)}
+.vcard.vy{width:min(78vw,320px)}
+.vcard{overflow:visible;opacity:.85}
+.vcard video,.vcard iframe{border-radius:6px}
+.vmute{width:40px;height:40px;right:10px;bottom:10px;background:rgba(210,210,210,.75)}
+.vmute svg{stroke:#222}
+.vprod{position:absolute;left:0;right:0;top:calc(100% + 14px);display:flex;align-items:center;gap:12px;border:1.5px solid var(--ink);background:var(--surface,#fff);padding:10px 14px;cursor:pointer;color:var(--ink)}
+.vprod img{width:56px;height:56px;object-fit:cover;flex:none}
+.vprod em{font-style:normal;font:500 14px/1.45 var(--body);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vcard:not(.on) .vprod{opacity:.75}
+.vcard.vfs .vprod,.vcard:fullscreen .vprod,.vcard:-webkit-full-screen .vprod{display:none}
+.vpsel{margin-top:6px;max-width:100%;font-size:13px}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
@@ -1755,11 +1785,15 @@ function renderTabs(){
   t.innerHTML='<button type="button" class="on" data-act="tabhome">Home</button>'+gs.map(function(g){return '<button type="button" data-act="viewcat" data-c="'+esc(g.name)+'">'+esc(g.name)+'</button>'}).join('');
 }
 function renderWaFloat(){
-  var w=document.getElementById('wafloat'),n=waNum(state.settings.whatsapp);
-  if(!n){if(w)w.remove();return}
-  if(!w){w=document.createElement('a');w.id='wafloat';w.target='_blank';w.rel='noopener';w.setAttribute('aria-label','Chat with us on WhatsApp');document.body.appendChild(w);
-    w.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm5.2 13.8c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.2.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4z"/></svg><i></i>'}
-  w.href='https://wa.me/'+n+'?text='+encodeURIComponent('Assalam o Alaikum, I need help with an order.');
+  var w=document.getElementById('wafloat'),n=waNum(state.settings.whatsapp),pn=document.getElementById('wapanel');
+  if(!n){if(w)w.remove();if(pn)pn.remove();return}
+  var WAI='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm5.2 13.8c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.2.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4z"/></svg>';
+  if(!w){w=document.createElement('button');w.type='button';w.id='wafloat';w.dataset.act='wachat';w.setAttribute('aria-label','Chat with us on WhatsApp');document.body.appendChild(w);w.innerHTML=WAI+'<i></i>'}
+  if(!pn){pn=document.createElement('div');pn.id='wapanel';pn.hidden=true;document.body.appendChild(pn)}
+  pn.innerHTML='<div class="wph"><span class="wpav">'+WAI+'</span><div><b>'+esc(state.settings.name||'Our store')+'</b><small>Typically replies within minutes</small></div><button type="button" class="wpx" data-act="wachat" aria-label="Close chat">&times;</button></div>'+
+    '<div class="wpb"><div class="wpm">&#128075; Hi! Welcome to <b>'+esc(state.settings.name||'our store')+'</b><br>How can we help you?</div><small>Just now</small></div>'+
+    '<form class="wpf" id="wapf"><input id="wapi" type="text" placeholder="Type a message..." autocomplete="off" aria-label="Type a message"><button type="submit" aria-label="Send on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 20l18-8L3 4v6l11 2-11 2z"/></svg></button></form>';
+  pn.querySelector('#wapf').onsubmit=function(e){e.preventDefault();var t=(document.getElementById('wapi').value||'').trim()||'Assalam o Alaikum, I need help with an order.';window.open('https://wa.me/'+n+'?text='+encodeURIComponent(t),'_blank','noopener');document.getElementById('wapi').value=''};
 }
 function wireRows(host){
   Array.prototype.forEach.call(host.querySelectorAll('.crow'),function(r){
@@ -2101,11 +2135,12 @@ function renderVideos(){
   vSig=sig;el.hidden=false;
   var FSX='<button type="button" class="vfsx" data-act="vexit" aria-label="Close full screen">&times;</button>';
   var SP='<button type="button" class="vmute" data-act="vmute" aria-label="Sound on or off"><svg class="soff" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/></svg><svg class="son" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.3 6.5a8 8 0 0 1 0 11"/></svg></button>';
+  var VP=function(v){var pr=v.pid&&prod(v.pid);if(!pr)return '';var im=imgsOf(pr);return '<span class="vprod" data-act="open" data-id="'+esc(pr.id)+'" role="button" tabindex="0">'+(im.length?'<img src="'+esc(im[0])+'" alt="" loading="lazy">':'')+'<em>'+esc(pr.name)+'</em></span>'};
   el.innerHTML='<div class="blkline"></div><h2 class="vh">Videos</h2><div class="vrow" id="vrow">'+
     l.map(function(v){
-      if(v.t==='y')return '<div class="vcard vy" data-act="vfull"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(v.id)+'?enablejsapi=1&mute=1&controls=0&playsinline=1&loop=1&rel=0&playlist='+esc(v.id)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Product video"></iframe>'+SP+FSX+'</div>';
+      if(v.t==='y')return '<div class="vcard vy" data-act="vfull"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(v.id)+'?enablejsapi=1&mute=1&controls=0&playsinline=1&loop=1&rel=0&playlist='+esc(v.id)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Product video"></iframe>'+SP+FSX+VP(v)+'</div>';
       var src=v.src||(pendV[v.pend]&&pendV[v.pend].url)||'';
-      return '<div class="vcard vf" data-act="vfull"><video src="'+esc(src)+(/^blob:/.test(src)?'':'#t=0.1')+'" muted'+(l.length>1?'':' loop')+' playsinline preload="metadata"></video>'+SP+FSX+'</div>';
+      return '<div class="vcard vf" data-act="vfull"><video src="'+esc(src)+(/^blob:/.test(src)?'':'#t=0.1')+'" muted'+(l.length>1?'':' loop')+' playsinline preload="metadata"></video>'+SP+FSX+VP(v)+'</div>';
     }).join('')+'</div><div class="vnav"><button type="button" class="varr" data-act="vscroll" data-d="-1" aria-label="Previous video">&lsaquo;</button><button type="button" class="varr" data-act="vscroll" data-d="1" aria-label="Next video">&rsaquo;</button></div>';
   var row=document.getElementById('vrow');
   row.addEventListener('scroll',function(){if(!vRaf)vRaf=requestAnimationFrame(function(){vRaf=0;vUpdate()})},{passive:true});
@@ -2168,7 +2203,8 @@ function vAdminHtml(){
   if(!l.length)return '<p class="hint">No videos yet.</p>';
   return l.map(function(v,i){
     var lab=v.t==='y'?'YouTube video ('+esc(v.id)+')':(v.pend&&pendV[v.pend]?'New video: '+esc(pendV[v.pend].file.name)+' ('+(pendV[v.pend].file.size/1048576).toFixed(1)+' MB)':'Video file ('+esc((v.src||'').split('/').pop())+')');
-    return '<div class="bnrow"><div class="vlab">'+lab+'</div><div class="bnb"><button type="button" class="btn sm ghost" data-act="vup" data-i="'+i+'"'+(i?'':' disabled')+' aria-label="Move up">&uarr;</button><button type="button" class="btn sm ghost" data-act="vdn" data-i="'+i+'"'+(i<l.length-1?'':' disabled')+' aria-label="Move down">&darr;</button><button type="button" class="btn sm ghost" data-act="vrm" data-i="'+i+'">Remove</button></div></div>';
+    var psel='<select class="vpsel" data-vi="'+i+'" aria-label="Product shown under this video"><option value="">No product under video</option>'+(state.products||[]).map(function(p){return '<option value="'+esc(p.id)+'"'+(v.pid===p.id?' selected':'')+'>'+esc(p.name)+'</option>'}).join('')+'</select>';
+    return '<div class="bnrow"><div class="vlab">'+lab+'<br>'+psel+'</div><div class="bnb"><button type="button" class="btn sm ghost" data-act="vup" data-i="'+i+'"'+(i?'':' disabled')+' aria-label="Move up">&uarr;</button><button type="button" class="btn sm ghost" data-act="vdn" data-i="'+i+'"'+(i<l.length-1?'':' disabled')+' aria-label="Move down">&darr;</button><button type="button" class="btn sm ghost" data-act="vrm" data-i="'+i+'">Remove</button></div></div>';
   }).join('');
 }
 function vRefresh(){var b=document.getElementById('vlist');if(b)b.innerHTML=vAdminHtml()}
@@ -2625,6 +2661,7 @@ document.addEventListener('click',function(e){
   if(a==='cat'){cat=b.dataset.cat;renderChips();renderGrid()}
   else if(a==='addcart'){ensureOpts(id);cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();updateShopBar();toast('Added to cart')}
   else if(a==='shop')openShop();
+  else if(a==='wachat'){var wp=document.getElementById('wapanel');if(wp){wp.hidden=!wp.hidden;if(!wp.hidden){var wi=document.getElementById('wapi');if(wi)setTimeout(function(){try{wi.focus()}catch(x){}},120)}}}
   else if(a==='viewcat'){openShop('cat',b.dataset.c)}
   else if(a==='tabhome'){if(document.getElementById('modal')&&document.getElementById('modal').innerHTML)closeModal();cat='All';window.scrollTo({top:0,behavior:'smooth'})}
   else if(a==='sbbuy'){var sp=prod(id);if(sp&&!sp.soldOut){if(!cart[id]){cart[id]=1;saveCart();renderBar();renderFab()}openCart()}}
@@ -2755,6 +2792,7 @@ document.addEventListener('input',function(e){
 });
 document.addEventListener('change',function(e){
   var t=e.target,f=t.files&&t.files[0];
+  if(t.classList&&t.classList.contains('vpsel')){var vv=(editing.videos||[])[+t.dataset.vi];if(vv){if(t.value)vv.pid=t.value;else delete vv.pid}return}
   if(t.id==='bkfile'&&f){var fr=new FileReader();fr.onload=function(){try{var o=JSON.parse(fr.result);if(!o||!Array.isArray(o.products))throw 0;if(!confirm('Replace everything on this phone with this backup? Then tap Publish to put it online.'))return;state=o;norm();dirty++;persist();closeModal();renderAll();toast('Backup restored on this phone. Tap Publish to put it online.')}catch(x){toast('This is not a valid backup file.')}};fr.readAsText(f);return}
   if(t.id==='citysel'){try{localStorage.setItem('zc-city',t.value)}catch(x){}var ch=cityList().filter(function(x){return x.c===t.value})[0];var cr=document.getElementById('cityres');if(cr)cr.textContent=ch?ch.d:'';return}
   if(t.dataset&&t.dataset.opt!=null&&t.dataset.id){var op=prod(t.dataset.id);if(op)readOpts(op);return}
