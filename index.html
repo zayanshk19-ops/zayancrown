@@ -1784,7 +1784,7 @@ var catSig='',catTick=0;
 function renderCats(){
   var host=document.getElementById('catrows'),h2=document.getElementById('home2'),chp=document.getElementById('chips');
   if(!chp||!chp.parentNode)return;
-  if(!h2){h2=document.createElement('div');h2.id='home2';var ft=document.getElementById('foot');if(ft&&ft.parentNode)ft.parentNode.insertBefore(h2,ft);else chp.parentNode.appendChild(h2)}
+  if(!h2){h2=document.createElement('div');h2.id='home2';var ft=document.getElementById('vsec')||document.getElementById('foot');if(ft&&ft.parentNode)ft.parentNode.insertBefore(h2,ft);else chp.parentNode.appendChild(h2)}
   if(!host){host=document.createElement('div');host.id='catrows';chp.parentNode.insertBefore(host,chp)}
   var groups=[],map={};
   (state.products||[]).forEach(function(p){var c=(p.category||'').trim();if(!c)return;var k=c.toLowerCase();if(!map[k]){map[k]={name:c,list:[]};groups.push(map[k])}map[k].list.push(p)});
