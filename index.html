@@ -1186,6 +1186,14 @@ html.pimg .pic img.ld,html.pimg .ti img.ld{opacity:1;transform:none}
   @keyframes cardrise{from{opacity:.0;transform:translateY(34px) scale(.95)}to{opacity:1;transform:none}}
  }
 }
+
+/* photos in their own ratio */
+.card .pic,.tcard .ti,.wimg{aspect-ratio:auto!important;min-height:120px;display:block!important;background:var(--tint)}
+.card .pic img,.tcard .ti img,.wimg img{width:100%!important;height:auto!important;max-height:440px;object-fit:contain!important;display:block;margin:0 auto}
+.card .pic .ph,.tcard .ti>svg,.wimg>svg{aspect-ratio:1/1;display:grid;place-items:center}
+.slide{aspect-ratio:auto!important;max-height:none!important;display:block!important}
+.slide img{width:100%!important;height:auto!important;max-height:72vh;object-fit:contain!important;margin:0 auto;display:block}
+.car{align-items:flex-start}
 </style>
 <link rel="preload" as="image" href="logo.png">
 <script>window.__zcCrown='<svg class="crown" viewBox="0 0 48 48" aria-hidden="true"><path d="M5 37 3 14l13 10L24 7l8 17 13-10-2 23z"/><rect x="5" y="40" width="38" height="5" rx="1.5"/></svg>';</script>
