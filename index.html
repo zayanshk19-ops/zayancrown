@@ -1784,15 +1784,15 @@ var catSig='',catTick=0;
 function renderCats(){
   var host=document.getElementById('catrows'),h2=document.getElementById('home2'),chp=document.getElementById('chips');
   if(!chp||!chp.parentNode)return;
-  if(!h2){h2=document.createElement('div');h2.id='home2';chp.parentNode.insertBefore(h2,chp)}
+  if(!h2){h2=document.createElement('div');h2.id='home2';var ft=document.getElementById('foot');if(ft&&ft.parentNode)ft.parentNode.insertBefore(h2,ft);else chp.parentNode.appendChild(h2)}
   if(!host){host=document.createElement('div');host.id='catrows';chp.parentNode.insertBefore(host,chp)}
   var groups=[],map={};
   (state.products||[]).forEach(function(p){var c=(p.category||'').trim();if(!c)return;var k=c.toLowerCase();if(!map[k]){map[k]={name:c,list:[]};groups.push(map[k])}map[k].list.push(p)});
   if(loading||q||!groups.length){host.innerHTML='';h2.innerHTML='';catSig='';return}
   var sig=JSON.stringify(groups.map(function(g){return [g.name,g.list.map(function(p){return [p.id,p.name,p.price,p.oldPrice,p.soldOut,(p.imgs||[])[0],p.trend,p.pinned,p.badge,p.sale]})]}))+(owner?'o':'')+wish.join(',')+'|'+rvIds().join(',');
   if(sig===catSig)return;catSig=sig;
-  h2.innerHTML=collectionHtml(groups)+trendHtml();
-  host.innerHTML=recentHtml()+catSections(groups)+'<div class="hsec allh"><h2>All <em>Products</em></h2></div>';
+  h2.innerHTML=recentHtml()+trendHtml();
+  host.innerHTML='<div class="hsec allh"><h2>All <em>Products</em></h2></div>';
   wireRows(host);
   catStart();
 }
@@ -2325,7 +2325,7 @@ function openMenu(){
   var IP='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 3-5.5 6.5-5.5s6.5 1.9 6.5 5.5M18 8v6M15 11h6"/></svg>';
   function row(act,txt,extra,ch){return '<button type="button" class="mrow" data-act="'+act+'"'+(extra||'')+'><span>'+txt+'</span>'+(ch?CH:'')+'</button>'}
   modal('<div class="mtop"><h3>Menu</h3><button type="button" class="dx" data-act="close" aria-label="Close">&times;</button></div>'+
-    '<nav class="mnav">'+row('tabhome','Home')+row('shop','Shop')+
+    '<nav class="mnav">'+row('tabhome','Home')+row('collpage','Shop by Collection',0,1)+row('shop','All Products')+
     gs.map(function(g){return row('viewcat',esc(g.name),' data-c="'+esc(g.name)+'"',1)}).join('')+
     row('info','Contact',' data-k="contact"')+'</nav>'+
     '<div class="msep"></div>'+
@@ -2372,6 +2372,12 @@ function shopGridHtml(){
 }
 function shopBarHtml(){var n=count();return n?'<button class="btn buy block" type="button" data-act="cart"><span>Buy now ('+n+')</span><span>'+money(subtotal())+'</span></button>':''}
 function updateShopBar(){var b=document.getElementById('sbuy');if(b)b.innerHTML=shopBarHtml()}
+function openCollections(){
+  var gs=catGroups();
+  modal(dhdrHtml()+'<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>Shop by Collection</h3></div>'+
+    (gs.length?collectionHtml(gs):'<p class="hint">No collections yet.</p>')+pageTailHtml(),'wishpg');
+  fitOp();
+}
 function openShop(mode,term){
   shopCat=mode==='cat'?(term||''):'';shopTerm=mode==='cat'?'':(term||'');var srch=mode==='search';shopSearch=srch;
   modal(dhdrHtml()+'<div class="whead"><button class="btn ghost sm" type="button" data-act="close">&larr; Back</button><h3>'+(srch?'Search':(shopCat?esc(shopCat):'Products'))+'</h3><button class="sico" type="button" data-act="shopsearch" aria-label="Search products"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></div>'+
@@ -2716,6 +2722,7 @@ document.addEventListener('click',function(e){
   if(a==='cat'){cat=b.dataset.cat;renderChips();renderGrid()}
   else if(a==='addcart'){ensureOpts(id);cart[id]=(cart[id]||0)+1;saveCart();renderBar();renderFab();updateShopBar();toast('Added to cart')}
   else if(a==='shop')openShop();
+  else if(a==='collpage')openCollections();
   else if(a==='wachat'){var wp=document.getElementById('wapanel');if(wp){wp.hidden=!wp.hidden;if(!wp.hidden){var wi=document.getElementById('wapi');if(wi)setTimeout(function(){try{wi.focus()}catch(x){}},120)}}}
   else if(a==='viewcat'){openShop('cat',b.dataset.c)}
   else if(a==='tabhome'){if(document.getElementById('modal')&&document.getElementById('modal').innerHTML)closeModal();cat='All';window.scrollTo({top:0,behavior:'smooth'})}
