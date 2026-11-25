@@ -1791,9 +1791,9 @@ function renderCats(){
   if(loading||q||!groups.length){host.innerHTML='';h2.innerHTML='';catSig='';return}
   var sig=JSON.stringify(groups.map(function(g){return [g.name,g.list.map(function(p){return [p.id,p.name,p.price,p.oldPrice,p.soldOut,(p.imgs||[])[0],p.trend,p.pinned,p.badge,p.sale]})]}))+(owner?'o':'')+wish.join(',')+'|'+rvIds().join(',');
   if(sig===catSig)return;catSig=sig;
-  h2.innerHTML=recentHtml()+trendHtml();
+  h2.innerHTML=recentHtml()+trendHtml()+catSections(groups);
   host.innerHTML='<div class="hsec allh"><h2>All <em>Products</em></h2></div>';
-  wireRows(host);
+  wireRows(host);wireRows(h2);
   catStart();
 }
 function recentHtml(){
